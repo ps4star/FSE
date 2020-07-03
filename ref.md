@@ -45,7 +45,7 @@ ORGs are added automatically. This means that rather than writing code such as:
 msgbox @someOrg 0x4
 ...
 @someOrg
-= someStringOfText
+= Let's go to the mall!
 ```
 FSE does it like this:
 ```
