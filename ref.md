@@ -9,3 +9,10 @@ TABLE OF CONTENTS
 2. Key Differences Between FSE and XSE
 3. **Command Documentation (what you're probably looking for)**
 4. Example Code
+
+
+================================================
+1. Environment Variables
+================================================
+
+### autoobtain
