@@ -15,7 +15,7 @@ TABLE OF CONTENTS:
 
 ## Environment Variables
 
-Environment variables 
+Environment variables exist mostly for the sake of convenience (while still giving the user plenty of power over what their script does), and can be modified at any point in the script. 
 
 #### autoobtain
 ###### Default Value: true
