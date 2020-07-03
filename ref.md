@@ -1,4 +1,4 @@
-# Official documentation of FSE
+# Official Documentation of FSE
 
 Copyright 2020 @ ps4star
 
