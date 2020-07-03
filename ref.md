@@ -20,6 +20,8 @@ Environment variables exist mostly for the sake of convenience (while still givi
 To set the value of an environment variable, use this:
 ```
 envr <var_name> <var_value>
+EXAMPLE:
+envr autoobtain false
 ```
 
 #### autoobtain
