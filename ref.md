@@ -12,7 +12,7 @@ TABLE OF CONTENTS
 
 
 ================================================
-\1. Environment Variables
+Environment Variables
 ================================================
 
 ### autoobtain
