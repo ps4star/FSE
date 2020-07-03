@@ -3,7 +3,7 @@ Official documentation of FSE
 Copyright 2020 @ ps4star
 
 
-TABLE OF CONTENTS
+TABLE OF CONTENTS:
 
 1. Environment Variables
 2. Key Differences Between FSE and XSE
@@ -11,6 +11,11 @@ TABLE OF CONTENTS
 4. Example Code
 
 
+
+
 ## Environment Variables
 
+Environment variables 
+
 #### autoobtain
+###### Default Value: true
