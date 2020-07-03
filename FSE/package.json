@@ -1,0 +1,17 @@
+{
+	"main" : "index.html",
+	"name" : "FastScriptEditor",
+	"description" : "A convenient new way to write XSE.",
+	"version" : "1.0",
+	"keywords" : ["FSE", "FastScriptEditor"],
+	"window" : {
+		"title" : "FastScriptEditor",
+		"toolbar" : false,
+		"frame" : true,
+		"width" : 620,
+		"height" : 620,
+		"position" : "mouse",
+		"min_width" : 620,
+		"min_height" : 620
+	}
+}
