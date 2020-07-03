@@ -24,12 +24,12 @@ EXAMPLE:
 envr autoObtain false
 ```
 
-#### autoObtain
+### autoObtain
 ###### Default Value: true
 
 Adds a fanfare and msgbox after an item or pokemon obtain event. Must be manually set to false to prevent this effect.
 
-#### autoLock
+### autoLock
 ###### Default Value: true
 
 Adds "lock" and "faceplayer" calls to the beginning of the script (just after the header). Must be manually set to false to prevent this effect.
