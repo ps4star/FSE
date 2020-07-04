@@ -74,7 +74,7 @@ Hex ints can be used as alternatives to the built-in tables, and in some cases a
 
 FSE has support for constants, as well as named flags. Constants are simply "shortcuts" and cannot be modified after definition (as in any other language), and flags are simply names for internal game flags. This means each flag needs a name as well as a hex pointer in its definition. However, referencing the flag afterwards requires only its name.
 
-NOTE 1: Do not use "=" when assigning constants or flags, only spaces.
+NOTE: Do not use "=" when assigning constants or flags.
 
 ### const
 ###### Other Names: constant, def, define, defconst, shortcut, replace
