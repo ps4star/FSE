@@ -190,7 +190,7 @@ FSE
 ```
 setspeed fast
 movenowait 0xFF down right down right
-movenowait 0x00 up left left left
+move 0x00 up left left left
 ```
 XSE
 ```
@@ -202,6 +202,7 @@ faceplayer
 
 applymovement 0xFF @off0
 applymovement 0x00 @off1
+waitmovement 0x0
 
 release
 
