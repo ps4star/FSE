@@ -47,6 +47,9 @@ While FSE does support raw hex values for the most part, it's highly recommended
 - exp.share OR expshare
 - rm.1key OR rm1key (same for rm(.)2key, rm(.)4key, etc)
 
+### Case-insensitivity
+All command names and environment variable names are case-insensitive. Obviously, things like string literals and defined constants and flags aren't, as they are user-defined.
+
 
 
 ## Types
@@ -69,15 +72,17 @@ Hex ints can be used as alternatives to the built-in tables, and in some cases a
 
 FSE has support for constants, as well as named flags.
 
-### Const
+### const
 ###### Other Names: constant, def, define, defconst, shortcut, replace
 ```
 const myConst (value)
 ```
 (value) is any type of data (string, hex int, whatever). This works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Obviously not included in XSE output.
 
-### Flag
-
+### setflag
+###### Other Names: f, defflag, defineflag, setflagat, defineflagat, defflagat
+```
+setflag 
 
 ## Environment Variables
 
