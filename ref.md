@@ -22,12 +22,12 @@ A note about the format of this document: placeholder values will appear in pare
 
 If you're used to scripting in XSE, there are a few things you'll want to be aware of before using FSE.
 
-### ORGs are added automatically. 
+### ORG statements are added automatically. 
 This means that rather than writing code such as:
 ```
 msgbox @someOrg 0x4
 ...
-@someOrg
+#org @someOrg
 = Let's go to the mall!
 ```
 FSE does it like this:
