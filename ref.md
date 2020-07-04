@@ -7,7 +7,7 @@ TABLE OF CONTENTS:
 
 1. Important notes about FSE
 <br>1a. Types
-<br>1b. Constants and Flags
+<br>1b. Constants
 2. Environment Variables
 3. **Command Documentation (what you're probably looking for)**
 4. Example Code
@@ -71,7 +71,7 @@ Hex ints can be used as alternatives to the built-in tables, and in some cases a
 ### Floating-point Numbers
 There is currently no support for floating-point numbers, and likely never will be, as they're not used in XSE as far as I'm aware. Attempting to create a floating-point number will either cause it to be interpreted as a string or floored by JS parseInt() to an integer.
 
-## Constants and Flags
+## Constants
 
 FSE has support for constants and named flags. Constants are simply "shortcuts" and cannot be modified after definition (as in any other language).
 
@@ -84,14 +84,6 @@ Defines an internal constant (can also be used for flags).
 const %(const name) (value)
 ```
 The "%" here is necessary, otherwise the compiler will error (it also must be included in all const references). (value) can be literally any arbitrary type of data (string, hex int, whatever). This works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to %(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using the "%" symbol if you're not trying to reference a constant. Obviously, constants are not included in XSE output. They can also be used to define flag names. To do this, simply make (value) a hex pointer to the desired flag. Then, when you call setflag, simply use the const name rather than the pointer.
-
-### setflag
-###### Other Names: sf
-Calls XSE setflag.
-```
-setflag (flag pointer)
-```
-(flag pointer) is an in-game hex flag ID. Note that you can also replace (flag pointer) with an internal const reference, meaning you can access flags by name rather than by a hex number. I would highly recommend doing this, as it lets you keep up with what flags do what, as opposed to using only the hex IDs of the flags.
 
 
 
@@ -135,6 +127,13 @@ Below is a list of all commands currently usable in FSE.
 ###### Other Names: msg, message, messagebox, text, txt, filltext, domsgbox
 Calls XSE msgbox. (string) is a string literal (or constant), representing the text you want to display, and (mode) is a hex integer representing the type of msgbox. See XSE msgbox documentation for more information on msgbox types.
 
+### setflag
+###### Other Names: sf
+Calls XSE setflag.
+```
+setflag (flag pointer)
+```
+(flag pointer) is an in-game hex flag ID. Note that you can also replace (flag pointer) with an internal const reference, meaning you can access flags by name rather than by a hex number. I would highly recommend doing this, as it lets you keep up with what flags do what, as opposed to using only the hex IDs of the flags.
 
 ### warp (map bank) (map number) (warp number)
 ###### Other Names: warpto, warp, wrp, w
