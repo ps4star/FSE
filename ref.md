@@ -117,7 +117,13 @@ Sets a label with a specified @(label name). This must start with "@" and must a
 
 ## (2) External Functions and Scripts
 
-FSE supports loading 
+FSE supports loading external functions and scripts from JSON files. Scripts must be called twice to be properly used, once to import/load the script, and again to execute the main code.
+
+To load a script:
+```
+script (script name) (args...)
+```
+For information on how this works, and how to create your own functions, see the [](external function guide).
 
 
 
@@ -125,9 +131,9 @@ FSE supports loading
 
 Below is a list of all commands currently usable in FSE.
 
-### applymovement (movement target) (...movement series...)
+### applymovement (movement target) (movement series...)
 ###### Other Names: move
-Calls XSE applymovement, and adds a "waitmovement 0x0" call afterwards. (movement target) is a hex int representing the target of (...movement series...), and (...movement series...) is a list of space-delimited movement commands. See the SIDE NOTE below for information on how to format movement commands. Hex codes may still be used here if desired. See XSE documentation for more info on (movement target) values. To prevent the waitmovement call, see applymovementnowait below.
+Calls XSE applymovement, and adds a "waitmovement 0x0" call afterwards. (movement target) is a hex int representing the target of (movement series...), and (movement series...) is a list of space-delimited movement commands. See the SIDE NOTE below for information on how to format movement commands. Hex codes may still be used here if desired. See XSE documentation for more info on (movement target) values. To prevent the waitmovement call, see applymovementnowait below.
 #### SIDE NOTE: The Movement System
 The movement system in FSE can be confusing at first, but like everything here, it's supposed to be as convenient as possible. There are several different speeds of movement that gen 3 supports. If you look at the move table in tables.js, you'll notice that there are several copies of the basic movement directions (up, down, left, and right) that have speeds appended to them (veryslow (exclusive to FR/LG), slow, normal, fast, faster, fastest). So, instead of constantly having to say "upnormal", "downslow", etc, you can simply pre-define a speed, use the basic directions (up, down, left, and right), and the speed will be handled for you.
 
@@ -140,7 +146,7 @@ move 0xFF @myMoveSequence @myMoveSequence @myMoveSequence ; Repeats the same mov
 ```
 Referencing the full (speed-included) name of a movement is also allowed. The default speed is normal. See setspeed below for more information.
 
-### applymovementnowait (movement target) (...movement series...)
+### applymovementnowait (movement target) (movement series...)
 ###### Other Names: movenowait
 Calls XSE applymovement. See applymovement above for more details.
 
