@@ -37,7 +37,7 @@ msgbox Let's go to the mall! 0x4
 And automatically generates an offset name and #org statement afterwards.
 
 ### FSE typically has multiple names for the same commands.
-This may be a controversial feature, but yeah, most FSE commands have several names. The main point of this is to reduce the time the user has to spend looking up stuff in the documentation. So, if you forgot what the name of a command is, just take a guess, and you'll probably get it right. As a bonus, a lot of the aliases are shorter than the original XSE commands, which is always nice. However, if you're familiar with the standard XSE names and don't have any particular reason not to use them, then use them for the sake of standardization.
+This may be a controversial feature, but yeah, most FSE commands have several names. The main point of this is to reduce the time the user has to spend looking up stuff in the documentation. So, if you forgot what the name of a command is, just take a guess, and you'll probably get it right. As a bonus, a lot of the aliases are shorter than the original XSE commands, which is always nice. However, the XSE names are still generally the standard, so please use them if you can.
 
 ### EVERYTHING IS A TABLE!
 While FSE does support raw hex values for the most part, it's highly recommended that you take advantage of the built-in tables. There are currently tables for pokemon IDs, item IDs, and movement IDs. More to (possibly) come in the future. The formatting for these tables is lowercased, no spaces, and no special characters. Items or pokemon with "." or "-" in their names can either be written with or without them. Some examples of weird names:
@@ -63,12 +63,13 @@ Hello, I am a string (look ma, no quotes).
 ```
 
 ### Decimal Int
-If you really want to, you can use decimal int IDs for items and pokemon (again, just use the built-in table). Outside of this, there's not much reason to use them.
+If you really want to, you can use decimal int IDs for items and pokemon (again, just use the built-in table). They are also used for certain commands, such as XSE warp. Formatted as standard ints
 
 ### Hex Int
 Hex ints can be used as alternatives to the built-in tables, and in some cases are required (such as msgbox types). Formatted as 0x**.
 
-
+### Floating-point Numbers
+There is currently no support for floating-point numbers, and likely never will be, as they're not used in XSE as far as I'm aware. Attempting to create a floating-point number will either cause it to be interpreted as a string or floored by JS parseInt() to an integer.
 
 ## Constants and Flags
 
@@ -77,7 +78,7 @@ FSE has support for constants and named flags. Constants are simply "shortcuts" 
 NOTE: Do not use "=" when assigning values to consts.
 
 ### const
-###### Other Names: c, constant, def, define, defconst, shortcut, replace, flag, defineflag, #, #def
+###### Other Names: c, constant, def, define, defconst, shortcut, replace, flag, defineflag, %define, %def
 Defines an internal constant (can also be used for flags).
 ```
 const %(const name) (value)
@@ -109,14 +110,20 @@ envr autoObtain false
 ### autoObtain
 ###### Default Value: true
 ###### Type: boolean
-
 Adds a fanfare and msgbox after an item or pokemon obtain event. Must be manually set to false to prevent this effect.
 
 ### autoLock
 ###### Default Value: true
 ###### Type: boolean
-
 Adds "lock" and "faceplayer" calls to the beginning of the script (just after the header). Must be manually set to false to prevent this effect.
+
+### setObtainFanfare
+###### Default Value: 0x13E
+###### Type: hex int
+Sets the fanfare ID for autoObtain. If autoObtain is false, this does nothing.
+
+### setObtainString
+###### Default Value: 
 
 
 
@@ -126,13 +133,12 @@ Below is a list of all commands currently usable in FSE.
 
 ### msgbox (string) (mode)
 ###### Other Names: msg, message, messagebox, text, txt, filltext, domsgbox
-
 Calls XSE msgbox. (string) is a string literal (or constant), representing the text you want to display, and (mode) is a hex integer representing the type of msgbox. See XSE msgbox documentation for more information on msgbox types.
 
 
-
-
-
+### warp (map bank) (map number) (warp number)
+###### Other Names: warpto, warp, wrp, w
+Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and (warp number) is the warp number. All of these are decimal ints.
 
 
 
