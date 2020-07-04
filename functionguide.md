@@ -26,5 +26,5 @@ are replaced with their corresponding values at compile time.
 
 ### (2) List of Standard Lib Functions
 ```
-obtain-pokemon @MESSAGE ;Plays fanfare 0x13E and displays a "you obtained item!" textbox.
+obtain-pokemon @MESSAGE ;Plays fanfare 0x13E and displays a textbox containing the string @MESSAGE.
 ```
