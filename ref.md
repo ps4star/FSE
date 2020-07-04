@@ -184,10 +184,44 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 Below are a few examples (with XSE output for comparison) just to show off what FSE is capable of.
 
+My personal favorite command in the whole language: applymovement...
+FSE
+```
+setspeed fast
+move 0xFF down right down right
+move 0x00 up left left left
+```
+XSE
+```
+#dynamic 0x197D000
+#org 0x197D000
 
+lock
+faceplayer
 
+applymovement 0xFF @off0
+waitmovement 0x0
+applymovement 0x00 @off1
+waitmovement 0x0
 
+release
 
+end
+
+#org @off0
+#raw 0x15
+#raw 0x18
+#raw 0x15
+#raw 0x18
+#raw 0xFE
+
+#org @off1
+#raw 0x16
+#raw 0x17
+#raw 0x17
+#raw 0x17
+#raw 0xFE
+```
 
 
 
