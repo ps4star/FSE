@@ -102,9 +102,18 @@ Comments are completely ignored by the compiler, even to the extent that they ar
 
 Much like XSE, FSE uses labels and if statements for control flow.
 
-### Lbl (label name)
+### Goto @(label name)
+###### Other Names: jmp
+Goes to the specified @(label name).
+
+### If (condition) (command...)
+Works exactly like XSE if.
+
+### Lbl @(label name)
 ###### Other Names: label, org
-Sets a label with a specified name.
+Sets a label with a specified @(label name). This must start with "@" and must also be referenced with the "@" in the future.
+
+
 
 
 
@@ -168,9 +177,29 @@ Referencing the full (speed-included) name of a movement is also allowed. The de
 ###### Other Names: movenowait
 Calls XSE applymovement. See applymovement above for more details.
 
+### clearflag (flag pointer)
+###### Other Names: cf, clear
+Calls XSE clearflag. I would recommend making (flag pointer) a constant rather than a hex literal, especially if you're modifying multiple different flags in 1 script.
+
+### lf
+###### Other Names: lockface, lockfaceplayer
+Calls XSE lock and faceplayer.
+
+### lock
+###### Other Names: l
+Calls XSE lock.
+
+### faceplayer
+###### Other Names: face
+Calls XSE faceplayer.
+
 ### msgbox (string) (mode)
 ###### Other Names: msg
 Calls XSE msgbox. (string) is a string literal (or constant), representing the text you want to display, and (mode) is a hex integer representing the type of msgbox. See XSE msgbox documentation for more information on msgbox types.
+
+### release
+###### Other Names: rel
+Calls XSE release.
 
 ### setflag
 ###### Other Names: sf
