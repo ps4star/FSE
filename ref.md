@@ -10,7 +10,7 @@ TABLE OF CONTENTS:
 <br>1b. Constants
 <br>1c. Comments
 <br>1d. Control Flow
-2. External Functions and Scripts
+2. External Functions
 3. **Command Documentation (what you're probably looking for)**
 4. Example Code
 
@@ -115,13 +115,15 @@ Sets a label with a specified @(label name). This must start with "@" and must a
 
 
 
-## (2) External Functions and Scripts
+## (2) External Functions
 
-FSE supports loading external functions and scripts from JSON files. Scripts must be called twice to be properly used, once to import/load the script, and again to execute the main code.
+FSE supports loading external functions. External functions are stored in the file scripts.js in JS object format. External functions act in much the same way constants do, but for code blocks as opposed to data. Unlike constants, however, external functions can take parameters.
 
-### script (script name) (args...)
-###### Other Names: func, callfunc, callscript
-For information on how this works, and how to create your own functions, see the [https://github.com/ps4star/FSE/blob/master/functionguide.md](external function guide).
+### func (func name) (args...)
+###### Other Names: callfunc, script, callscript
+Not to be confused with call.
+
+For information on how external functions work, and how to create your own, see [https://github.com/ps4star/FSE/blob/master/functionguide.md](external function guide).
 
 
 
