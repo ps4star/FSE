@@ -61,23 +61,23 @@ Hello, I am a string (look ma, no quotes).
 ```
 
 ### Decimal Int
-If you really want to, you can use decimal int IDs for items and pokemon (again, just use the built-in table). They are also used for certain commands, such as XSE warp. Formatted as standard ints
+If you really want to, you can use decimal int IDs for items and pokemon (again, just use the built-in table). They are also used for certain commands, such as warp.
 
 ### Hex Int
 Hex ints can be used as alternatives to the built-in tables, and in some cases are required (such as msgbox types). Formatted as 0x**.
 
 ### Floating-point Numbers
-There is currently no support for floating-point numbers, and likely never will be, as they're not used in XSE as far as I'm aware. Attempting to create a floating-point number will either cause it to be interpreted as a string or floored by JS parseInt() to an integer.
+There is currently no support for floating-point numbers, and likely never will be, as they're not used in XSE as far as I'm aware. Attempting to create a floating-point number will either cause it to be interpreted as a string or floored by JavaScript parseInt() to an integer.
 
 ## (1b) Constants
 
-FSE has support for constants and named flags. Constants are simply "shortcuts" and cannot be modified after definition (as in any other language).
+FSE has support for constants. Constants are simply "shortcuts" and cannot be modified after definition (as in any other language).
 
 NOTE: Do not use "=" when assigning values to consts.
 
 ### const
 ###### Other Names: define
-Defines an internal constant (can also be used for flags).
+Defines an internal constant.
 ```
 const @(const name) (value)
 
