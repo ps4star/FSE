@@ -47,6 +47,8 @@ While FSE does support raw hex values for the most part, it's highly recommended
 - exp.share OR expshare
 - rm.1key OR rm1key (same for rm(.)2key, rm(.)4key, etc)
 
+The internal tables can be located in the "Data Parsers" folder of this repo if you'd like to see for yourself how to use them.
+
 ### Case-insensitivity
 All command names and environment variable names are case-insensitive. Obviously, things like string literals and defined constants and flags aren't, as they are user-defined.
 
@@ -55,7 +57,7 @@ All command names and environment variable names are case-insensitive. Obviously
 ## Types
 
 ### String
-Since technically everything in FSE is initially processed as a JavaScript string, string literals do not require quotes, unlike most languages. Example:
+Since technically everything in FSE is initially processed as a JavaScript string, string literals do not require quotes, unlike most languages, but including them without the addition of escape characters **shouldn't** cause compilation problems. Example:
 ```
 Hello, I am a string (look ma, no quotes).
 ```
@@ -70,7 +72,7 @@ Hex ints can be used as alternatives to the built-in tables, and in some cases a
 
 ## Variables and Flags
 
-FSE has support for constants, as well as named flags.
+FSE has support for constants, as well as named flags. Constants are simply "shortcuts" and cannot be modified after definition (as in any other language), and flags are simply names for internal game flags. This means each flag needs a name as well as a hex pointer in its definition. However, referencing the flag afterwards requires only its name.
 
 ### const
 ###### Other Names: constant, def, define, defconst, shortcut, replace
@@ -82,7 +84,11 @@ const myConst (value)
 ### setflag
 ###### Other Names: f, defflag, defineflag, setflagat, defineflagat, defflagat
 ```
-setflag 
+setflag (flag name) (flag pointer)
+```
+(flag name) is a string representing the name of the flag, and (flag pointer) is a hex int representing the flag's pointer. Look at the XSE documentation for a table of usable flag pointers. Remember that these aren't 
+
+
 
 ## Environment Variables
 
