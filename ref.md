@@ -10,7 +10,7 @@ TABLE OF CONTENTS:
 <br>1b. Constants
 <br>1c. Comments
 <br>1d. Control Flow
-2. Environment Variables
+2. External Functions and Scripts
 3. **Command Documentation (what you're probably looking for)**
 4. Example Code
 
@@ -24,7 +24,7 @@ A note about the format of this document: placeholder values will appear in pare
 
 If you're used to scripting in XSE, there are a few things you'll want to be aware of before using FSE.
 
-### ORG statements are added automatically. 
+### Do not use ORG statements with commands like msgbox and applymovement
 This means that rather than writing code such as:
 ```
 msgbox @someOrg 0x4
@@ -115,44 +115,11 @@ Sets a label with a specified @(label name). This must start with "@" and must a
 
 
 
+## (2) External Functions and Scripts
+
+FSE supports loading 
 
 
-## (2) Environment Variables
-
-Environment variables exist mostly for the sake of convenience (while still giving the user plenty of power over what their script does), and can be modified at any point in the script. The variable "autoObtain" for example, will automatically add the traditional fanfare noise as well as "you obtained X!" textbox that appears when receing a pokemon or item.
-
-To set the value of an environment variable, use this:
-```
-envr (var name) (var value)
-
-EXAMPLE:
-envr autoObtain false
-```
-
-### autoLock
-###### Default Value: true
-###### Type: boolean
-Adds "lock" and "faceplayer" calls to the beginning of the script (just after the header, in @start).
-
-### autoObtain
-###### Default Value: true
-###### Type: boolean
-Adds a fanfare and msgbox after an item or pokemon obtain event.
-
-### autoRelease
-###### Default Value: true
-###### Type: boolean
-Adds an XSE release call to the end of orgs.
-
-### setObtainFanfare
-###### Default Value: 0x13E
-###### Type: hex int
-Sets the fanfare ID for autoObtain. If autoObtain is false, this does nothing.
-
-### setObtainString
-###### Default Value: You received a @POKEMON_NAME!
-###### Type: string
-Sets the string for autoObtain. Use @POKEMON_NAME to specify the pokemon name (not required). If autoObtain is false, this does nothing.
 
 ## (3) Command Documentation
 
