@@ -123,7 +123,7 @@ FSE supports loading external functions. External functions are stored in the fi
 ###### Other Names: callfunc, script, callscript
 Not to be confused with call.
 
-For information on how external functions work, and how to create your own, see [https://github.com/ps4star/FSE/blob/master/functionguide.md](external function guide).
+For information on how external functions work, and how to create your own, see [external function guide](https://github.com/ps4star/FSE/blob/master/functionguide.md).
 
 
 
