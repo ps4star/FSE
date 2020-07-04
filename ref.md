@@ -151,7 +151,7 @@ Here is an example of applymovement in action:
 const @myMoveSequence up up down left right right right
 
 setspeed normal
-move 0xFF @myMoveSequence @myMoveSequence @myMoveSequence ; Repeats the same move sequence 3 times. And yes, this is a thing you can do. It's neat.
+move 0xFF @myMoveSequence @myMoveSequence @myMoveSequence ; Repeats the same move sequence 3 times.
 ```
 Referencing the full (speed-included) name of a movement is also allowed. The default speed is normal. See setspeed below for more information.
 
