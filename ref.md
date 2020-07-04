@@ -36,9 +36,6 @@ msgbox Let's go to the mall! 0x4
 ```
 And automatically generates an offset name and #org statement afterwards.
 
-### FSE typically has multiple names for the same commands.
-This may be a controversial feature, but yeah, most FSE commands have several names. The main point of this is to reduce the time the user has to spend looking up stuff in the documentation. So, if you forgot what the name of a command is, just take a guess, and you'll probably get it right. As a bonus, a lot of the aliases are shorter than the original XSE commands, which is always nice. However, the XSE names are still generally the standard, so please use them if you can.
-
 ### EVERYTHING IS A TABLE!
 While FSE does support raw hex values for the most part, it's highly recommended that you take advantage of the built-in tables. There are currently tables for pokemon IDs, item IDs, and movement IDs. More to (possibly) come in the future. The formatting for these tables is lowercased, no spaces, and no special characters. Items or pokemon with "." or "-" in their names can either be written with or without them. Some examples of weird names:
 
@@ -78,12 +75,12 @@ FSE has support for constants and named flags. Constants are simply "shortcuts" 
 NOTE: Do not use "=" when assigning values to consts.
 
 ### const
-###### Other Names: c, constant, def, define, defconst, shortcut, replace, flag, defineflag, %define, %def
+###### Other Names: define
 Defines an internal constant (can also be used for flags).
 ```
-const %(const name) (value)
+const @(const name) (value)
 ```
-The "%" here is necessary, otherwise the compiler will error (it also must be included in all const references). (value) can be literally any arbitrary type of data (string, hex int, whatever). This works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to %(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using the "%" symbol if you're not trying to reference a constant. Obviously, constants are not included in XSE output. They can also be used to define flag names. To do this, simply make (value) a hex pointer to the desired flag. Then, when you call setflag, simply use the const name rather than the pointer.
+Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up to your preference. You must include one of these chars at the start of your const name, or the compiler will pitch a fit (this character must also must be included in all references to the const post-definition). (value) can be literally any arbitrary type of data (string, hex int, whatever). Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. Obviously, constants are not included in XSE output.
 
 
 
@@ -99,15 +96,20 @@ EXAMPLE:
 envr autoObtain false
 ```
 
-### autoObtain
-###### Default Value: true
-###### Type: boolean
-Adds a fanfare and msgbox after an item or pokemon obtain event. Must be manually set to false to prevent this effect.
-
 ### autoLock
 ###### Default Value: true
 ###### Type: boolean
-Adds "lock" and "faceplayer" calls to the beginning of the script (just after the header). Must be manually set to false to prevent this effect.
+Adds "lock" and "faceplayer" calls to the beginning of the script (just after the header).
+
+### autoObtain
+###### Default Value: true
+###### Type: boolean
+Adds a fanfare and msgbox after an item or pokemon obtain event.
+
+### autoRelease
+###### Default Value: true
+###### Type: boolean
+Adds an XSE release call to the end of the script (just before end).
 
 ### setObtainFanfare
 ###### Default Value: 0x13E
@@ -115,16 +117,26 @@ Adds "lock" and "faceplayer" calls to the beginning of the script (just after th
 Sets the fanfare ID for autoObtain. If autoObtain is false, this does nothing.
 
 ### setObtainString
-###### Default Value: 
-
-
+###### Default Value: You received a @POKEMON_NAME!
+###### Type: string
+Sets the string for autoObtain. Use @POKEMON_NAME to specify the pokemon name (not required). If autoObtain is false, this does nothing.
 
 ## Command Documentation
 
 Below is a list of all commands currently usable in FSE.
 
+### applymovement (movement target) (...movement series...)
+###### Other Names: move
+Calls XSE applymovement, and adds a "waitmovement 0x0" call afterwards. (movement target) is a hex int representing the target of (...movement series...), and (...movement series...) is a list of space-delimited movement commands. See the SIDE NOTE below for information on how to format movement commands. Hex codes may still be used here if desired. See XSE documentation for more info on (movement target) values. To prevent the waitmovement call, see applymovementnowait below.
+#### SIDE NOTE: The Movement System
+The movement system in FSE can be confusing at first, but like everything here, it's supposed to be as convenient as possible. There are several different speeds of movement that gen 3 supports. If you look at the move table in tables.js, you'll notice that there are several copies of the basic movement directions (up, down, left, and right) that have speeds appended to them (veryslow (exclusive to FR/LG), slow, normal, fast, faster, fastest). So, instead of constantly having to say "upnormal", "downslow", etc, you can simply pre-define a speed, simply use the basic directions (up, down, left, and right) and the speed will be handled for you. So, the 4 basic movements of up, down, left, and right are all you need to include in your (...movement series...), as well as any other movement commands which have variable speeds. If you want to have mixed speeds in the same move sequence, you'll need to use raw hex values instead. The movement speed is set to normal by default, but see setspeed below to find out how to change it.
+
+### applymovementnowait (movement target) (...movement series...)
+###### Other Names: movenowait
+Calls XSE applymovement. See applymovement above for more details.
+
 ### msgbox (string) (mode)
-###### Other Names: msg, message, messagebox, text, txt, filltext, domsgbox
+###### Other Names: msg
 Calls XSE msgbox. (string) is a string literal (or constant), representing the text you want to display, and (mode) is a hex integer representing the type of msgbox. See XSE msgbox documentation for more information on msgbox types.
 
 ### setflag
@@ -135,10 +147,12 @@ setflag (flag pointer)
 ```
 (flag pointer) is an in-game hex flag ID. Note that you can also replace (flag pointer) with an internal const reference, meaning you can access flags by name rather than by a hex number. I would highly recommend doing this, as it lets you keep up with what flags do what, as opposed to using only the hex IDs of the flags.
 
-### warp (map bank) (map number) (warp number)
-###### Other Names: warpto, warp, wrp, w
-Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and (warp number) is the warp number. All of these are decimal ints.
+### setspeed
+###### Other Names: setmovespeed
+Sets internal movement speed. Values can be veryslow (FR/LG only), slow, normal, fast, faster, and fastest, though not all of these speeds are available for every command, and some commands don't have speeds at all. See the movetable in tables.js for more info.
 
+### warp (map bank) (map number) (warp number)
+Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and (warp number) is the warp number. All of these are decimal ints.
 
 
 
