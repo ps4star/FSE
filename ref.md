@@ -1,4 +1,4 @@
-# Official Documentation of FSE
+# Official Documentation of FSE (Fast Script Editor)
 
 Copyright 2020 @ ps4star
 
@@ -99,7 +99,7 @@ Comments are completely ignored by the compiler, even to the extent that they ar
 
 
 
-## Environment Variables
+## (2) Environment Variables
 
 Environment variables exist mostly for the sake of convenience (while still giving the user plenty of power over what their script does), and can be modified at any point in the script. The variable "autoObtain" for example, will automatically add the traditional fanfare noise as well as "you obtained X!" textbox that appears when receing a pokemon or item.
 
@@ -136,7 +136,7 @@ Sets the fanfare ID for autoObtain. If autoObtain is false, this does nothing.
 ###### Type: string
 Sets the string for autoObtain. Use @POKEMON_NAME to specify the pokemon name (not required). If autoObtain is false, this does nothing.
 
-## Command Documentation
+## (3) Command Documentation
 
 Below is a list of all commands currently usable in FSE.
 
@@ -180,6 +180,9 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 
 
+## (4) Example Code
+
+Below are a few examples (with XSE output for comparison) just to show off what FSE is capable of.
 
 
 
