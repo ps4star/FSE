@@ -9,6 +9,7 @@ TABLE OF CONTENTS:
 <br>1a. Types
 <br>1b. Constants
 <br>1c. Comments
+<br>1d. Control Flow
 2. Environment Variables
 3. **Command Documentation (what you're probably looking for)**
 4. Example Code
@@ -97,6 +98,14 @@ const @myConst I'm a string literal and not a comment ; ok now we're in a commen
 ```
 Comments are completely ignored by the compiler, even to the extent that they are not ported to XSE output.
 
+## (1d) Control Flow
+
+Much like XSE, FSE uses labels and if statements for control flow.
+
+### Lbl (label name)
+###### Other Names: label, org
+Sets a label with a specified name.
+
 
 
 ## (2) Environment Variables
@@ -114,7 +123,7 @@ envr autoObtain false
 ### autoLock
 ###### Default Value: true
 ###### Type: boolean
-Adds "lock" and "faceplayer" calls to the beginning of the script (just after the header).
+Adds "lock" and "faceplayer" calls to the beginning of the script (just after the header, in @start).
 
 ### autoObtain
 ###### Default Value: true
@@ -124,7 +133,7 @@ Adds a fanfare and msgbox after an item or pokemon obtain event.
 ### autoRelease
 ###### Default Value: true
 ###### Type: boolean
-Adds an XSE release call to the end of the script (just before end).
+Adds an XSE release call to the end of orgs.
 
 ### setObtainFanfare
 ###### Default Value: 0x13E
