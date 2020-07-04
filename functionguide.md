@@ -13,10 +13,10 @@ The easiest way to explain how to write functions is by showing one:
 ```
 {
 	"body" : [
-    "lf",
+		"lf",
 		"fanfare 0x13E",
 		"msgbox You obtained a %ARG_1! 0x4",
-    "release"
+		"release"
 	],
 	"args" : 1
 }
