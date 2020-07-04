@@ -74,12 +74,14 @@ Hex ints can be used as alternatives to the built-in tables, and in some cases a
 
 FSE has support for constants, as well as named flags. Constants are simply "shortcuts" and cannot be modified after definition (as in any other language), and flags are simply names for internal game flags. This means each flag needs a name as well as a hex pointer in its definition. However, referencing the flag afterwards requires only its name.
 
+NOTE 1: Do not use "=" when assigning constants or flags, only spaces.
+
 ### const
 ###### Other Names: constant, def, define, defconst, shortcut, replace
 ```
-const myConst (value)
+const %(const name) (value)
 ```
-(value) is any type of data (string, hex int, whatever). This works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Obviously not included in XSE output.
+The "%" sign here is necessary, otherwise the compiler will error. (value) is any type of data (string, hex int, whatever). This works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Obviously not included in XSE output.
 
 ### setflag
 ###### Other Names: f, defflag, defineflag, setflagat, defineflagat, defflagat
