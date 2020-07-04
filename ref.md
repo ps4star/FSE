@@ -58,7 +58,10 @@ Hello, I am a string (look ma, no quotes).
 ```
 
 ### Decimal Int
-FSE does not currently support decimal ints in any capacity (
+FSE does support decimal ints, though there's not really any reason to use them (remember that there are tables for item and pokemon IDs).
+
+### Hex Int
+Hex ints can be used as alternatives to the built-in tables, and in some cases are required (such as msgbox types). Formatted as 0x****.
 
 
 
