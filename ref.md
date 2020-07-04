@@ -93,8 +93,6 @@ OR
 ### setflag
 ###### Other Names: sf
 Calls XSE setflag.
-
-This can be used in 2 ways:
 ```
 setflag (flag pointer)
 ```
