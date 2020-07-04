@@ -76,19 +76,13 @@ FSE has support for constants and named flags. Constants are simply "shortcuts" 
 
 NOTE: Do not use "=" when assigning values to consts.
 
-### const (%)
-###### Other Names: constant, def, define, defconst, shortcut, replace, flag, defineflag
+### const
+###### Other Names: c, constant, def, define, defconst, shortcut, replace, flag, defineflag, #, #def
 Defines an internal constant (can also be used for flags).
-
-Constants can be defined in 2 ways:
 ```
-const (const name) (value)
+const %(const name) (value)
 ```
-OR
-```
-% (const name) (value)
-```
-(value) is any type of data (string, hex int, whatever). This works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Obviously not included in XSE output. This can also be used to define flag names. To do this, simply make (value) a hex pointer to the desired flag. Then, when you call setflag, simply use the const name rather than the pointer.
+The "%" here is necessary, otherwise the compiler will error (it also must be included in all const references). (value) is any type of data (string, hex int, whatever). This works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to %(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using the "%" symbol if you're not trying to reference a constant. Obviously, constants are not included in XSE output. They can also be used to define flag names. To do this, simply make (value) a hex pointer to the desired flag. Then, when you call setflag, simply use the const name rather than the pointer.
 
 ### setflag
 ###### Other Names: sf
