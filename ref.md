@@ -184,7 +184,8 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 Below are a few examples (with XSE output for comparison) just to show off what FSE is capable of.
 
-My personal favorite command in the whole language: applymovement...
+My personal favorite command in the whole language: applymovement...<br>
+
 FSE
 ```
 setspeed fast
