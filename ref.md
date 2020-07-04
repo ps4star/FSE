@@ -7,7 +7,7 @@ TABLE OF CONTENTS:
 
 1. Important notes about FSE
 <br>1a. Types
-<br>1b. Variables and Flags
+<br>1b. Constants and Flags
 2. Environment Variables
 3. **Command Documentation (what you're probably looking for)**
 4. Example Code
@@ -70,25 +70,35 @@ Hex ints can be used as alternatives to the built-in tables, and in some cases a
 
 
 
-## Variables and Flags
+## Constants and Flags
 
-FSE has support for constants, as well as named flags. Constants are simply "shortcuts" and cannot be modified after definition (as in any other language), and flags are simply names for internal game flags. This means each flag needs a name as well as a hex pointer in its definition. However, referencing the flag afterwards requires only its name.
+FSE has support for constants and named flags. Constants are simply "shortcuts" and cannot be modified after definition (as in any other language).
 
-NOTE: Do not use "=" when assigning constants or flags.
+NOTE: Do not use "=" when assigning values to consts.
 
-### const
-###### Other Names: constant, def, define, defconst, shortcut, replace
+### const (%)
+###### Other Names: constant, def, define, defconst, shortcut, replace, flag, defineflag
+Defines an internal constant (can also be used for flags).
+
+Constants can be defined in 2 ways:
 ```
-const %(const name) (value)
+const (const name) (value)
 ```
-The "%" sign here is necessary, otherwise the compiler will error. (value) is any type of data (string, hex int, whatever). This works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Obviously not included in XSE output.
+OR
+```
+% (const name) (value)
+```
+(value) is any type of data (string, hex int, whatever). This works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Obviously not included in XSE output. This can also be used to define flag names. To do this, simply make (value) a hex pointer to the desired flag. Then, when you call setflag, simply use the const name rather than the pointer.
 
 ### setflag
-###### Other Names: f, defflag, defineflag, setflagat, defineflagat, defflagat
+###### Other Names: sf
+Calls XSE setflag.
+
+This can be used in 2 ways:
 ```
-setflag (flag name) (flag pointer)
+setflag (flag pointer)
 ```
-(flag name) is a string representing the name of the flag, and (flag pointer) is a hex int representing the flag's pointer. Look at the XSE documentation for a table of usable flag pointers. Remember that these aren't 
+(flag pointer) is an in-game hex flag ID. Note that you can also replace (flag pointer) with an internal const reference, meaning you can access flags by name rather than by a hex number. I would highly recommend doing this, as it lets you keep up with what flags do what, as opposed to using only the hex IDs of the flags.
 
 
 
