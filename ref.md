@@ -49,7 +49,7 @@ While FSE does support raw hex values for the most part, it's highly recommended
 
 
 
-## Types in FSE
+## Types
 
 ### String
 Since technically everything in FSE is initially processed as a JavaScript string, string literals do not require quotes, unlike most languages. Example:
@@ -63,6 +63,20 @@ FSE does support decimal ints, though there's not really any reason to use them 
 ### Hex Int
 Hex ints can be used as alternatives to the built-in tables, and in some cases are required (such as msgbox types). Formatted as 0x****.
 
+
+
+## Variables and Flags
+
+FSE has support for constants, as well as named flags.
+
+### Const
+###### Other Names: constant, def, define, defconst, shortcut, replace
+```
+const myConst (value)
+```
+(value) is any type of data (string, hex int, whatever). This works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Obviously not included in XSE output.
+
+### Flag
 
 
 ## Environment Variables
