@@ -102,14 +102,14 @@ Comments are completely ignored by the compiler, even to the extent that they ar
 
 Much like XSE, FSE uses labels and if statements for control flow.
 
-### Goto @(label name)
+### goto @(label name)
 ###### Other Names: jmp
 Goes to the specified @(label name).
 
-### If (condition) (command...)
+### if (condition) (command...)
 Works exactly like XSE if.
 
-### Lbl @(label name)
+### lbl @(label name)
 ###### Other Names: label, org
 Sets a label with a specified @(label name). This must start with "@" and must also be referenced with the "@" in the future.
 
