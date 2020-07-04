@@ -6,8 +6,8 @@ Copyright 2020 @ ps4star
 TABLE OF CONTENTS:
 
 1. Important notes about FSE
-  a. Types
-  b. Variables and Flags
+<br>a. Types
+<br>b. Variables and Flags
 2. Environment Variables
 3. **Command Documentation (what you're probably looking for)**
 4. Example Code
