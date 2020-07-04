@@ -119,11 +119,9 @@ Sets a label with a specified @(label name). This must start with "@" and must a
 
 FSE supports loading external functions and scripts from JSON files. Scripts must be called twice to be properly used, once to import/load the script, and again to execute the main code.
 
-To load a script:
-```
-script (script name) (args...)
-```
-For information on how this works, and how to create your own functions, see the [](external function guide).
+### script (script name) (args...)
+###### Other Names: func, callfunc, callscript
+For information on how this works, and how to create your own functions, see the [https://github.com/ps4star/FSE/blob/master/functionguide.md](external function guide).
 
 
 
