@@ -95,7 +95,7 @@ FSE supports only single-line comments, indicated by the ; (semicolon) char. The
 ```
 const @myConst I'm a string literal and not a comment ; ok now we're in a comment
 ```
-Comments are not ported to XSE output.
+Comments are completely ignored by the compiler, even to the extent that they are not ported to XSE output.
 
 
 
