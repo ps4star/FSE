@@ -177,6 +177,10 @@ For this reason, the below list is NOT a complete or comprehensive list of all c
 
 Below is a list of all standard XSE commands currently recognized by the compiler which are written differently in FSE compared to XSE.
 
+### @ (label name)
+###### Other Names: label, lbl
+Creates an XSE org with (label name). Adds "@" to the beginning of this name. Note that all labels must come after your @start code. Code found outside of any labels will throw a compiler error.
+
 ### applymovement (movement target) (movement series...)
 ###### Other Names: move
 Calls XSE applymovement, and adds a "waitmovement 0x0" call afterwards. (movement target) is a hex int representing the target of (movement series...), and (movement series...) is a list of space-delimited movement commands. See the SIDE NOTE below for information on how to format movement commands. Hex codes may still be used here if desired. See XSE documentation for more info on (movement target) values. To prevent the waitmovement call, see applymovementnowait below.
