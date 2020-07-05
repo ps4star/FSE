@@ -11,7 +11,7 @@ TABLE OF CONTENTS:
 <br>1c. Comments
 <br>1d. Control Flow
 2. External Functions
-3. **Command Documentation (what you're probably looking for)**
+3. **XSE Commands (what you're probably looking for)**
 4. Example Code
 
 A note about the format of this document: placeholder values will appear in parentheses (like this). Any time you see this, ignore the parentheses. FSE currently does not support them in any way, so please don't include them in real FSE code, or it will probably not compile.
@@ -127,7 +127,7 @@ For information on how external functions work, and how to create your own, see 
 
 
 
-## (3) Command Documentation
+## (3) XSE Commands
 
 Below is a list of all commands currently usable in FSE.
 
