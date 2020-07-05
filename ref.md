@@ -88,7 +88,7 @@ Comments are completely ignored by the compiler, even to the extent that they ar
 
 ## (1c) @start and label ending
 
-The @start org is automatically added to XSE output. This label does not need to be closed with an end statement - the compiler handles this automatically. Any user-defined labels do need to be closed with end, however.
+The @start org is automatically added to XSE output. This label does not need to be closed with an end statement - the compiler handles this automatically. Any user-defined labels do need to be closed with end, however. Also note that any labels MUST come after your @start code, or it won't be executed.
 
 
 
