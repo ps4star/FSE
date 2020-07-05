@@ -108,7 +108,7 @@ For information on how external functions work, and how to create your own, see 
 
 This section contains all the internal, FSE-exclusive commands. These commands exist for user convenience and are not ported to XSE output.
 
-### const
+### const @(const name) (value)
 ###### Other Names: define
 Defines an internal constant.
 ```
