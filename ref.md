@@ -64,7 +64,7 @@ In any case where a string is being used as a function argument, it can not cont
 ```
 Hello,&spI&spam&spa&spstring&sp(look&spma,&spno&spquotes).
 ```
-Special characters require an extra escape character before them to work properly. This means \\n rather than simply \n.
+Special characters require an extra escape character before them to work properly. This means \\\\n rather than simply \n.
 
 ### Decimal Int
 If you really want to, you can use decimal int IDs for items and pokemon (again, just use the built-in table). They are also used for certain commands, such as warp.
