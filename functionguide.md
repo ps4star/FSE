@@ -36,7 +36,8 @@ fcall name-poke %ARG_1 %ARG_2`
 
 ## (2) List of Standard Lib Functions
 ```
-obtain-poke @POKEMON_NAME ;Plays fanfare 0x13E and displays a textbox containing the string @POKEMON_NAME.
 name-poke @POKEMON_NAME @CONFIRM_LABEL ;Asks user to name pokemon @POKEMON_NAME. If yes, calls @CONFIRM_LABEL.
+nickname ;Pulls up naming screen.
+obtain-poke @POKEMON_NAME ;Plays fanfare 0x13E and displays a textbox containing the string @POKEMON_NAME.
 obtain-name @POKEMON_NAME @CONFIRM_LABEL ;Combination of obtain-poke and name-poke.
 ```
