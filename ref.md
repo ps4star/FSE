@@ -120,7 +120,7 @@ const @birch 0x00
 
 move @birch @birchMoveSeq
 ```
-Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up to your preference. You must include one of these chars at the start of your const name, or the compiler will pitch a fit (this character must also must be included in all references to the const post-definition). (value) can be literally any arbitrary type of data (string, hex int, whatever). Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. Obviously, constants are not included in XSE output.
+Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up to your preference. If you're going to use @, be careful of potential name collisions with org names. You must include one of these special chars at the start of your const name, or the compiler will pitch a fit (this character must also must be included in all references to the const post-definition). (value) can be literally any arbitrary type of data (string, hex int, whatever). Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. Obviously, constants are not included in XSE output.
 
 ### pageonbreak (boolean)
 ###### Default Value: false
@@ -128,6 +128,7 @@ Determines whether or not to create a new page (\p) upon a linebreak. If set to 
 
 ### setspeed (speed)
 ###### Other Names: setmovespeed
+###### Default Value: normal
 Sets internal movement speed. (speed) is a string, and its values can be veryslow (FR/LG only), slow, normal, fast, faster, or fastest, though not all of these speeds are available for every command, and some commands don't have speeds at all. See the movetable in tables.js for more info.
 
 ### setbreaklimit (new limit)
