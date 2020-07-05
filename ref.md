@@ -9,7 +9,7 @@ TABLE OF CONTENTS:
 <br>1a. Types
 <br>1b. Comments
 <br>1c. @start and label ending
-2. External Functions
+2. fcall
 3. FSE Commands
 4. **XSE Commands (what you're probably looking for)**
 5. Example Code
@@ -64,6 +64,7 @@ In any case where a string is being used as a function argument, it can not cont
 ```
 Hello,&spI&spam&spa&spstring&sp(look&spma,&spno&spquotes).
 ```
+Special characters require an extra escape character before them to work properly. This means \\n rather than simply \n.
 
 ### Decimal Int
 If you really want to, you can use decimal int IDs for items and pokemon (again, just use the built-in table). They are also used for certain commands, such as warp.
@@ -92,13 +93,13 @@ The @start org is automatically added to XSE output. This label does not need to
 
 
 
-## (2) External Functions
+## (2) fcall
 
-FSE supports loading external functions. External functions are stored in the file scripts.js in JS object format. External functions act in much the same way constants do, but for code blocks as opposed to data. Unlike constants, however, external functions can take parameters.
+fcall is the most important command in all of FSE, and thus deserves its own section in this document. It calls what I refer to as an "external function." External functions are stored in the file scripts.js in JS object format. External functions act in much the same way constants do, but for code blocks as opposed to data. Unlike constants, however, external functions can take parameters. And yes, you can even reference OTHER external functions in the definition of an external function (see below for a guide on how external functions work).
 
 ### fcall (func name) (args...)
 ###### Other Names: func
-Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this.
+Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this. Like with all strings, use escape characters for linebreaks (\\n not \n).
 
 For information on how external functions work, and how to create your own, see [external function guide](https://github.com/ps4star/FSE/blob/master/functionguide.md).
 
