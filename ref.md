@@ -12,7 +12,7 @@ TABLE OF CONTENTS:
 2. fcall
 3. FSE Commands
 4. XSE Commands (what you're probably looking for)
-<br>4a. **(READ BEFORE 4B and 4C) Note About XSE Commands**
+<br>4a. **(READ THIS BEFORE 4B AND 4C) Note About XSE Commands**
 <br>4b. List of XSE Commands with Special Requirements
 <br>4c. List of XSE Commands with Alternative Names
 5. Examples
