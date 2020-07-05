@@ -140,6 +140,10 @@ Determines whether or not to create a new page (\p) upon a linebreak. If set to 
 ###### Default Value: 27
 Sets internal text break limit to decimal int (new limit). This value is used to determine how many characters of text to read before looking for a \n or \l point. These linebreaks are only allowed to occur at spaces, thus the default value of 27 as opposed to the actual limit of 34.
 
+### setlabelname (new label name)
+###### Default Value: offset
+Sets the naming convention of auto-generated labels, such as those used for msgbox and applymovement.
+
 ### setspeed (speed)
 ###### Other Names: setmovespeed
 ###### Default Value: normal
@@ -162,7 +166,15 @@ For this reason, the below list is NOT a complete or comprehensive list of all c
 
 ## (4b) List of XSE Commands with Special Requirements
 
-Below is a list of all standard XSE commands currently recognized by the compiler.
+Below is a list of all standard XSE commands currently recognized by the compiler which are written differently in FSE compared to XSE.
+
+### msgbox (string) (mode)
+###### Other Names: msg
+Calls XSE msgbox. 
+```
+msgbox Let's go to the mall! 0x4
+```
+(string) is a string literal (or constant), representing the text to display. (mode) is a hex integer representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 3 for more information on the automatic breaking system.
 
 ### applymovement (movement target) (movement series...)
 ###### Other Names: move
@@ -183,8 +195,12 @@ Referencing the full (speed-included) name of a movement is also allowed. The de
 ###### Other Names: movenowait
 Calls XSE applymovement. See applymovement above for more details.
 
+
+
+## (4c) List of XSE Commands with Alternative Names
+
 ### clearflag (flag pointer)
-###### Other Names: cf, clear
+###### Other Names: cf, resetflag
 Calls XSE clearflag. I would recommend making (flag pointer) a constant rather than a hex literal, especially if you're modifying multiple different flags in 1 script.
 
 ### faceplayer
@@ -199,27 +215,16 @@ Calls XSE lock and faceplayer.
 ###### Other Names: l
 Calls XSE lock.
 
-### msgbox (string) (mode)
-###### Other Names: msg
-Calls XSE msgbox. 
-```
-msgbox Let's go to the mall! 0x4
-```
-(string) is a string literal (or constant), representing the text to display. (mode) is a hex integer representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 3 for more information on the automatic breaking system.
-
 ### release
 ###### Other Names: rel
 Calls XSE release.
 
-### setflag
+### setflag (flag)
 ###### Other Names: sf
-Calls XSE setflag.
-```
-setflag (flag pointer)
-```
-(flag pointer) is an in-game hex flag ID. Note that you can also replace (flag pointer) with an internal const reference, meaning you can access flags by name rather than by a hex number. I would highly recommend doing this, as it lets you keep up with what flags do what, as opposed to using only the hex IDs of the flags.
+Calls XSE setflag. (flag) is a hex int representing the flag ID.
 
 ### warp (map bank) (map number) (warp number)
+##### Other Names: warpto
 Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and (warp number) is the warp number. All of these are decimal ints.
 
 
