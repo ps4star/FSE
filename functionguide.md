@@ -36,7 +36,7 @@ msgbox You received a %ARG_1! 0x4`,
 compare 0x800D 0x1
 if 0x1 call %ARG_2`,
 
-	"obtain-name" :
+	"obtain-and-name" :
 	
 `fcall obtain-poke %ARG_1
 fcall name-poke %ARG_1 %ARG_2`
@@ -48,6 +48,6 @@ fcall name-poke %ARG_1 %ARG_2`
 ```
 name-poke @POKEMON_NAME @CONFIRM_LABEL ;Asks user to name pokemon @POKEMON_NAME. If yes, calls @CONFIRM_LABEL.
 nickname ;Pulls up naming screen.
+obtain-and-name @POKEMON_NAME @CONFIRM_LABEL ;Combination of obtain-poke and name-poke.
 obtain-poke @POKEMON_NAME ;Plays fanfare 0x13E and displays a textbox containing the string @POKEMON_NAME.
-obtain-name @POKEMON_NAME @CONFIRM_LABEL ;Combination of obtain-poke and name-poke.
 ```
