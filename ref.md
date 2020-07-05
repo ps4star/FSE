@@ -140,8 +140,8 @@ Determines whether or not to create a new page (\p) upon a linebreak. If set to 
 
 ### setbreaklimit (new limit)
 ###### Other Names: breaklimit
-###### Default Value: 27
-Sets internal text break limit to decimal int (new limit). This value is used to determine how many characters of text to read before looking for a \n or \l point. These linebreaks are only allowed to occur at spaces, thus the default value of 27 as opposed to the actual limit of 34.
+###### Default Value: 30
+Sets internal text break limit to decimal int (new limit). This value is used to determine how many characters of text to read before looking for a \n or \l point. These linebreaks are only allowed to occur at spaces, thus the default value of 30 as opposed to the actual limit of 34.
 
 ### setlabelname (new label name)
 ###### Default Value: offset
