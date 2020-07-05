@@ -13,7 +13,7 @@ TABLE OF CONTENTS:
 3. FSE Commands
 4. XSE Commands (what you're probably looking for)
 <br>4a. **(READ THIS BEFORE 4B AND 4C) Note About XSE Commands**
-<br>4b. List of XSE Commands with Special Requirements
+<br>4b. List of XSE Commands with Modified Syntax
 <br>4c. List of XSE Commands with Alternative Names
 5. Examples
 
@@ -117,6 +117,9 @@ This section contains all the internal, FSE-exclusive commands. These commands e
 ###### Default Value: true
 Determines whether or not to use the Automatic Breaking System. If set to false, it will not be used.
 
+### compile (data...)
+Converts (data...) to XSE and outputs result to an alert box. Does not port (data...) to actual XSE output. Only useful for debugging.
+
 ### const @(const name) (value)
 ###### Other Names: define
 Defines an internal constant.
@@ -149,10 +152,15 @@ Sets the naming convention of auto-generated labels, such as those used for msgb
 ###### Default Value: normal
 Sets internal movement speed. (speed) is a string, and its values can be veryslow (FR/LG only), slow, normal, fast, faster, or fastest, though not all of these speeds are available for every command, and some commands don't have speeds at all. See the movetable in tables.js for more info.
 
+### xse (raw xse...)
+###### Other Names: raw
+Copies (raw xse...) to XSE output. Does not de-reference constants.
+
+### xsed (raw xse...)
+Copies (raw xse...) to XSE output. De-references constants.
+
 
 ## (4) XSE Commands
-
-There's nothing to say here yet, it's all explained in 4a and 4b...
 
 
 
@@ -160,21 +168,13 @@ There's nothing to say here yet, it's all explained in 4a and 4b...
 
 FSE has support for all XSE commands, but not in the way that you might think. If FSE does not "recognize" a command, it will assume it's XSE code, and will simply copy and paste it to XSE output, with the only modifications being that it will still scan for const references. This means only some XSE commands (those which are particularly inconvenient or have optimization potential, or those which have alternative names) are actually "recognized", while the rest are simply de-referenced and copied without any special attention given to them by the compiler.
 
-For this reason, the below list is NOT a complete or comprehensive list of all commands in XSE, simply a list of all the ones that work differently (or have "special requirements") in FSE than XSE. Note that 4c contains a different XSE command list. The commands in the 4c list do not need to be written differently, but simply have alternative (shortened) names. For example, there is a command called "lf" which simply produces the XSE output "lock(linebreak)faceplayer". These are technically recognized by the compiler, but generally don't have any "special requirements", thus they are in a separate list.
+For this reason, the below list is NOT a complete or comprehensive list of all commands in XSE, simply a list of all the ones that work differently (or have "modified syntax") in FSE than XSE. Note that 4c contains a different XSE command list. The commands in the 4c list do not need to be written differently, but simply have alternative (shortened) names. For example, there is a command called "lf" which simply produces the XSE output "lock(linebreak)faceplayer". These are technically recognized by the compiler, but generally don't have any "modified syntax", thus they are in a separate list.
 
 
 
-## (4b) List of XSE Commands with Special Requirements
+## (4b) List of XSE Commands with Modified Syntax
 
 Below is a list of all standard XSE commands currently recognized by the compiler which are written differently in FSE compared to XSE.
-
-### msgbox (string) (mode)
-###### Other Names: msg
-Calls XSE msgbox. 
-```
-msgbox Let's go to the mall! 0x4
-```
-(string) is a string literal (or constant), representing the text to display. (mode) is a hex integer representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 3 for more information on the automatic breaking system.
 
 ### applymovement (movement target) (movement series...)
 ###### Other Names: move
@@ -194,6 +194,24 @@ Referencing the full (speed-included) name of a movement is also allowed. The de
 ### applymovementnowait (movement target) (movement series...)
 ###### Other Names: movenowait
 Calls XSE applymovement. See applymovement above for more details.
+
+### bufferattack (attack name)
+Calls XSE bufferattack. (attack name) can be a string representing the name of the move, a decimal int representing the move ID, or a hex int representing the move ID.
+
+### bufferpokemon (pokemon name)
+Calls XSE bufferpokemon. (pokemon name) can be a string representing the name of the pokemon, a decimal int representing the pokemon ID, or a hex int representing the pokemon ID.
+
+### givepokemon (pokemon name) (pokemon level) (pokemon held item)
+###### Other Names: pokemon
+Calls XSE givepokemon. All 3 args can either be hex int IDs, decimal int IDs, or, for (pokemon name) and (pokemon held item) only, a string representing the name of the pokemon or held item.
+
+### msgbox (string) (mode)
+###### Other Names: msg
+Calls XSE msgbox. 
+```
+msgbox Let's go to the mall! 0x4
+```
+(string) is a string literal (or constant), representing the text to display. (mode) is a hex integer representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 3 for more information on the automatic breaking system.
 
 
 
