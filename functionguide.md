@@ -11,6 +11,7 @@ All external functions are stored as JS objects in the variable "allScripts" fou
 The easiest way to explain how to write external functions is by showing one:
 ```javascript
 var allScripts = {
+
 	"obtain-poke" :
 	
 `fanfare 0x13E
@@ -23,6 +24,7 @@ Notice the %ARG_1 at the end. When an external function is being evaluated, the 
 You can also reference other external functions within an external function definition:
 ```javascript
 var allScripts = {
+
 	"obtain-poke" :
 	
 `fanfare 0x13E
