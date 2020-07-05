@@ -6,19 +6,14 @@ TABLE OF CONTENTS:
 
 ### (1) How to Write External Functions
 
-All external functions are stored as JSON files in the scripts folder. You MUST place all functions in this folder, or the compiler will error when trying to access your script.
-You can, however, create subfolders within scripts, as long as you include the filepath in all references to your script.
+All external functions are stored as JS objects in the variable "allScripts" found in the scripts.js file.
 
-The easiest way to explain how to write functions is by showing one:
-```
-{
-	"body" : [
-		"lf",
-		"fanfare 0x13E",
-		"msgbox You obtained a %ARG_1! 0x4",
-		"release"
-	],
-	"args" : 1
+The easiest way to explain how to write external functions is by showing one:
+```javascript
+var allScripts = {
+	"obtain-poke" :
+`fanfare 0x13E
+msgbox You received a %ARG_1! 0x4`
 }
 ```
 body is an array of strings representing lines of FSE code, and args is how many arguments the function takes. Arguments are simply inserted via %ARG_X into the function, and
