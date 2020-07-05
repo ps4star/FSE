@@ -7,12 +7,12 @@ TABLE OF CONTENTS:
 
 1. Important notes about FSE
 <br>1a. Types
-<br>1b. Constants
-<br>1c. Comments
-<br>1d. Control Flow
+<br>1b. Comments
+<br>1c. @start and label ending
 2. External Functions
-3. **XSE Commands (what you're probably looking for)**
-4. Example Code
+3. FSE Commands
+4. **XSE Commands (what you're probably looking for)**
+5. Example Code
 
 A note about the format of this document: placeholder values will appear in parentheses (like this). Any time you see this, ignore the parentheses. FSE currently does not support them in any way, so please don't include them in real FSE code, or it will probably not compile.
 
@@ -74,11 +74,39 @@ Hex ints can be used as alternatives to the built-in tables, and in some cases a
 ### Floating-point Numbers
 There is currently no support for floating-point numbers, and likely never will be, as they're not used in XSE as far as I'm aware. Attempting to create a floating-point number will either cause it to be interpreted as a string or floored by JavaScript parseInt() to an integer.
 
-## (1b) Constants
 
-FSE has support for constants. Constants are simply "shortcuts" and cannot be modified after definition (as in any other language).
 
-NOTE: Do not use "=" when assigning values to consts.
+## (1b) Comments
+
+FSE supports only single-line comments, indicated by the ; (semicolon) char. These can be on an empty line or after commands.
+```
+const @myConst I'm a string literal and not a comment ; ok now we're in a comment
+```
+Comments are completely ignored by the compiler, even to the extent that they are not ported to XSE output.
+
+
+
+## (1c) @start and label ending
+
+The @start org is automatically added to XSE output. This label does not need to be closed with an end statement - the compiler handles this automatically. Any user-defined labels do need to be closed with end, however.
+
+
+
+## (2) External Functions
+
+FSE supports loading external functions. External functions are stored in the file scripts.js in JS object format. External functions act in much the same way constants do, but for code blocks as opposed to data. Unlike constants, however, external functions can take parameters.
+
+### fcall (func name) (args...)
+###### Other Names: func
+Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this.
+
+For information on how external functions work, and how to create your own, see [external function guide](https://github.com/ps4star/FSE/blob/master/functionguide.md).
+
+
+
+## (3) FSE Commands
+
+This section contains all the internal, FSE-exclusive commands. These commands exist for user convenience and are not ported to XSE output.
 
 ### const
 ###### Other Names: define
@@ -94,46 +122,24 @@ move @birch @birchMoveSeq
 ```
 Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up to your preference. You must include one of these chars at the start of your const name, or the compiler will pitch a fit (this character must also must be included in all references to the const post-definition). (value) can be literally any arbitrary type of data (string, hex int, whatever). Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. Obviously, constants are not included in XSE output.
 
-## (1c) Comments
+### pageonbreak (boolean)
+###### Default Value: false
+Determines whether or not to create a new page (\p) upon a linebreak. If set to false, \l (new line) will be used instead.
 
-FSE supports only single-line comments, indicated by the ; (semicolon) char. These can be on an empty line or after commands.
-```
-const @myConst I'm a string literal and not a comment ; ok now we're in a comment
-```
-Comments are completely ignored by the compiler, even to the extent that they are not ported to XSE output.
+### setspeed (speed)
+###### Other Names: setmovespeed
+Sets internal movement speed. (speed) is a string, and its values can be veryslow (FR/LG only), slow, normal, fast, faster, or fastest, though not all of these speeds are available for every command, and some commands don't have speeds at all. See the movetable in tables.js for more info.
 
-## (1d) Control Flow
-
-Much like XSE, FSE uses labels and if statements for control flow.
-
-### goto @(label name)
-###### Other Names: jmp
-Goes to the specified @(label name).
-
-### if (condition) (command...)
-Works exactly like XSE if.
-
-### lbl @(label name)
-###### Other Names: label, org
-Sets a label with a specified @(label name). This must start with "@" and must also be referenced with the "@" in the future.
+### setbreaklimit (new limit)
+###### Other Names: breaklimit
+###### Default Value: 27
+Sets internal text break limit to decimal int (new limit). This value is used to determine how many characters of text to read before looking for a \n or \l point. These linebreaks are only allowed to occur at spaces, thus the default value of 27 as opposed to the actual limit of 34.
 
 
 
-## (2) External Functions
+## (4) XSE Commands
 
-FSE supports loading external functions. External functions are stored in the file scripts.js in JS object format. External functions act in much the same way constants do, but for code blocks as opposed to data. Unlike constants, however, external functions can take parameters.
-
-### func (func name) (args...)
-###### Other Names: callfunc, script, callscript
-Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this.
-
-For information on how external functions work, and how to create your own, see [external function guide](https://github.com/ps4star/FSE/blob/master/functionguide.md).
-
-
-
-## (3) XSE Commands
-
-Below is a list of all commands currently usable in FSE.
+Below is a list of all standard XSE commands currently usable in FSE.
 
 ### applymovement (movement target) (movement series...)
 ###### Other Names: move
@@ -148,7 +154,7 @@ const @myMoveSequence up up down left right right right
 setspeed normal
 move 0xFF @myMoveSequence @myMoveSequence @myMoveSequence ; Repeats the same move sequence 3 times.
 ```
-Referencing the full (speed-included) name of a movement is also allowed. The default speed is normal. See setspeed below for more information.
+Referencing the full (speed-included) name of a movement is also allowed. The default speed is normal. See setspeed in section 3 for more information.
 
 ### applymovementnowait (movement target) (movement series...)
 ###### Other Names: movenowait
@@ -158,6 +164,10 @@ Calls XSE applymovement. See applymovement above for more details.
 ###### Other Names: cf, clear
 Calls XSE clearflag. I would recommend making (flag pointer) a constant rather than a hex literal, especially if you're modifying multiple different flags in 1 script.
 
+### faceplayer
+###### Other Names: face
+Calls XSE faceplayer.
+
 ### lf
 ###### Other Names: lockface, lockfaceplayer
 Calls XSE lock and faceplayer.
@@ -166,13 +176,13 @@ Calls XSE lock and faceplayer.
 ###### Other Names: l
 Calls XSE lock.
 
-### faceplayer
-###### Other Names: face
-Calls XSE faceplayer.
-
 ### msgbox (string) (mode)
 ###### Other Names: msg
-Calls XSE msgbox. (string) is a string literal (or constant), representing the text you want to display, and (mode) is a hex integer representing the type of msgbox. See XSE msgbox documentation for more information on msgbox types.
+Calls XSE msgbox. 
+```
+msgbox Let's go to the mall! 0x4
+```
+(string) is a string literal (or constant), representing the text to display. (mode) is a hex integer representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 3 for more information on the automatic breaking system.
 
 ### release
 ###### Other Names: rel
@@ -186,16 +196,12 @@ setflag (flag pointer)
 ```
 (flag pointer) is an in-game hex flag ID. Note that you can also replace (flag pointer) with an internal const reference, meaning you can access flags by name rather than by a hex number. I would highly recommend doing this, as it lets you keep up with what flags do what, as opposed to using only the hex IDs of the flags.
 
-### setspeed
-###### Other Names: setmovespeed
-Sets internal movement speed. Values can be veryslow (FR/LG only), slow, normal, fast, faster, and fastest, though not all of these speeds are available for every command, and some commands don't have speeds at all. See the movetable in tables.js for more info.
-
 ### warp (map bank) (map number) (warp number)
 Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and (warp number) is the warp number. All of these are decimal ints.
 
 
 
-## (4) Example Code
+## (5) Example Code
 
 Below are a few examples (with XSE output for comparison) just to show off what FSE is capable of.
 
