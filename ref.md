@@ -60,6 +60,10 @@ Since technically everything in FSE is initially processed as a JavaScript strin
 ```
 Hello, I am a string (look ma, no quotes).
 ```
+In any case where a string is being used as a function argument, it can not contain the character " ". Instead, the signifier "&sp" can be used. These scenarios are generally rare, however, as function arguments are almost always label names or item or pokemon names. Example:
+```
+Hello,&spI&spam&spa&spstring&sp(look&spma,&spno&spquotes).
+```
 
 ### Decimal Int
 If you really want to, you can use decimal int IDs for items and pokemon (again, just use the built-in table). They are also used for certain commands, such as warp.
@@ -121,7 +125,7 @@ FSE supports loading external functions. External functions are stored in the fi
 
 ### func (func name) (args...)
 ###### Other Names: callfunc, script, callscript
-Not to be confused with call.
+Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this.
 
 For information on how external functions work, and how to create your own, see [external function guide](https://github.com/ps4star/FSE/blob/master/functionguide.md).
 
