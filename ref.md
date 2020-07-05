@@ -11,8 +11,11 @@ TABLE OF CONTENTS:
 <br>1c. @start and label ending
 2. fcall
 3. FSE Commands
-4. **XSE Commands (what you're probably looking for)**
-5. Example Code
+4. XSE Commands (what you're probably looking for)
+<br>4a. **(READ BEFORE 4B and 4C) Note About XSE Commands**
+<br>4b. List of XSE Commands with Special Requirements
+<br>4c. List of XSE Commands with Alternative Names
+5. Examples
 
 A note about the format of this document: placeholder values will appear in parentheses (like this). Any time you see this, ignore the parentheses. FSE currently does not support them in any way, so please don't include them in real FSE code, or it will probably not compile.
 
@@ -143,10 +146,23 @@ Sets internal text break limit to decimal int (new limit). This value is used to
 Sets internal movement speed. (speed) is a string, and its values can be veryslow (FR/LG only), slow, normal, fast, faster, or fastest, though not all of these speeds are available for every command, and some commands don't have speeds at all. See the movetable in tables.js for more info.
 
 
-
 ## (4) XSE Commands
 
-Below is a list of all standard XSE commands currently usable in FSE.
+There's nothing to say here yet, it's all explained in 4a and 4b...
+
+
+
+## (4a) Note About XSE Commands
+
+FSE has support for all XSE commands, but not in the way that you might think. If FSE does not "recognize" a command, it will assume it's XSE code, and will simply copy and paste it to XSE output, with the only modifications being that it will still scan for const references. This means only some XSE commands (those which are particularly inconvenient or have optimization potential, or those which have alternative names) are actually "recognized", while the rest are simply de-referenced and copied without any special attention given to them by the compiler.
+
+For this reason, the below list is NOT a complete or comprehensive list of all commands in XSE, simply a list of all the ones that work differently (or have "special requirements") in FSE than XSE. Note that 4c contains a different XSE command list. The commands in the 4c list do not need to be written differently, but simply have alternative (shortened) names. For example, there is a command called "lf" which simply produces the XSE output "lock(linebreak)faceplayer". These are technically recognized by the compiler, but generally don't have any "special requirements", thus they are in a separate list.
+
+
+
+## (4b) List of XSE Commands with Special Requirements
+
+Below is a list of all standard XSE commands currently recognized by the compiler.
 
 ### applymovement (movement target) (movement series...)
 ###### Other Names: move
@@ -208,7 +224,7 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 
 
-## (5) Example Code
+## (5) Examples
 
 Below are a few examples (with XSE output for comparison) just to show off what FSE is capable of.
 
