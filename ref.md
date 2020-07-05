@@ -223,16 +223,12 @@ move 0x00 up left left left
 XSE
 ```
 #dynamic 0x197D000
-#org 0x197D000
 
-lock
-faceplayer
+#org @start
 
 applymovement 0xFF @off0
 applymovement 0x00 @off1
 waitmovement 0x0
-
-release
 
 end
 
