@@ -108,6 +108,11 @@ For information on how external functions work, and how to create your own, see 
 
 This section contains all the internal, FSE-exclusive commands. These commands exist for user convenience and are not ported to XSE output.
 
+### autobreak (boolean)
+###### Other Names: setautobreak
+###### Default Value: true
+Determines whether or not to use the Automatic Breaking System. If set to false, it will not be used.
+
 ### const @(const name) (value)
 ###### Other Names: define
 Defines an internal constant.
@@ -126,15 +131,15 @@ Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up t
 ###### Default Value: false
 Determines whether or not to create a new page (\p) upon a linebreak. If set to false, \l (new line) will be used instead.
 
-### setspeed (speed)
-###### Other Names: setmovespeed
-###### Default Value: normal
-Sets internal movement speed. (speed) is a string, and its values can be veryslow (FR/LG only), slow, normal, fast, faster, or fastest, though not all of these speeds are available for every command, and some commands don't have speeds at all. See the movetable in tables.js for more info.
-
 ### setbreaklimit (new limit)
 ###### Other Names: breaklimit
 ###### Default Value: 27
 Sets internal text break limit to decimal int (new limit). This value is used to determine how many characters of text to read before looking for a \n or \l point. These linebreaks are only allowed to occur at spaces, thus the default value of 27 as opposed to the actual limit of 34.
+
+### setspeed (speed)
+###### Other Names: setmovespeed
+###### Default Value: normal
+Sets internal movement speed. (speed) is a string, and its values can be veryslow (FR/LG only), slow, normal, fast, faster, or fastest, though not all of these speeds are available for every command, and some commands don't have speeds at all. See the movetable in tables.js for more info.
 
 
 
