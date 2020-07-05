@@ -16,6 +16,7 @@ TABLE OF CONTENTS:
 <br>4b. List of XSE Commands with Modified Syntax
 <br>4c. List of XSE Commands with Alternative Names
 5. Examples
+6. Info/legal
 
 A note about the format of this document: placeholder values will appear in parentheses (like this). Any time you see this, ignore the parentheses. FSE currently does not support them in any way, so please don't include them in real FSE code, or it will probably not compile.
 
@@ -168,7 +169,7 @@ Copies (raw xse...) to XSE output. De-references constants.
 
 FSE has support for all XSE commands, but not in the way that you might think. If FSE does not "recognize" a command, it will assume it's XSE code, and will simply copy and paste it to XSE output, with the only modifications being that it will still scan for const references. This means only some XSE commands (those which are particularly inconvenient or have optimization potential, or those which have alternative names) are actually "recognized", while the rest are simply de-referenced and copied without any special attention given to them by the compiler.
 
-For this reason, the below list is NOT a complete or comprehensive list of all commands in XSE, simply a list of all the ones that work differently (or have "modified syntax") in FSE than XSE. Note that 4c contains a different XSE command list. The commands in the 4c list do not need to be written differently, but simply have alternative (shortened) names. For example, there is a command called "lf" which simply produces the XSE output "lock(linebreak)faceplayer". These are technically recognized by the compiler, but generally don't have any "modified syntax", thus they are in a separate list.
+For this reason, the below list is NOT a complete or comprehensive list of all commands in XSE, simply a list of all the ones that work differently (or have "modified syntax") in FSE than XSE. Note that 4c contains a different XSE command list. The commands in the 4c list do not need to be written differently, but simply have alternative (shortened) names (though all of these also retain their original XSE names, i.e. you're not forced to use any of these alternative names if you don't want to). For example, there is a command called "lf" which simply produces the XSE output "lock(linebreak)faceplayer". These are technically recognized by the compiler, but generally don't have any "modified syntax", thus they are in a separate list.
 
 
 
@@ -285,6 +286,35 @@ end
 #raw 0x17
 #raw 0xFE
 ```
+
+
+
+## (6) Info/legal
+
+Thanks for reading about FSE. It's something I've been working hard on over the past few weeks. As for legal stuff, feel free to distribute this as long as it's done non-commercially and credit is given to me (ps4star) for the files which I created. This means everything except the file ace.js and the ace folder - I did not create the ACE editor and any modification, distribution, etc. of that editor is subject to ACE's license.
+
+License (aka "don't sue me"):
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL PS4STAR BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+
+
+
+
+
+
+
 
 
 
