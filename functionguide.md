@@ -4,7 +4,7 @@ TABLE OF CONTENTS:
 1. How to Write External Functions
 2. List of Standard Lib Functions
 
-### (1) How to Write External Functions
+## (1) How to Write External Functions
 
 All external functions are stored as JS objects in the variable "allScripts" found in the scripts.js file.
 
@@ -34,7 +34,7 @@ fcall name-poke %ARG_1 %ARG_2`
 }
 ```
 
-### (2) List of Standard Lib Functions
+## (2) List of Standard Lib Functions
 ```
 obtain-poke @POKEMON_NAME ;Plays fanfare 0x13E and displays a textbox containing the string @POKEMON_NAME.
 name-poke @POKEMON_NAME @CONFIRM_LABEL ;Asks user to name pokemon @POKEMON_NAME. If yes, calls @CONFIRM_LABEL.
