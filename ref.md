@@ -177,9 +177,9 @@ For this reason, the below list is NOT a complete or comprehensive list of all c
 
 Below is a list of all standard XSE commands currently recognized by the compiler which are written differently in FSE compared to XSE.
 
-### @ (label name)
-###### Other Names: label, lbl
-Creates an XSE org with (label name). Adds "@" to the beginning of this name. Note that all labels must come after your @start code. Code found outside of any labels will throw a compiler error.
+### @(label name)
+###### Other Names: label, lbl, @
+Creates an XSE org with (label name). Adds "@" to the beginning of this name. Adding an "@" to the start yourself is also allowed. In fact, you can add as many "@" symbols as you want to the start of the label name, and the compiler will automatically strip them away. Note that "@" is specified as an "other name" despite already being the primary name. This is because it can be used both with a space and without a space ("@lblname" vs "@ lblname"). @ is the only name this applies to (i.e. the other names require a space and cannot be used without one). Any non-leading @s found in the label name will cause an error. Note that all labels must come after your @start code. Code found outside of any labels will throw a compiler error. All labels must be referred to with the "@".
 
 ### applymovement (movement target) (movement series...)
 ###### Other Names: move
