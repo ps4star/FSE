@@ -9,7 +9,11 @@ TABLE OF CONTENTS:
 <br>1a. Types
 <br>1b. Comments
 <br>1c. @start and label ending
-2. fcall
+2. FSE Functions
+<br>2a. fcall
+<br>2b. External Functions
+<br>2c. Internal Functions
+<br>2d. Function Saving and Cache Commands
 3. FSE Commands
 4. XSE Commands (what you're probably looking for)
 <br>4a. **(READ THIS BEFORE 4B AND 4C) Note About XSE Commands**
@@ -64,9 +68,11 @@ Since technically everything in FSE is initially processed as a JavaScript strin
 ```
 Hello, I am a string (look ma, no quotes).
 ```
-In any case where a string is being used as a function argument, it can not contain the character " ". Instead, the signifier "&sp" can be used. These scenarios are generally rare, however, as function arguments are almost always label names or item or pokemon names. Example:
+In any case where a string is being used as a function argument, it can not contain the character " ". Instead, the signifier "&sp" can be used. These scenarios are generally rare, however, as function arguments are almost always label names or item or pokemon names. Also, you can use const (see section 3) to automatically convert spaces to this signifier, and then reference said const as a function argument to avoid having to write out every "&sp". Example:
 ```
-Hello,&spI&spam&spa&spstring&sp(look&spma,&spno&spquotes).
+const @lookMa Hello, I am a string (look ma, no quotes).
+
+fcall function_that_takes_a_string @lookMa ; passes multi-space string as function argument
 ```
 Special characters require an extra escape character before them to work properly. This means \\\\n rather than simply \n.
 
@@ -97,15 +103,68 @@ The @start org is automatically added to XSE output. This label does not need to
 
 
 
-## (2) fcall
+## (2) FSE Functions
 
-fcall is the most important command in all of FSE, and thus deserves its own section in this document. It calls what I refer to as an "external function." External functions are stored in the file scripts.js in JS object format. External functions act in much the same way constants do, but for code blocks as opposed to data. Unlike constants, however, external functions can take parameters. And yes, you can even reference OTHER external functions in the definition of an external function (see below for a guide on how external functions work).
+FSE has two types of functions: internal and external. External functions are located in the scripts.js file (hence the name external - they're in a different file from the compiler). Internal functions are functions which are defined in FSE code. Internal functions can be saved as externals via the savefunc command (found in this section, see below). See below for more about functions and how to call them.
+
+
+
+## (2a) fcall
+
+fcall is the most important command in all of FSE. It calls a function (whether it's internal or external doesn't matter) and passes parameters into it as specified in the function definition.
 
 ### fcall (func name) (args...)
-###### Other Names: func
-Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this. Like with all strings, use escape characters for linebreaks (\\n not \n).
+Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this. Like with all strings, use escape characters for linebreaks (\\n not \n). Additionally, you can use a const to get around this "&sp" limitations, as consts automatically convert spaces to &sp.
+
+
+
+## (2b) External Functions
+
+External functions are loaded in as soon as you start FSE. Thus, they can be called at any point, and there is no need to define them explicitly.
 
 For information on how external functions work, and how to create your own, see [external function guide](https://github.com/ps4star/FSE/blob/master/functionguide.md).
+
+
+
+## (2c) Internal Functions
+
+Internal functions are explicitly defined in-script, and cannot be called prior to their definition. All function (and cache)-related commands start with the "$" character.
+
+A standard internal function definition:
+```
+$funcstart sendm
+msg %ARG_1 0x4
+$funcend
+
+fcall sendm MyMessage ;Displays "MyMessage" in a text box.
+```
+Read below for more information on these function commands.
+
+### $funcstart (func name)
+Defines the function name as (func name) and begins a function definition.
+
+### $funcend
+Ends a function definition.
+
+
+
+## (2d) Function Saving and Cache Commands
+
+Internal functions are automatically "saved" to the JS localStorage cache, though this can be disabled if the user desires. Note that this form of storage is not the same as what external functions use, and if you really care about using a function for more than a couple of sessions, you should define it in scripts.js. Any time you clear your browser history, cookies, data, etc, you run a very high risk of deleting your function cache. Look up "localStorage" online for more info on how this works.
+
+With that said, below is a list of function cache commands.
+### $autosav (boolean)
+###### Default Value: true
+Determines whether or not to cache internal functions. Can be set at multiple points in the script. If a function is defined while this is false, it will not be written to the cache, otherwise it will. Note that this, like all other compiler variables with default values, will be reset to true every time the compiler is executed, even within the same session.
+
+### $savfunc (func)
+Saves the specified (func) to the internal function cache.
+
+### $clear (func)
+Clears the specified (func) from the function cache.
+
+### $clearall
+Clears the internal function cache. If you care about your cache, be weary of copying and pasting FSE code into the editor from other sources or websites, as there are no restrictions on this command.
 
 
 
@@ -291,13 +350,27 @@ end
 #raw 0xFE
 ```
 
+Some function stuff.
+
+FSE
+```
+const @ebonyName Ebony Dark'ness Dementia Raven Way ; hi my name is ebony dark'ness dementia raven way and i have long ebony black hair...
+
+$funcstart display_name
+msg Hello, %ARG_1! 0x4
+$funcend
+
+fcall display_name @ebonyName
+
+msg @ebonyName 0x4
+```
 
 
 ## (6) Info/legal
 
 Thanks for reading about FSE. It's something I've been working hard on over the past few weeks. As for legal stuff, feel free to distribute this as long as it's done non-commercially and credit is given to me (ps4star) for the files which I created. This means everything except the file ace.js and the ace folder - I did not create the ACE editor and any modification, distribution, etc. of that editor is subject to ACE's license.
 
-You can find the exact license within this repo as LICENSE.txt
+You can find the exact license within this repo as LICENSE.txt.
 
 
 
