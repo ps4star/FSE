@@ -20,7 +20,8 @@ TABLE OF CONTENTS:
 <br>4a. **(READ THIS BEFORE 4B AND 4C) Note About XSE Commands**
 <br>4b. List of XSE Commands with Modified Syntax
 <br>4c. List of XSE Commands with Alternative Names
-5. Info/legal
+5. List of all Special % Strings
+6. Info/legal
 
 A note about the format of this document: placeholder values will appear in parentheses (like this). Any time you see this, ignore the parentheses. FSE currently does not support them in any way, so please don't include them in real FSE code, or it will probably not compile.
 
@@ -132,7 +133,10 @@ Not to be confused with call. Since arguments are separated by " ", any string a
 
 External functions are loaded in as soon as you start FSE. Thus, they can be called at any point, and there is no need to define them explicitly. External functions are stored in "libraries", with each library having its own name. These library names need to be referenced in any fcall references to the function. This can be bypassed with the namespace command.
 
-For example:
+### namespace (lib name)
+Writes (lib name) to top-level namespace.
+
+Example:
 ```
 fcall stdlib.nickname ;valid
 fcall nickname ;invalid, will error
@@ -140,6 +144,7 @@ fcall nickname ;invalid, will error
 namespace stdlib
 
 fcall nickname ;valid
+fcall stdlib.nickname ;still valid
 ```
 
 For information on how external functions work, and how to create your own, see [external function guide](https://github.com/ps4star/FSE/blob/master/functionguide.md).
@@ -229,6 +234,20 @@ const @birch 0x00
 move @birch @birchMoveSeq
 ```
 Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up to your preference. If you're going to use @, be careful of potential name collisions with org names. You must include one of these special chars at the start of your const name, or the compiler will pitch a fit (this character must also must be included in all references to the const post-definition). (value) can be literally any arbitrary type of data (string, hex int, whatever). Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. Obviously, constants are not included in XSE output.
+
+### loop (times)
+###### Other Names: lstart, loopstart
+Begins a loop. Use special string %LOOPITER for a 0-indexed loop iteration number.
+
+Example
+```
+$funcstart multi_message
+loop %NUMARGS
+msg %ARG 0x4
+lend
+$funcend
+```
+
 
 ### pageonbreak (boolean)
 ###### Default Value: false
@@ -408,7 +427,23 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 
 
-## (5) Info/legal
+## (5) List of all Special % Strings
+
+% strings have been mentioned throughout this reference, but for the sake of simplicity, here's a list of all of them:
+```
+;Any time "X" is used, it represents an argument number (starts at 1).
+
+%ARGX  ;Function argument. Use only in func definitions.
+%ARGXP  ;Function argument. Specifies that it's a pokemon name. Use only in func definitions.
+%ARGXA  ;Function argument. Specifies that it's an in-battle move name. Use only in func definitions.
+%ARGXI  ;Function argument. Specifies that it's an item name. Use only in func definitions.
+
+%LOOPITER  ;Current loop iteration. Use only in loops.
+```
+
+
+
+## (6) Info/legal
 
 Thanks for reading about FSE. It's something I've been working hard on over the past few weeks. As for legal stuff, feel free to distribute this as long as it's done non-commercially and credit is given to me (ps4star) for the files which I created. This means everything except the file ace.js and the ace folder - I did not create the ACE editor and any modification, distribution, etc. of that editor is subject to ACE's license.
 
