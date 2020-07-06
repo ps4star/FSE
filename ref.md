@@ -276,6 +276,10 @@ Calls XSE bufferattack. (attack name) can be a string representing the name of t
 ### bufferpokemon (pokemon name)
 Calls XSE bufferpokemon. (pokemon name) can be a string representing the name of the pokemon, a decimal int representing the pokemon ID, or a hex int representing the pokemon ID.
 
+### giveitem (item name) (item quantity)
+###### Other Names: item
+Calls XSE giveitem. (item name) can be a hex ID, decimal ID, or string (such as "potion"). (item quantity) can be any kind of integer (hex or decimal).
+
 ### givepokemon (pokemon name) (pokemon level) (pokemon held item)
 ###### Other Names: pokemon
 Calls XSE givepokemon. All 3 args can either be hex int IDs, decimal int IDs, or, for (pokemon name) and (pokemon held item) only, a string representing the name of the pokemon or held item.
@@ -286,7 +290,7 @@ Calls XSE msgbox.
 ```
 msgbox Let's go to the mall! 0x4
 ```
-(string) is a string literal (or constant), representing the text to display. (mode) is a hex integer representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 3 for more information on the automatic breaking system.
+(string) is a string literal (or constant), representing the text to display. (mode) is a hex integer or string (starting with "MSG_") representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 3 for more information on the automatic breaking system.
 
 
 
