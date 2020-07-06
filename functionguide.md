@@ -11,10 +11,14 @@ The easiest way to explain how to write external functions is by showing one:
 ```javascript
 var allScripts = {
 
-	"obtain-poke" :
+	"stdlib": { //not the actual standard lib, just 1 function from it
+
+		"obtain-poke" :
 	
 `fanfare 0x13E
 msgbox You received a %ARG1! 0x4`
+
+	}
 
 }
 ```
@@ -24,21 +28,25 @@ You can also reference other external functions within an external function defi
 ```javascript
 var allScripts = {
 
-	"obtain-poke" :
+	"stdlib" : {
+
+		"obtain-poke" :
 	
 `fanfare 0x13E
 msgbox You received a %ARG1! 0x4`,
 
-	"name-poke" :
+		"name-poke" :
 	
 `msg Would you like to give a\\nnickname to %ARG1? 0x5
 compare 0x800D 0x1
 if 0x1 call %ARG2`,
 
-	"obtain-and-name" :
+		"obtain-and-name" :
 	
 `fcall obtain-poke %ARG1
 fcall name-poke %ARG1 %ARG2`
 
+	}
+	
 }
 ```
