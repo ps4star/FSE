@@ -19,8 +19,7 @@ TABLE OF CONTENTS:
 <br>4a. **(READ THIS BEFORE 4B AND 4C) Note About XSE Commands**
 <br>4b. List of XSE Commands with Modified Syntax
 <br>4c. List of XSE Commands with Alternative Names
-5. Examples
-6. Info/legal
+5. Info/legal
 
 A note about the format of this document: placeholder values will appear in parentheses (like this). Any time you see this, ignore the parentheses. FSE currently does not support them in any way, so please don't include them in real FSE code, or it will probably not compile.
 
@@ -263,6 +262,14 @@ Referencing the full (speed-included) name of a movement is also allowed. The de
 ###### Other Names: movenowait
 Calls XSE applymovement. See applymovement above for more details.
 
+### applymovementreverse (movement target) (movement series...)
+###### Other Names: mover, movereverse
+Calls XSE applymovement, and adds a "waitmovement 0x0" call afterwards, but reverses (movement series...). See applymovement above for more details.
+
+### applymovementnowaitreverse (movement target) (movement series...)
+###### Other Names: movenowaitreverse
+Calls XSE applymovement, but reverses (movement series...). See applymovement above for more details.
+
 ### bufferattack (attack name)
 Calls XSE bufferattack. (attack name) can be a string representing the name of the move, a decimal int representing the move ID, or a hex int representing the move ID.
 
@@ -315,62 +322,7 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 
 
-## (5) Examples
-
-Below are a few examples (with XSE output for comparison) just to show off what FSE is capable of.
-
-My personal favorite command in the whole language: applymovement...<br>
-
-FSE
-```
-setspeed fast
-movenowait 0xFF down right down right
-move 0x00 up left left left
-```
-XSE
-```
-#dynamic 0x197D000
-
-#org @start
-
-applymovement 0xFF @off0
-applymovement 0x00 @off1
-waitmovement 0x0
-
-end
-
-#org @off0
-#raw 0x15
-#raw 0x18
-#raw 0x15
-#raw 0x18
-#raw 0xFE
-
-#org @off1
-#raw 0x16
-#raw 0x17
-#raw 0x17
-#raw 0x17
-#raw 0xFE
-```
-
-Some function stuff.
-
-FSE
-```
-const @ebonyName Ebony Dark'ness Dementia Raven Way ;HEY RAVEN DO U KNOW WHERE MY SWEATER I
-
-$funcstart display_name
-msg Hello, %ARG_1! 0x4
-$funcend
-
-fcall display_name @ebonyName
-
-msg @ebonyName 0x4
-```
-
-
-## (6) Info/legal
+## (5) Info/legal
 
 Thanks for reading about FSE. It's something I've been working hard on over the past few weeks. As for legal stuff, feel free to distribute this as long as it's done non-commercially and credit is given to me (ps4star) for the files which I created. This means everything except the file ace.js and the ace folder - I did not create the ACE editor and any modification, distribution, etc. of that editor is subject to ACE's license.
 
