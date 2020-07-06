@@ -130,7 +130,17 @@ Not to be confused with call. Since arguments are separated by " ", any string a
 
 ## (2b) External Functions
 
-External functions are loaded in as soon as you start FSE. Thus, they can be called at any point, and there is no need to define them explicitly.
+External functions are loaded in as soon as you start FSE. Thus, they can be called at any point, and there is no need to define them explicitly. External functions are stored in "libraries", with each library having its own name. These library names need to be referenced in any fcall references to the function. This can be bypassed with the namespace command.
+
+For example:
+```
+fcall stdlib.nickname ;valid
+fcall nickname ;invalid, will error
+
+namespace stdlib
+
+fcall nickname ;valid
+```
 
 For information on how external functions work, and how to create your own, see [external function guide](https://github.com/ps4star/FSE/blob/master/functionguide.md).
 
@@ -182,7 +192,7 @@ Along with the standard "%ARGX", FSE supports explicit typing (to an extent) of 
 %ARGXP example
 ```javascript
 ...
-"set_seen":
+"set-seen":
 	
 `setvar 0x8004 %ARG1P
 special 0x163`
@@ -254,7 +264,7 @@ Copies (raw xse...) to XSE output. De-references constants.
 
 FSE has support for all XSE commands, but not in the way that you might think. If FSE does not "recognize" a command, it will assume it's XSE code, and will simply copy and paste it to XSE output, with the only modifications being that it will still scan for const references. This means only some XSE commands (those which are particularly inconvenient or have optimization potential, or those which have alternative names) are actually "recognized", while the rest are simply de-referenced and copied without any special attention given to them by the compiler.
 
-For this reason, the below list is NOT a complete or comprehensive list of all commands in XSE, simply a list of all the ones that work differently (or have "modified syntax") in FSE than XSE. Note that 4c contains a different XSE command list. The commands in the 4c list do not need to be written differently, but simply have alternative (shortened) names (though all of these also retain their original XSE names, i.e. you're not forced to use any of these alternative names if you don't want to). For example, there is a command called "lf" which simply produces the XSE output "lock(linebreak)faceplayer". These are technically recognized by the compiler, but generally don't have any "modified syntax", thus they are in a separate list.
+For this reason, the below list is NOT a complete or comprehensive list of all commands in XSE, simply a list of all the ones that work differently (or have "modified syntax") in FSE than XSE. Note that 4c contains a different XSE command list. The commands in the 4c list do not need to be written differently, but simply have alternative (shortened) names (though all of these also retain their original XSE names, i.e. you're not forced to use any of these alternative names if you don't want to). Some commands in the list also have additional XSE command calls automatically performed after them. "lf" for example calls XSE lock, then XSE faceplayer, both in 1 command. These are technically recognized by the compiler, but generally don't have any "modified syntax", thus they are in a separate list.
 
 
 
@@ -299,6 +309,47 @@ Calls XSE bufferattack. (attack name) can be a string representing the name of t
 ### bufferpokemon (pokemon name)
 Calls XSE bufferpokemon. (pokemon name) can be a string representing the name of the pokemon, a decimal int representing the pokemon ID, or a hex int representing the pokemon ID.
 
+### compare (value to compare) (value to compare against)
+###### Other Names: comp
+Calls XSE compare. (value to compare) is a hex int representing an in-game variable, and (value to compare against) is a hex or decimal int representing the value to compare (value to compare) against. If you need to use a sequence of compare calls, see compseq below for a faster method of doing it.
+
+### compseq (value to compare) (label name...)
+###### Other Names: compareseq, compsequence, comparesequence
+Repeatedly calls XSE compare (using (value to compare) and the value to compare against) and if 0x1 goto (label name). The value to compare against increases by 1 for each (label name...), and is initialized at 0x0. The final value to compare against in the sequence is set to 0x7F (the menu cancel option). This can be avoided by using the explicit form of this command: compseqexplicit.
+
+Since this is easily the most confusing command in the entire language, here's an example with compiler output:
+
+FSE
+```
+compseq 0x8000 0x0 @option1 @option2 @option3 @option4 @option5 @option6 @canceled
+```
+XSE (this was copied from [Sierra's MEGA-HUGE XSE Scripting Tutorial](https://www.pokecommunity.com/showthread.php?t=164276))
+```
+compare 0x8000 0x0
+if 0x1 goto @option1
+compare 0x8000 0x1
+if 0x1 goto @option2
+compare 0x8000 0x2
+if 0x1 goto @option3
+compare 0x8000 0x3
+if 0x1 goto @option4
+compare 0x8000 0x4
+if 0x1 goto @option5
+compare 0x8000 0x5
+if 0x1 goto @option6
+compare 0x8000 0x7F
+if 0x1 goto @canceled
+```
+
+### compseqexplicit (value to compare) \[(value to compare against) (label name)...\]
+###### Other Names: compseqe, compareseqexplicit, compsequenceexplicit, comparesequenceexplicit
+Explicit form of compseq. Requires a (value to compare against) AND (label name...) for the compare/if loop rather than only (label name...).
+
+Example:
+```
+compseqexplicit 0x8000 0x0 @option1 0x1 @option2 0x2 @option3 0x3 @option4 0x4 @option5 0x5 @option6 0x7F @canceled
+```
+
 ### giveitem (item name) (item quantity)
 ###### Other Names: item
 Calls XSE giveitem. (item name) can be a hex ID, decimal ID, or string (such as "potion"). (item quantity) can be any kind of integer (hex or decimal).
@@ -334,6 +385,14 @@ Calls XSE lock and faceplayer.
 ### lock
 ###### Other Names: l
 Calls XSE lock.
+
+### preparemsg (pointer)
+###### Other Names: prepmsg
+Calls XSE preparemsg with specified (pointer), and adds a waitmsg call afterwards. To prevent the waitmsg call, see preparemsgnowait below.
+
+### preparemsgnowait (poitner)
+###### Other Names: prepmsgnowait
+Calls XSE preparemsg with specified (pointer).
 
 ### release
 ###### Other Names: rel
