@@ -94,6 +94,10 @@ FSE supports single-line comments, indicated by the ; (semicolon) char. These ca
 ```
 const @myConst I'm a string literal and not a comment ; ok now we're in a comment
 ```
+";" can be escaped for use in strings as "\;" (I know, it's weird)
+```
+msg Hi Brendan\; Hi May 0x4 ;this is a comment, but the semicolon earlier isn't, since it was escaped with \
+```
 FSE also supports multi-line comments, indicated by &comstart and &comend. Both of these instructions must be on otherwise-empty lines.
 ```
 &comstart
