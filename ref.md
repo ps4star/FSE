@@ -182,7 +182,7 @@ Along with the standard "%ARGX", FSE supports explicit typing (to an extent) of 
 %ARGXP example
 ```javascript
 ...
-"set-seen":
+"set_seen":
 	
 `setvar 0x8004 %ARG1P
 special 0x163`
