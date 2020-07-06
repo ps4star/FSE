@@ -135,7 +135,7 @@ External functions are loaded in as soon as you start FSE. Thus, they can be cal
 
 ### using namespace (lib)
 ###### Other Names: namespace
-Writes string representing a library name (lib) to top-level namespace. Retains (lib) in the namespace.
+Writes all library functions represented by string (lib) to top-level namespace. Does not delete (lib) itself from the namespace.
 
 Example:
 ```
