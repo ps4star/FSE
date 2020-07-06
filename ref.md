@@ -14,6 +14,7 @@ TABLE OF CONTENTS:
 <br>2b. External Functions
 <br>2c. Internal Functions
 <br>2d. Function Saving and Cache Commands
+<br>2e. Special Function Arguments
 3. FSE Commands
 4. XSE Commands (what you're probably looking for)
 <br>4a. **(READ THIS BEFORE 4B AND 4C) Note About XSE Commands**
@@ -168,6 +169,28 @@ Determines whether or not to cache internal functions. Can be set at multiple po
 
 ### $clearall
 Clears the internal function cache. If you care about your cache, be weary of copying and pasting FSE code into the editor from other sources or websites, as there are no restrictions on this command.
+
+
+
+## (2e) Special Function Arguments
+
+Along with the standard "%ARGX", FSE supports explicit typing (to an extent) of function arguments. This is done by adding a "special character" to the end of an %ARGX statement to denote the type. Currently supported are:
+- P for pokemon
+- I for item
+- A for battle move
+
+%ARGXP example
+```javascript
+...
+"set-seen":
+	
+`setvar 0x8004 %ARG1P
+special 0x163`
+...
+```
+The %ARG1P here is automatically conformed into a hex int representing a pokemon ID. For example, if you pass "mew" into the set-seen function, it will convert the string to 0x97. If you pass 0x97, it will convert to 0x97. If you pass 151, it will convert to 0x97.
+
+The other two types of special arguments are currently not used in any standard lib functions, but still work just the same.
 
 
 
