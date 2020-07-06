@@ -2,7 +2,6 @@
 
 TABLE OF CONTENTS:
 1. How to Write External Functions
-2. List of Standard Lib Functions
 
 ## (1) How to Write External Functions
 
@@ -42,12 +41,4 @@ if 0x1 call %ARG_2`,
 fcall name-poke %ARG_1 %ARG_2`
 
 }
-```
-
-## (2) List of Standard Lib Functions
-```
-name-poke @POKEMON_NAME @CONFIRM_LABEL ;Asks user to name pokemon @POKEMON_NAME. If yes, calls @CONFIRM_LABEL.
-nickname ;Pulls up naming screen.
-obtain-and-name @POKEMON_NAME @CONFIRM_LABEL ;Combination of obtain-poke and name-poke.
-obtain-poke @POKEMON_NAME ;Plays fanfare 0x13E and displays a textbox containing the string @POKEMON_NAME.
 ```
