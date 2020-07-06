@@ -133,8 +133,9 @@ Not to be confused with call. Since arguments are separated by " ", any string a
 
 External functions are loaded in as soon as you start FSE. Thus, they can be called at any point, and there is no need to define them explicitly. External functions are stored in "libraries", with each library having its own name. These library names need to be referenced in any fcall references to the function. This can be bypassed with the namespace command.
 
-### namespace (lib name)
-Writes (lib name) to top-level namespace.
+### using namespace (lib)
+###### Other Names: namespace
+Writes string representing a library name (lib) to top-level namespace. Retains (lib) in the namespace.
 
 Example:
 ```
@@ -248,6 +249,9 @@ lend
 $funcend
 ```
 
+### using namespace (lib)
+###### Other Names: namespace
+See section 2b (external functions).
 
 ### pageonbreak (boolean)
 ###### Default Value: false
@@ -439,6 +443,7 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 %ARGXI  ;Function argument. Specifies that it's an item name. Use only in func definitions.
 
 %LOOPITER  ;Current loop iteration. Use only in loops.
+%LOOPITERH  ;Current loop iteration conformed to a hex int. Use only in loops.
 ```
 
 
