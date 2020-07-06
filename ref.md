@@ -8,7 +8,7 @@ TABLE OF CONTENTS:
 1. Important notes about FSE
 <br>1a. Types
 <br>1b. Comments
-<br>1c. @start and label ending
+<br>1c. @main and label ending
 2. FSE Functions
 <br>2a. fcall
 <br>2b. External Functions
@@ -106,9 +106,9 @@ Comments are completely ignored by the compiler, even to the extent that they ar
 
 
 
-## (1c) @start and label ending
+## (1c) @main and label ending
 
-The @start org is automatically added to XSE output. This label does not need to be closed with an end statement - the compiler handles this automatically. Any user-defined labels do need to be closed with end, however. Also note that any labels MUST come after your @start code, or it won't be executed.
+The @main org is automatically added to XSE output. This label does not need to be closed with an end statement - the compiler handles this automatically. Any user-defined labels do need to be closed with end, however. Also note that any labels MUST come after your @main code, or it won't be executed.
 
 
 
@@ -241,7 +241,7 @@ Below is a list of all standard XSE commands currently recognized by the compile
 
 ### @(label name)
 ###### Other Names: label, lbl, @
-Creates an XSE org with (label name). Note that "@" is specified as an "other name" despite already being the primary name. This is because it can be used both with a space and without a space ("@lblname" vs "@ lblname"). @ is the only name this applies to (i.e. the other names require a space and cannot be used without one). Any non-leading @s found in the label name will cause an error. Note that all labels must come after your @start code. Code found outside of any labels will throw a compiler error. All label references MUST start with @, otherwise invalid XSE code will be generated, as there is minimal error-checking for label references.
+Creates an XSE org with (label name). Note that "@" is specified as an "other name" despite already being the primary name. This is because it can be used both with a space and without a space ("@lblname" vs "@ lblname"). @ is the only name this applies to (i.e. the other names require a space and cannot be used without one). Any non-leading @s found in the label name will cause an error. Note that all labels must come after your @main code. Code found outside of any labels will throw a compiler error. All label references MUST start with @, otherwise invalid XSE code will be generated, as there is minimal error-checking for label references.
 
 ### applymovement (movement target) (movement series...)
 ###### Other Names: move
