@@ -354,7 +354,7 @@ Some function stuff.
 
 FSE
 ```
-const @ebonyName Ebony Dark'ness Dementia Raven Way ; hi my name is ebony dark'ness dementia raven way and i have long ebony black hair...
+const @ebonyName Ebony Dark'ness Dementia Raven Way ;HEY RAVEN DO U KNOW WHERE MY SWEATER I
 
 $funcstart display_name
 msg Hello, %ARG_1! 0x4
