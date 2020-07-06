@@ -9,11 +9,24 @@ There are 3 ways to install FSE.
 
 ## 1. GitHub Site
 
+Although this is the easiest way to access FSE, it comes with a rather big drawback: you can't edit scripts.js. This means you can't define external functions. While saving internal functions to the cache is still an option, it's not as permanent as saving them externally.
 
+link: https://ps4star.github.io/FSE/
 
-## 2. Local (browser)
+## 2. Local (browser) \[RECOMMENDED\]
 
-
+1. Download all the files from this repo as a .zip.
+2. Extract files to a folder.
+3. Find "index.html" in the folder.
+4. Right click index.html.
+5. "Open with..."
+6. Select your preferred web browser.
+7. Open.
 
 ## 3. Local (nw.js)
 
+1. Download all the files from this repo as a .zip.
+2. Go to https://nwjs.io/ and download the appropriate version of nw.js for your machine/OS.
+3. Go inside "nwjs-sdk..." and find the file "nw.exe".
+4. Whatever directory "nw.exe" is in, copy it and all other files in the directory into the same directory as FSE's "index.html", "package.json", "scripts.js", etc.
+5. Once nw.exe and all other nw files are in the same directory as FSE, double click nw.exe and it should launch the program.
