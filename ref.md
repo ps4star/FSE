@@ -89,9 +89,19 @@ There is currently no support for floating-point numbers, and likely never will 
 
 ## (1b) Comments
 
-FSE supports only single-line comments, indicated by the ; (semicolon) char. These can be on an empty line or after commands.
+FSE supports single-line comments, indicated by the ; (semicolon) char. These can be on an empty line or after commands.
 ```
 const @myConst I'm a string literal and not a comment ; ok now we're in a comment
+```
+FSE also supports multi-line comments, indicated by &comstart and &comend. Both of these instructions must be on otherwise-empty lines.
+```
+&comstart
+Look
+A
+Multi-
+Line
+Comment
+&comend
 ```
 Comments are completely ignored by the compiler, even to the extent that they are not ported to XSE output.
 
