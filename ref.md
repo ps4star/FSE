@@ -142,7 +142,7 @@ Internal functions are explicitly defined in-script, and cannot be called prior 
 A standard internal function definition:
 ```
 $funcstart sendm
-msg %ARG_1 0x4
+msg %ARG1 0x4
 $funcend
 
 fcall sendm MyMessage ;Displays "MyMessage" in a text box.
