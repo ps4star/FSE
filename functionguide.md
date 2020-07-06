@@ -13,7 +13,7 @@ var allScripts = {
 
 	"stdlib": { //not the actual standard lib, just 1 function from it
 
-		"obtain-poke" :
+		"obtain_poke" :
 	
 `fanfare 0x13E
 msgbox You received a %ARG1! 0x4`
@@ -30,18 +30,18 @@ var allScripts = {
 
 	"stdlib" : {
 
-		"obtain-poke" :
+		"obtain_poke" :
 	
 `fanfare 0x13E
 msgbox You received a %ARG1! 0x4`,
 
-		"name-poke" :
+		"name_poke" :
 	
 `msg Would you like to give a\\nnickname to %ARG1? 0x5
 compare 0x800D 0x1
 if 0x1 call %ARG2`,
 
-		"obtain-and-name" :
+		"obtain_and_name" :
 	
 `fcall obtain-poke %ARG1
 fcall name-poke %ARG1 %ARG2`
