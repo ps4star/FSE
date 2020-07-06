@@ -167,12 +167,6 @@ With that said, below is a list of function cache commands.
 ###### Default Value: true
 Determines whether or not to cache internal functions. Can be set at multiple points in the script. If a function is defined while this is false, it will not be written to the cache, otherwise it will. Note that this, like all other compiler variables with default values, will be reset to true every time the compiler is executed, even within the same session.
 
-### $savfunc (func)
-Saves the specified (func) to the internal function cache.
-
-### $clear (func)
-Clears the specified (func) from the function cache.
-
 ### $clearall
 Clears the internal function cache. If you care about your cache, be weary of copying and pasting FSE code into the editor from other sources or websites, as there are no restrictions on this command.
 
