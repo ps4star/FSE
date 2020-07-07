@@ -59,7 +59,7 @@ While FSE does support raw hex values for the most part, it's highly recommended
 The internal tables can be located in the tables.js file of this repo if you'd like to see for yourself how to use them.
 
 ### Case-insensitivity
-All command names and environment variable names are case-insensitive. Obviously, things like string literals and defined constants and flags aren't, as they are user-defined.
+All command names are case-insensitive. Obviously, things like string literals and defined constants and flags aren't, as they are user-defined.
 
 
 
