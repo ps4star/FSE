@@ -331,10 +331,18 @@ Calls XSE applymovement, and adds a "waitmovement 0x0" call afterwards, but reve
 ###### Other Names: movenowaitreverse
 Calls XSE applymovement, but reverses (movement series...). See applymovement above for more details.
 
-### bufferattack (attack name)
+### bufferattack (buffer) (attack name)
 Calls XSE bufferattack. (attack name) can be a string representing the name of the move, a decimal int representing the move ID, or a hex int representing the move ID.
+#### SIDE NOTE
+For bufferattack and the 3 buffer commands below, (buffer) can be a string in the format of "\[bufferx]" where x is a decimal int, or it can be a hex number (like 0x00). \[buffer1] corresponds to hex 0x00, \[buffer2] is 0x01, etc.
 
-### bufferpokemon (pokemon name)
+### bufferfirstpokemon (buffer)
+Calls XSE bufferfirstpokemon.
+
+### bufferitem (buffer) (item name)
+Calls XSE bufferitem. (item name) can be a string representing the name of the item, a decimal int representing the item ID, or a hex int representing the item ID.
+
+### bufferpokemon (buffer) (pokemon name)
 Calls XSE bufferpokemon. (pokemon name) can be a string representing the name of the pokemon, a decimal int representing the pokemon ID, or a hex int representing the pokemon ID.
 
 ### compare (value to compare) (value to compare against)
