@@ -56,7 +56,7 @@ While FSE does support raw hex values for the most part, it's highly recommended
 - exp.share OR expshare
 - rm.1key OR rm1key (same for rm(.)2key, rm(.)4key, etc)
 
-The internal tables can be located in the "Data Parsers" folder of this repo if you'd like to see for yourself how to use them.
+The internal tables can be located in the tables.js file of this repo if you'd like to see for yourself how to use them.
 
 ### Case-insensitivity
 All command names and environment variable names are case-insensitive. Obviously, things like string literals and defined constants and flags aren't, as they are user-defined.
