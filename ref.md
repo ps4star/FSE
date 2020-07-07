@@ -198,6 +198,7 @@ Along with the standard "%ARGX", FSE supports explicit typing (to an extent) of 
 - P for pokemon
 - I for item
 - A for battle move
+- H for hex value
 
 %ARGXP example
 ```javascript
@@ -445,6 +446,8 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 %ARGXP  ;Function argument. Specifies that it's a pokemon name. Use only in func definitions.
 %ARGXA  ;Function argument. Specifies that it's an in-battle move name. Use only in func definitions.
 %ARGXI  ;Function argument. Specifies that it's an item name. Use only in func definitions.
+
+%ARGXH  ;Function argument. Specifies that it's a hex int. Use only in func definitions.
 
 %LOOPITER  ;Current loop iteration. Use only in loops.
 %LOOPITERH  ;Current loop iteration conformed to a hex int. Use only in loops.
