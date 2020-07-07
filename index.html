@@ -4,15 +4,23 @@
         <title>FSE v1.0</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="./tables.js" type="text/javascript"></script>
-		<script src="./scripts.js" type="text/javascript"></script>
+		<script id="sc" src="./scripts.js" type="text/javascript"></script>
     </head>
     <body style="font-family: 'Trebuchet MS'; overflow: hidden;">
-        <p style="margin-top: 19px;">Starting Offset:</p>
-        <input id="offset" type="text" style="position: absolute; top: 38px;" value="0x197D000"></input>
+        <p style="margin-top: 1.3%;">Starting Offset:</p>
+        <input id="offset" type="text" style="position: absolute; top: 5.7%;" value="0x800000"></input>
         <select style="position: absolute; top: 1px;">
             <option id="rse" value="1" selected>Ruby/Sapphire/Emerald</option>
             <option id="frlg" value="2">FireRed/LeafGreen</option>
         </select>
+		<div style="position: absolute; left: 37%; top: 6.1%;">
+			<label for="efont">Editor Font Size:&nbsp;</label>
+			<input type="text" value="15" name="efont" id="ef" style="position: relative; left: 0.5%;"></input>
+		</div>
+		<div style="position: absolute; left: 37%; top: 10%;">
+			<label for="ofont">Output Font Size:</label>
+			<input type="text" value="14" name="ofont" id="of"></input>
+		</div>
         <div style="position: absolute; left: 15%; top: 6.1%;">
         <label for="ts">Editor Theme:</label>
         <select name="ts" id="theme" style="position: relative;" onclick="changeMode();">
@@ -61,42 +69,33 @@
     	</div>
         <br>
         <br>
-        <button id="convert_button" onclick="convert();" style="position: absolute; top: 75px; left: 11.1%;">Convert! (Ctrl+Q)</button>
-        <button id="help-button" onclick="launchHelp();" style="position: absolute; top: 75px;">Documentation/Help</button>
+        <button id="convert_button" onclick="convert();" style="position: absolute; top: 11%; left: 11.1%;">Convert/Expand (Ctrl+Q)</button>
+        <button id="help-button" onclick="launchHelp();" style="position: absolute; top: 11%;">Documentation/Help</button>
         <br>
         <br>
         <p style="position: absolute; left: 10px; top: 13.65%;">FSE code (input)</p>
         <p style="position: absolute; left: 632px; top: 13.65%;">XSE code (output; automatically copied to clipboard)</p>
-        <div id="in" style="position: absolute; top: 19%; right: 0%; left: 9px; bottom: 0; margin-right: 55%;"></div>
-        <textarea id="out" cols="85" rows="33" readonly style="position: absolute; left: 46%; top: 18.95%; background-color: black; color: white; font-family: 'Trebuchet MS'; overflow-y: scroll;"></textarea>
+        <div id="in" style="position: absolute; top: 19%; right: 0%; left: .5%; bottom: 0; margin-right: 55%;"></div>
+        <textarea id="out" cols="85" rows="33" readonly style="position: absolute; left: 46%; top: 18.95%; background-color: black; color: white; font-family: 'Trebuchet MS'; overflow-y: scroll; resize: none;"></textarea>
         <br>
         <p id = "status" style="position: absolute; top: -2.5%; left: 15%;">Welcome to FSE. This message will tell you whether or not a conversion was successful.</p>
         <script src="./ace/ace.js" type="text/javascript" charset="utf-8"></script>
         <script defer>
-
-
+		
+		
+		
+		
+		
 String.prototype.replaceAt = function(index, replacement) {
     return this.substr(0, index+1) + replacement + this.substr(index + replacement.length);
 }
 
 var keysDown = [];
+var keysUp = [];
 
-document.addEventListener("keyup", function(e) {
 
-    delete keysDown[keysDown.indexOf(e.key)];
 
-});
 
-document.addEventListener("keydown", function(e) {
-
-    keysDown.push(e.key);
-
-    if (keysDown.indexOf("Control") > -1 && keysDown.indexOf("q") > -1) {
-        convert();
-		keysDown = [];
-    }
-
-});
 
 function launchHelp() {
 
@@ -113,6 +112,39 @@ var FSEeditor = ace.edit("in", {wrap: true});
 FSEeditor.setTheme("ace/theme/xcode");
 FSEeditor.session.setMode("ace/mode/assembly_x86");
 
+FSEeditor.setValue("using namespace stdlib\n\n");
+
+var csetfont = "20";
+var offont = document.getElementById("out").style.fontSize;
+
+document.addEventListener("keyup", function(e) {
+
+    delete keysDown[keysDown.indexOf(e.key)];
+	
+	keysUp.push(e.key);
+	
+	
+
+});
+
+function updateFonts() {
+	csetfont = document.getElementById("ef").value;
+	offont = document.getElementById("of").value;
+	
+	document.getElementById("out").style.fontSize = offont+'px';
+}
+
+const noCompString = "Expansion statements successfully processed! Hit compile again to compile your code.";
+
+$("#ef").on("change keyup paste", function(){
+	updateFonts();
+    FSEeditor.setOptions({fontSize: csetfont+"pt"});
+});
+
+$("#of").on("change keyup paste", function(){
+    updateFonts();
+});
+
 if (localStorage["selection"] == "undefined") {
 	localStorage["selection"] = "twilight";
 }
@@ -126,12 +158,15 @@ themeSel.selectedIndex = ops.indexOf(localStorage["selection"]);
 function changeMode() {
 	localStorage["selection"] = themeSel.options[themeSel.selectedIndex].text;
 	FSEeditor.setTheme("ace/theme/"+localStorage["selection"]);
+	document.getElementById('in').style.fontSize=csetfont;
 }
 changeMode();
 
-document.getElementById('in').style.fontSize='20px';
+document.getElementById('in').style.fontSize=csetfont;
 
 FSEeditor.focus();
+
+FSEeditor.clearSelection();
 
 var noliNewLineAre = false;
 
@@ -201,8 +236,9 @@ function parseMoves(input) {
 
     for(var i = 0; i < input.length; i++) {
 		input[i] = input[i].replace("u", "up").replace("d", "down").replace("l", "left").replace("r", "right");
-		if (input[i].charAt(0) == ";") {
-			break;
+		if (input[i] == "") {
+			success = false;
+			alert("Unnecessary space/empty string in applymovement move sequence.");
 		}
         if (["up", "down", "left", "right"].indexOf(input[i]) > -1) {
             input[i] += cSpeed;
@@ -272,8 +308,6 @@ function derefAllFromIndexFcall(arr, index) {
 	for (let v = index; v < arr.length; v++) {
 	
 		arr[v] = deref(arr[v]);
-		
-		console.log(arr[v]);
 	
 	}
 	
@@ -299,6 +333,54 @@ function removeComments(arr) {
 
 }
 
+function addFuncsFromCache() {
+	
+	let vals = JSON.parse(localStorage.func);
+	
+	let keys = Object.keys(vals);
+	let values = Object.values(vals);
+	
+	for (let i = 0; i < keys.length; i++) {
+	
+		allScripts[keys[i]] = values[i];
+	
+	}
+	
+}
+
+function loadCache() {
+
+	if (typeof localStorage.func == 'undefined' || localStorage.func == "undefined" || !(localStorage.func.length > 0)) {
+		
+		localStorage.func = JSON.stringify({});
+		
+	} else {
+
+		addFuncsFromCache();
+
+	}
+	
+}
+
+loadCache();
+
+function clone(obj) { //copied from SO
+    let k = Object.keys(obj);
+	
+	let res = {};
+	
+	for (let iter = 0; iter < k.length; iter++) {
+	
+		res[k[iter]] = obj[k[iter]];
+		
+	}
+	
+	return res;
+		
+}
+
+const originalAllScripts = clone(allScripts); //for some reason Object.assign wasn't working here???
+
 var cLab = "@start";
 var endCalled = false;
 var activeLabel = false;
@@ -316,6 +398,8 @@ var originalautolabelname = autolabelname;
 var autosav = true;
 
 function resetAll() {
+	allScripts = clone(originalAllScripts);
+
 	currOff = 0;
 	constTable = {};
 	cLab = "@start";
@@ -333,6 +417,8 @@ function resetAll() {
 	autolabelname = originalautolabelname;
 	
 	autosav = true;
+	
+	FSEeditor.clearSelection();
 }
 
 
@@ -401,7 +487,7 @@ function doLines(n) {
 	
 	}
 	
-	if (["\n", "\l", "\p"].indexOf(res.charAt(res.length-1)) > -1) {
+	if (["\n", "\l", "\p"].indexOf(res.charAt(res.length-1)) > -1 || res.charAt(res.length-1) == " ") {
 		res = res.substring(0, res.length-2);
 	}
 	
@@ -413,35 +499,30 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function repArgs(data, args, arg) {
-
-	var res = data;
-
-	for (let m = 1; m <= args; m++) {
-	
-		res = res.split("%ARG_"+m);
-		res = res.join(arg[m+1]);
-		
-	}
-	
-	return res.replace(/\&sp/g, " ").split(/\n/g);
-
-}
+var specialArgs = ["A", "P", "I"];
 
 function getHighestArgFromTemplate(template) {
 
 	var lns = template.split('\n');
-	var cHighest = 0;
+	var cHighest = -1;
 	
 	for (let i = 0; i < lns.length; i++) {
 	
-		while (lns[i].includes("%ARG_")) {
-			let argInt = lns[i].substring(lns[i].indexOf("%ARG_")+5, lns[i].length).split(" ")[0];
+		while (lns[i].includes("%ARG")) {
+			if (specialArgs.indexOf(lns[i].charAt(lns[i].length-1)) > -1) {
+				lns[i] = lns[i].substring(0, (lns[i].length+1) - specialArgs[specialArgs.indexOf(lns[i].charAt(lns[i].length-1))].length);
+			}
+			let argInt = lns[i].substring(lns[i].indexOf("%ARG")+4, lns[i].length).split(" ")[0];
 			if (parseInt(argInt) > cHighest) {
 				cHighest = parseInt(argInt);
 			}
 			
-			lns[i] = lns[i].replace("%ARG_"+parseInt(argInt).toString(), "");
+			lns[i] = lns[i].replace("%ARG"+parseInt(argInt).toString(), "");
+			if (parseInt(argInt) == 0) {
+				success = false;
+				alert("Arg 0 does not exist.");
+				return;
+			}
 		}
 	
 	}
@@ -451,9 +532,9 @@ function getHighestArgFromTemplate(template) {
 }
 
 getHighestArgFromTemplate(`
-msg %ARG_1 0x4
-msg %ARG_2 0x4
-msg %ARG_3 0x4
+msg %ARG1 0x4
+msg %ARG2 0x4
+msg %ARG3 0x4
 `); //holy shit it actually worked first try, no debugging, wtf???
 
 //converts templates to strings
@@ -487,22 +568,63 @@ function isNonHexInt(n) {
 
 }
 
+function prepCase(n) {
+	let nc = n.split("");
+	
+	for (let h = 0; h < nc.length; h++) {
+		
+		if (h > 1) {
+			nc[h] = nc[h].toUpperCase();
+		}
+		
+	}
+	
+	return nc.join("");
+}
+
 function conformHex(n, tableRef, decTable) {
 
 	if (isHex(n)) {
-		return n;
+		return prepCase(n);
 	} else if (isNonHexInt(n)) {
 		//is decimal int
-		return toXSEhex(parseInt(n));
+		return prepCase(toXSEhex(parseInt(n)));
 	} else {
 		if (tableRef == undefined) {
 			return false;
 		}
 		if (decTable) {
-			return toXSEhex(parseInt(tableRef[n]));
+			return prepCase(toXSEhex(parseInt(tableRef[n])));
 		}
-		return tableRef[n]; //must be string
+		return prepCase(tableRef[n]); //must be string
 	}
+
+}
+
+function repArgs(data, args, arg, cHighest) {
+
+	var res = data;
+
+	for (let m = 1; m <= args; m++) {
+	
+		res = res.split("%ARG"+m+"P");
+		res = res.join(conformHex(arg[m+1], pokemontable, true));
+		
+		res = res.split("%ARG"+m+"I");
+		res = res.join(conformHex(arg[m+1], itemstable, true));
+		
+		res = res.split("%ARG"+m+"A");
+		res = res.join(conformHex(arg[m+1], attacktable, true));
+		
+		res = res.split("%ARG"+m+"H");
+		res = res.join(conformHex(arg[m+1]));
+		
+		res = res.split("%ARG"+m);
+		res = res.join(arg[m+1]);
+		
+	}
+	
+	return res.replace(/\&sp/g, " ").split(/\n/g);
 
 }
 
@@ -511,37 +633,55 @@ String.prototype.lstrip = function()
 	return String(this).replace(/^@+|@+$/g, '');
 };
 
-function addFuncsFromCache() {
+//expand functions o_o
 	
-	let vals = JSON.parse(localStorage.func);
-	
-	let keys = Object.keys(vals);
-	let values = Object.values(vals);
-	
-	for (let i = 0; i < keys.length; i++) {
-	
-		allScripts[keys[i]] = values[i];
-	
+
+String.prototype.swapChars = function(arg1, arg2) {
+
+	let res = this;
+
+	for (let c = 0; c < res.length; c++) {
+		
+		if (res.charAt(c) == arg1) {
+			res = res.substring(0, c) + arg2 + res.substring(c+1, res.length);
+		} else if (res.charAt(c) == arg2) {
+			res = res.substring(0, c) + arg1 + res.substring(c+1, res.length);
+		}
+		
 	}
 	
-}
-
-if (typeof localStorage.func == 'undefined' || !(localStorage.func.length > 0)) {
-	
-	localStorage.func = JSON.stringify({});
-	
-} else {
-
-	addFuncsFromCache();
+	return res;
 
 }
+
+window.onload = function() {
+	FSEeditor.setOptions({fontSize: "15pt"});
+	FSEeditor.clearSelection();
+}
+
+document.addEventListener("keydown", function(e) {
+
+    keysDown.push(e.key);
+
+    if (keysDown.indexOf("Control") > -1 && keysDown.indexOf("q") > -1) {
+        convert();
+		keysDown = [];
+    }
+	
+	if (keysDown.indexOf("Control") > -1 && keysDown.indexOf(";") > -1) {
+        convertExpands();
+    }
+	
+	keysUp = [];
+
+});
 
 function getXSE(text) {
-    let lines = (text+"\n").split(/\n/);
+    let lines = (text.replace(new RegExp("    ", "g"), "").replace(new RegExp("\t", "g"), "").replace(new RegExp("\r\n", "g"), "\n").replace(new RegExp("%PL", "gi"), "[player]").replace(new RegExp("%RI", "gi"), "[rival]")+"\n").split(/\n/);
 	let actualLength = lines.length;
     let header1 = "#dynamic "+goff;
 	let scriptText = "\n";
-	let header2 = "\n#org @start\n\n";
+	let header2 = "\n#org @main\n\n";
     let body = "";
     let footer = "";
 	
@@ -555,15 +695,37 @@ function getXSE(text) {
 	let funcName = "";
 	
 	let oldFuncValue = isFuncDef;
+	
+	let noCompile = false;
+	
+	let allBef = [];
+	let lmode = "loop";
+	
+	let loopTimes = 0;
+	
+	let cLoopData = "";
+	
+	let loopOff = 0;
+	let loopMult = 1;
 
 	//console.log(goff)
-    for(var i = 0; i < lines.length; i++, globalLine++) {
+    for(var i = 0; i < lines.length; i++) {
         var cline = lines[i];
 
         if (cline.charAt(0) != ";") {
+		
         var arg = cline.split(" ");
 		
 		arg = removeComments(arg);
+		
+		for (let b = 0; b < arg.length; b++) {
+			if (arg[b].includes("\;")) {
+				arg[b] = arg[b].split("\\;").join(";");
+			}
+			if (b > 0 && arg[b] == "") {
+				delete arg[b];
+			}
+		}
 		
 		if (isFuncDef == false) {
 
@@ -572,10 +734,22 @@ function getXSE(text) {
 				oldFuncValue = isFuncDef;
 				isFuncDef = "com";
 				break;
-			case "$funcstart":
+			case "$autosav":
+				arg = derefAllFromIndex(arg, 1);
+				
 				if (arg.length < 2) {
 					success = false;
-					alert("$funcstart requires a func name. Exception on line "+(globalLine+1)+".");
+					alert("$autosav requires 1 argument. Exception on line .");
+					return;
+				}
+				
+				autosav = ( arg[1] == 'true' );
+				
+				break;
+			case "$funcstart":
+				if (arg.length < 2 || arg[1].length < 1) {
+					success = false;
+					alert("$funcstart requires a func name. Exception on line.");
 					return;
 				}
 				noliNewLineAre = true;
@@ -583,6 +757,12 @@ function getXSE(text) {
 				isFuncDef = true;
 				funcName = arg[1];
 				allScripts[funcName] = ``;
+				
+				localStorage.func[funcName] = ``;
+				
+				break;
+			case "$clearall":
+				localStorage.removeItem("func");
 				break;
 			case "compile":
 				arg = derefAllFromIndex(arg, 1);
@@ -596,63 +776,268 @@ function getXSE(text) {
 				autolabelname = arg[1];
 				
 				break;
+			case "compseqe":
+			case "compareseqexplicit":
+			case "compsequenceexplicit":
+			case "compsequenceexplicit":
+				let startOfArgSeqe = 2;
+				
+				arg = derefAllFromIndex(arg, 1);
+				
+				if (!isHex(arg[1])) {
+					success = false;
+					alert("compseqexplicit arg 1 is not hex. Exception on line.");
+					return;
+				}
+				
+				for (startOfArgSeqe; startOfArgSeqe < arg.length; startOfArgSeqe += 2) {
+				
+					body += "compare "+arg[1]+" "+conformHex(arg[startOfArgSeqe].toString());
+					body += "\nif 0x1 goto "+arg[startOfArgSeqe+1]+"\n";
+				
+				}
+				
+				noliNewLineAre = true;
+			
+				break;
+			case "offiter":
+				arg = derefAllFromIndex(arg, 1);
+				loopOff += Math.max(0, parseInt(arg[1]));
+				noliNewLineAre = true;
+				break;
+			case "multiter":
+				loopMult = Math.max(0, parseInt(arg[1]));
+				noliNewLineAre = true;
+				break;
+			case "prepmsg":
+			case "preparemsg":
+			case "prepmsgnowait":
+			case "preparemsgnowait":
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "preparemsg "+conformHex(arg[1]);
+				
+				if (!arg[0].toLowerCase().includes("nowait")) {
+					body += "\nwaitmsg";
+				}
+				
+				break;
+			case "compseq":
+			case "compareseq":
+			case "compsequence":
+			case "comparesequence":
+				let startOfArgSeq = 2;
+				let sValue = 0;
+				
+				arg = derefAllFromIndex(arg, 1);
+				
+				if (!isHex(arg[1])) {
+					success = false;
+					alert("compseq arg 1 is not hex. Exception on line.");
+					return;
+				}
+				
+				for (startOfArgSeq; startOfArgSeq < arg.length; sValue++, startOfArgSeq++) {
+				
+					body += "compare "+arg[1]+" "+conformHex(sValue.toString());
+					if (startOfArgSeq == arg.length-1) {
+						body += "\nif 0x7F goto "+arg[startOfArgSeq]+"\n";
+					} else {
+						body += "\nif 0x1 goto "+arg[startOfArgSeq]+"\n";
+					}
+				
+				}
+				
+				noliNewLineAre = true;
+				
+				break;
+			case "applymovementreverse":
+			case "applymovementnowaitreverse":
+			case "movereverse":
+			case "mover":
+			case "movenowaitreverse":
             case "applymovement":
             case "move":
 			case "applymovementnowait":
             case "movenowait":
 				arg = derefAllFromIndex(arg, 1);
+				if (arg[0].toLowerCase().includes("r")) {
+					for (let thisa = 2; thisa < arg.length; thisa++) {
+						arg[thisa] = arg[thisa].swapChars("u", "d");
+						arg[thisa] = arg[thisa].swapChars("l", "r");
+						
+						arg[thisa] = arg[thisa].swapChars("up", "down");
+						arg[thisa] = arg[thisa].swapChars("left", "right");
+						
+					}
+				}
                 body += "applymovement "+arg[1]+" "+getOff();
 
-                if (!(arg[0] == "movenowait")) {
+                if (!(arg[0].toLowerCase().includes("nowait"))) {
                     body += "\nwaitmovement 0x0";
                 }
 
                 footer += footer.addOrg(parseMoves(arg.slice(2)));
                 break;
 			case "bufferattack":
-				arg[1] = arg[1].toLowerCase();
+				arg = arg.join("\n").toLowerCase().split("\n");
+				
+				arg[1] = arg[1].replace(/\[buffer/g, "").replace(/\]/g, "");
+				
+				arg[1] = conformHex((parseInt(arg[1])-1).toString());
 				
 				body += "bufferattack "+arg[1]+" "+conformHex(arg[2], attacktable);
 				
 				break;
 			case "bufferpokemon":
-				arg[1] = arg[1].toLowerCase();
+				arg = arg.join("\n").toLowerCase().split("\n");
+				
+				arg[1] = arg[1].replace(/\[buffer/g, "").replace(/\]/g, "");
+				
+				arg[1] = conformHex((parseInt(arg[1])-1).toString());
 				
 				body += "bufferpokemon "+arg[1]+" "+conformHex(arg[2], pokemontable, true);
 				
 				break;
+			case "bufferfirstpokemon":
+				arg = arg.join("\n").toLowerCase().split("\n");
+				
+				arg[1] = arg[1].replace(/\[buffer/g, "").replace(/\]/g, "");
+				
+				arg[1] = conformHex((parseInt(arg[1])-1).toString());
+				
+				body += "bufferfirstpokemon "+arg[1];
+				
+				break;
+			case "bufferitem":
+				arg = arg.join("\n").toLowerCase().split("\n");
+				
+				arg[1] = arg[1].replace(/\[buffer/g, "").replace(/\]/g, "");
+				
+				arg[1] = conformHex((parseInt(arg[1])-1).toString());
+				
+				body += "bufferitem "+arg[1]+" "+conformHex(arg[2], itemstable, true);
+				
+				break;
+			case "buffernumber":
+				arg = arg.join("\n").toLowerCase().split("\n");
+				
+				arg[1] = arg[1].replace(/\[buffer/g, "").replace(/\]/g, "");
+				
+				arg[1] = conformHex((parseInt(arg[1])-1).toString());
+				
+				body += "buffernumber "+arg[1]+" "+conformHex(arg[2]);
+				
+				break;
 			case "func":
 			case "fcall":
+			
+				try {
+			
+					var reference = eval('allScripts.'+arg[1]);
+					
+				} catch(e) {
 				
-				arg[1] = arg[1].toLowerCase();
+
+					
+					success = false;
+					alert("Specified function not found. Exception on line.");
+					return;
 				
-				if (Object.keys(allScripts).indexOf(arg[1]) == -1) {
+				}
+			
+				if (arg.length < 2) {
+					success = false;
+					alert("fcall requires at least 1 argument. Exception on line.");
+					return;
+				}
+				
+				if (reference == "undefined" || typeof reference == "undefined") {
 					success = false;
 					alert("Function "+arg[1]+" not defined. Edit scripts.js to create a definition.");
 					return;
 				}
 				
-				let thisHighestArg = getHighestArgFromTemplate(allScripts[arg[1]]);
+				let thisHighestArg = getHighestArgFromTemplate(reference);
 				
-				if (Object.keys(allScripts).indexOf(arg[1]) == -1) {
-				
-				
+				if (arg.length-2 < thisHighestArg) {
 					success = false;
-					alert("Function specified on line "+(globalLine+1)+" does not exist. Please create a definition in scripts.js.");
+					alert("The function definition requires more arguments than actual arguments provided in fcall. Exception on line.");
 					return;
-				
 				}
 				
-				if (arg.length-2 != thisHighestArg) {
-					success = false;
-					alert("Mismatch between specified external function arguments and actual arguments provided.");
-				}
+				let finalVal = repArgs(reference, thisHighestArg, arg, thisHighestArg);
 				
-				lines.splice(i+1, 0, repArgs(allScripts[arg[1]], thisHighestArg, arg));
+				lines.splice(i+1, 0, finalVal);
 				lines = lines.flat();
 				
 				noliNewLineAre = true;
 				
+				break;
+			case "expstart":
+			case "lstart":
+			case "loopstart":
+			case "loop":
+				arg = derefAllFromIndex(arg, 1);
+				
+				if (arg[0].toLowerCase() == "expstart") {
+				
+					let indOfStart = 0;
+					let indOfEnd = 0;
+					
+					let fselines = FSEeditor.getValue().split("\n");
+					
+					for (let c = 0; c < fselines.length; c++) {
+					
+						if (fselines[c].split(" ")[0] == "expstart") {
+							indOfStart = c;
+						}
+						
+						if (fselines[c] == "expend") {
+							indOfEnd = c;
+						}
+					
+					}
+				
+					allBef = fselines.slice(0, indOfStart);
+					
+					allAf = fselines.slice(indOfEnd);
+					
+					FSEeditor.setValue(FSEeditor.getValue().split("\n").slice(0, indOfEnd+1).flat().join("\n"));
+				
+					noCompile = true;
+					
+					lmode = "exp";
+					
+					var expStartIndex = i;
+					var expEndIndex = lines.slice(i).indexOf("expend")+i;
+					
+				} else {
+					lmode = "loop";
+				}
+				
+				cLoopData = "";
+				
+				if (arg.length < 2 || arg[1].length < 1) {
+					success = false;
+					if (noCompile) {
+						alert("Expansion statements require a times argument (like \"expstart 5\" loops the statement 5 times). They are essentially loops, after all.");
+					} else {
+						alert("loop requires a times argument.");
+					}
+					return;
+				}
+				
+				loopTimes = parseInt(arg[1]);
+				
+				isFuncDef = "loop";
+				
+				noliNewLineAre = true;
+				
+				break;
+			case "loopend":
+			case "lend":
+			case "expend":
 				break;
 			case "setbreaklimit":
 			case "breaklimit":
@@ -695,7 +1080,7 @@ function getXSE(text) {
 			case "release":
 				if (cLab != "@start" && !activeLabel) {
 					success = false;
-					alert("Release statements must either be in @start or another label. This release is not in any label. Exception on line "+(globalLine+1)+".");
+					alert("Release statements must either be in @start or another label. This release is not in any label. Exception on line.");
 				}
 				body += "release";
 				break;
@@ -716,7 +1101,7 @@ function getXSE(text) {
 				}
 				if ((arg[1].match(/@/g) || []).length > 1) {
 					success = false;
-					alert("Labels must start with @, but cannot contain @ elsewhere, only the first char. Pls fix. Exception on line "+(globalLine+1)+".");
+					alert("Labels must start with @, but cannot contain @ elsewhere, only the first char. Pls fix. Exception on line.");
 					return;
 				}
 				body += "\n#org "+arg[1]+"\n";
@@ -725,7 +1110,7 @@ function getXSE(text) {
 			case "return":
 				if (!activeLabel) {
 					success = false;
-					alert("Ret used on line "+(globalLine+1)+", but no corresponding lbl.");
+					alert("Ret used on line, but no corresponding lbl.");
 					return;
 				}
 				activeLabel = false;
@@ -748,7 +1133,7 @@ function getXSE(text) {
 				}
 				if (["@", "%", "!", "#", "$"].indexOf(arg[1].charAt(0)) == -1 || Object.keys(constTable).indexOf(arg[1]) > -1) {
 					success = false;
-					alert("Const on line "+(globalLine+1)+" either does not start with const identifier (%) or has already been defined.");
+					alert("Const on line either does not start with const identifier (%) or has already been defined.");
 				}
 				let constVal = arg.slice(2).join(" ");
 				constVal = constVal.split(" ").join("&sp");
@@ -801,6 +1186,34 @@ function getXSE(text) {
                 }
                 noliNewLineAre = true;
                 break;
+			case "using":
+				arg.shift();
+				noliNewLineAre = true;
+			case "writetop":
+			case "loadlib":
+			case "namespace":
+			
+				noliNewLineAre = true;
+				
+				let ref;
+				let asKeys;
+			
+				if (arg.length < 2) {
+					success = false;
+					alert("namespace requires 1 argument. Exception on line.");
+					return;
+				}
+				
+				ref = eval("allScripts."+arg[1]);
+				asKeys = Object.keys(ref);
+				
+				for (let thisName = 0; thisName < asKeys.length; thisName++) {
+					
+					allScripts[asKeys[thisName]] = ref[asKeys[thisName]];
+					
+				}
+			
+				break;
             case "msgbox":
             case "msg":
 				if (arg.length < 3) {
@@ -812,15 +1225,17 @@ function getXSE(text) {
 				for (let g = 1; g < arg.length-1; g++) {
 					if (arg[g].indexOf(String.raw`\n`) > -1 && arg[g].indexOf(String.raw`\\n`) == -1) {
 						success = false;
-						alert("Use \\\\n not \\n. Exception on line "+(globalLine+1)+".");
+						alert("Use \\\\n not \\n. Exception on line.");
 						return;
 					}
 					arg[g] = arg[g].replace("\\\\n", "\\n");
 				}
 				
 				if (!(isHex(arg[arg.length-1]))) {
-					success = false;
-					alert("last argument of msgbox is not a msgbox type (hex int). This error could also be caused by failing to escape \\n in an externally-called msgbox. Use \\\\n for external strings, not \\n.");
+					if (arg[arg.length-1].substring(0, 4) != "MSG_") {
+						success = false;
+						alert("last argument of msgbox is not a msgbox type (hex int). This error could also be caused by failing to escape \\n in an externally-called msgbox. Use \\\\n for external strings, not \\n.");
+					}
 				}
             	let txtOff = getOff();
                 body += "msgbox "+txtOff+" "+arg.slice(-1)[0];
@@ -869,6 +1284,7 @@ function getXSE(text) {
 			case "":
 				noliNewLineAre = true;
             default:
+				arg[0] = arg[0].toLowerCase();
 				if (arg[0].charAt(0) == "@" && arg[0].length > 1) { //label name case
 					lines.splice((i+1), 0, "@ "+arg[0]);
 					continue;
@@ -886,7 +1302,7 @@ function getXSE(text) {
 				isFuncDef = false;
 				funcName = "";
 			} else {
-				let val = arg.slice(0).join(" ");
+				let val = arg.slice(0).join(" ")+"\n";
 				if (autosav) {
 					let obj = JSON.parse(localStorage.func);
 					if (typeof obj[funcName] == 'undefined') {
@@ -899,9 +1315,92 @@ function getXSE(text) {
 			}
 			
 		} else if (isFuncDef == "com") {
-			if (arg[0] == "&comend"){
+			if (arg[0].toLowerCase() == "&comend"){
 				isFuncDef = oldFuncValue;
 			}
+			noliNewLineAre = true;
+		} else if (isFuncDef == "loop") {
+			let cond;
+			if (noCompile) {
+				cond = arg.indexOf("expend");
+			} else {
+				cond = Math.max(arg.indexOf("lend"), arg.indexOf("loopend"));
+			}
+			
+			let fin = 0;
+			
+			if (cond > -1) {
+			
+				for (let j = 0; j < loopTimes; j++) {
+					let nloopdat = cLoopData;
+					
+					let iterExpr;
+					
+					if (lmode == "exp") {
+						iterExpr = ((j*loopMult)+(loopOff)).toString();
+					} else {
+						iterExpr = ((loopTimes-j-1)*(loopMult)+(loopOff)).toString();
+					}
+					
+					if (nloopdat.includes("%LOOPITERH")) {
+						nloopdat = nloopdat.replace(new RegExp("%LOOPITERH", "g"), conformHex(iterExpr));
+					}
+					if (nloopdat.includes("%LOOPITER")) {
+						nloopdat = nloopdat.replace(new RegExp("%LOOPITER", "g"), iterExpr);
+					}
+					if (lmode == "exp") {
+						let editorContent = FSEeditor.getValue();
+						let editorContentLns = editorContent.split("\n");
+						
+						console.log(editorContentLns);
+						
+						fin += nloopdat.split("\n").length;
+						
+						editorContentLns.splice(expEndIndex+1+fin, 0, nloopdat.split("\n"));
+						
+						editorContentLns = editorContentLns.slice(editorContentLns.indexOf("expend")+1);
+						
+						if (j == loopTimes-1) {
+						
+							console.log(allAf);
+						
+							let temp = allBef;
+							temp.push(editorContentLns.flat());
+							temp.push(allAf.slice(1).flat());
+							editorContentLns = temp.flat().join("\n");
+						} else {
+							editorContentLns = editorContentLns.flat().join("\n")
+						}
+						
+						let fVal = editorContentLns;
+						
+						if (j == loopTimes-1) {
+							fVal += "\n";
+						}
+						
+						FSEeditor.setValue( fVal );
+						
+						console.log(fVal);
+					} else {
+						lines.splice(i+1, 0, nloopdat.split("\n"));
+					}
+				}
+				lines = lines.flat();
+				
+				loopMult = 1;
+				loopOff = 0;
+				
+				isFuncDef = false;
+				cLoopData = "";
+				
+				loopTimes = 0;
+				
+			} else {
+				cLoopData += arg.slice(0).join(" ")+"\n";
+			}
+			noliNewLineAre = true;
+			
+			FSEeditor.clearSelection();
 		}
         
         if (!noliNewLineAre) {
@@ -913,13 +1412,23 @@ function getXSE(text) {
 
     }
 	
+	if (isFuncDef != false) {
+		success = false;
+		alert("Compiler is not in main state. A function or loop somewhere was not closed properly.");
+		return;
+	}
+	
 	if (activeLabel) {
 		success = false;
-		alert("Label not closed. Use 'end' to close a label.");
+		alert("Label not closed. Use 'end' or 'ret' to close a label.");
 	}
 	
 	if (!endCalled) {
 		body += "\nend\n";
+	}
+	
+	if (noCompile) {
+		return noCompString;
 	}
 	
 	let k = String.raw`kek`.replace("kek", body);
@@ -1018,6 +1527,10 @@ var goff = document.getElementById("offset").value;
 var whichGame = "rse";
 
 var inbutton = document.getElementById("in");
+var outbutton = document.getElementById("out");
+
+outbutton.style.max_width = outbutton.style.width;
+outbutton.style.max_height = outbutton.style.height;
 
 if (localStorage["inputdata"] != "undefined" && localStorage["inputdata"] != undefined && localStorage["inputdata"] != null) {
     FSEeditor.setValue(localStorage["inputdata"], 0);
@@ -1043,9 +1556,11 @@ function convert() {
     } else {
         whichGame = "frlg";
     }
+	
+	FSEeditor.setValue( FSEeditor.getValue().replace(new RegExp("!se", "g"), "expstart").replace(new RegExp("!ee", "g"), "expend") );
 
     var intext = FSEeditor.getValue();
-    localStorage["inputdata"] = FSEeditor.getValue();
+    localStorage["inputdata"] = intext;
 
     var res = getXSE(intext);
 
