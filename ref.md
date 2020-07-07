@@ -120,7 +120,7 @@ The @main org is automatically added to XSE output. This label does not need to 
 
 ## (2) FSE Functions
 
-FSE has two types of functions: internal and external. External functions are located in the scripts.js file (hence the name external - they're in a different file from the compiler). Internal functions are functions which are defined in FSE code. Internal functions can be saved as externals via the savefunc command (found in this section, see below). See below for more about functions and how to call them.
+FSE has two types of functions: internal and external. External functions are located in the scripts.js file (hence the name external - they're in a different file from the compiler). Internal functions are functions which are defined in FSE code. Internal functions can be saved to the JS localStorage cache. See below for more about functions and how to call them.
 
 
 
@@ -129,16 +129,16 @@ FSE has two types of functions: internal and external. External functions are lo
 fcall is the most important command in all of FSE. It calls a function (whether it's internal or external doesn't matter) and passes parameters into it as specified in the function definition.
 
 ### fcall (func name) (args...)
-Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this. Like with all strings, use escape characters for linebreaks (\\n not \n). Additionally, you can use a const to get around this "&sp" limitations, as consts automatically convert spaces to &sp.
+Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this. Like with all strings, use escape characters for linebreaks (\\n not \n). Additionally, you can use a const to get around this "&sp" limitation, as consts automatically convert spaces to &sp.
 
 
 
 ## (2b) External Functions
 
-External functions are loaded in as soon as you start FSE. Thus, they can be called at any point, and there is no need to define them explicitly. External functions are stored in "libraries", with each library having its own name. These library names need to be referenced in any fcall references to the function. This can be bypassed with the namespace command.
+External functions are loaded in as soon as you start FSE. Thus, they can be called at any point, and there is no need to define them explicitly. External functions are stored in "libraries", with each library having its own name. These library names need to be referenced in any fcall references to the function. This can be bypassed with using namespace.
 
 ### using namespace (lib)
-###### Other Names: namespace
+###### Other Names: namespace, writetop, loadlib, surface
 Writes all library functions represented by string (lib) to top-level namespace. Does not delete (lib) itself from the namespace.
 
 Example:
