@@ -9,19 +9,20 @@ TABLE OF CONTENTS:
 <br>1a. Types
 <br>1b. Comments
 <br>1c. @main and label ending
-2. FSE Functions
+2. Functions
 <br>2a. fcall
 <br>2b. External Functions
 <br>2c. Internal Functions
 <br>2d. Function Saving and Cache Commands
 <br>2e. Special Function Arguments
-3. FSE Commands
-4. XSE Commands (what you're probably looking for)
-<br>4a. **(READ THIS BEFORE 4B AND 4C) Note About XSE Commands**
-<br>4b. List of XSE Commands with Modified Syntax
-<br>4c. List of XSE Commands with Alternative Names
-5. List of all Special % Strings
-6. Info/legal
+3. Loops and Expansion Statements
+4. FSE Commands
+5. XSE Commands (what you're probably looking for)
+<br>5a. **(READ THIS BEFORE 4B AND 4C) Note About XSE Commands**
+<br>5b. List of XSE Commands with Modified Syntax
+<br>5c. List of XSE Commands with Alternative Names
+6. List of all Special % Strings
+7. Info/legal
 
 A note about the format of this document: placeholder values will appear in parentheses (like this). Any time you see this, ignore the parentheses. FSE currently does not support them in any way, so please don't include them in real FSE code, or it will probably not compile.
 
@@ -69,7 +70,7 @@ Since technically everything in FSE is initially processed as a JavaScript strin
 ```
 Hello, I am a string (look ma, no quotes).
 ```
-In any case where a string is being used as a function argument, it can not contain the character " ". Instead, the signifier "&sp" can be used. These scenarios are generally rare, however, as function arguments are almost always label names or item or pokemon names. Also, you can use const (see section 3) to automatically convert spaces to this signifier, and then reference said const as a function argument to avoid having to write out every "&sp". Example:
+In any case where a string is being used as a function argument, it can not contain the character " ". Instead, the signifier "&sp" can be used. These scenarios are generally rare, however, as function arguments are almost always label names or item or pokemon names. Also, you can use const (see section 5) to automatically convert spaces to this signifier, and then reference said const as a function argument to avoid having to write out every "&sp". Example:
 ```
 const @lookMa Hello, I am a string (look ma, no quotes).
 
@@ -118,7 +119,7 @@ The @main org is automatically added to XSE output. This label does not need to 
 
 
 
-## (2) FSE Functions
+## (2) Functions
 
 FSE has two types of functions: internal and external. External functions are located in the scripts.js file (hence the name external - they're in a different file from the compiler). Internal functions are functions which are defined in FSE code. Internal functions can be saved to the JS localStorage cache. See below for more about functions and how to call them.
 
@@ -215,7 +216,65 @@ The other two types of special arguments are currently not used in any standard 
 
 
 
-## (3) FSE Commands
+## (3) Loops and Expansion Statements
+
+
+### Loops
+FSE loops are quite limited. You must specify a number of times to loop, and with the exception of functions, these cannot be expressions, only static numbers. Loops begin with "loop" or "lstart" and end with "loopend" or "lend".
+
+A loop inside @main
+```
+lf
+
+loop 5
+msg Message Number: %LOOPITER 0x4 ;%LOOPITER is the current loop iteration number
+lend
+
+rel
+```
+#### Modifying %LOOPITER
+%LOOPITER can be indirectly modified with specific commands. These are "offiter" and "multiter". Offiter offsets %LOOPITER by the specified amount (cannot be negative), and multiter increases the rate at which %LOOPITER increases (cannot be negative).
+
+Making %LOOPITER increase by 2 for each loop:
+```
+multiter 2 ;%LOOPITER commands cannot be used in loops themselves, only before
+loop 5
+msg %LOOPITER 0x4 ;0, 2, 4, 6, 8
+lend
+```
+Offsetting %LOOPITER by 3:
+```
+offiter 3
+loop 5
+msg %LOOPITER 0x4 ;3, 4, 5, 6, 7
+lend
+```
+
+### Expansion Statements
+Expansion statements are where things get a little bit... meta. They work exactly the same way that loops do (they even share most of the exact same code in the compiler), and everything mentioned in the loops section also applies to them (even %LOOPITER, %LOOPITER commands, etc). The only difference is that they output to FSE input rather than XSE output. Also, if the compiler detects any expansion statements, the typical compilation process will be completely de-railed in order to process the expansions before actual compilation. Simply hit compile a second time after this process to truly compile.
+
+Expansion statements are started with "expstart" or "!se" and ended with "expend" or "!ee"
+```
+!se 6 ;loops 6 times
+@name%LOOPITER ;@name0, @name1, etc...
+fcall nickname
+ret
+!ee
+```
+Expansion with iter commands
+```
+offiter 3
+!se 4
+msg %LOOPITER 0x4 ;3, 4, 5, 6
+!ee
+```
+
+A GIF of an expansion statement in action:
+![](https://i.ibb.co/r2ZFNy5/ezgif-com-video-to-gif.gif)
+
+
+
+## (4) FSE Commands
 
 This section contains all the internal, FSE-exclusive commands. These commands exist for user convenience and are not ported to XSE output.
 
@@ -240,29 +299,6 @@ const @birch 0x00
 move @birch @birchMoveSeq
 ```
 Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up to your preference. If you're going to use @, be careful of potential name collisions with org names. You must include one of these special chars at the start of your const name, or the compiler will pitch a fit (this character must also must be included in all references to the const post-definition). (value) can be literally any arbitrary type of data (string, hex int, whatever). Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. Obviously, constants are not included in XSE output.
-
-### loop (times)
-###### Other Names: lstart, loopstart
-Begins a loop. Use special string %LOOPITER for a 0-indexed loop iteration number.
-
-Example
-```
-$funcstart multi_message
-loop %NUMARGS
-msg %ARG 0x4
-lend
-$funcend
-```
-#### SIDE NOTE: Loop Iter Overrides
-The following are commands you use exclusively BEFORE loops for the purpose of modifying the %LOOPITER value, and are reset upon loop completion. Note that none of these alter the number of times the loop executes, and that multiter changes the rate at which %LOOPITER increases. If set to 2, %LOOPITER will increase by 2 for each iteration, and so on. 
-```
-offiter (whole decimal number) ;can be negative, though %LOOPITER cannot go below 0. offsets %LOOPITER by specified amount.
-multiter (positive whole decimal number) ;multiplies iter by specified value. can not contain a decimal point.
-```
-
-### lend
-###### Other Names: loopend
-Ends a loop.
 
 ### using namespace (lib)
 ###### Other Names: namespace
@@ -294,11 +330,11 @@ Copies (raw xse...) to XSE output. Does not de-reference constants.
 Copies (raw xse...) to XSE output. De-references constants.
 
 
-## (4) XSE Commands
+## (5) XSE Commands
 
 
 
-## (4a) Note About XSE Commands
+## (5a) Note About XSE Commands
 
 FSE has support for all XSE commands, but not in the way that you might think. If FSE does not "recognize" a command, it will assume it's XSE code, and will simply copy and paste it to XSE output, with the only modifications being that it will still scan for const references. This means only some XSE commands (those which are particularly inconvenient or have optimization potential, or those which have alternative names) are actually "recognized", while the rest are simply de-referenced and copied without any special attention given to them by the compiler.
 
@@ -306,7 +342,7 @@ For this reason, the below list is NOT a complete or comprehensive list of all c
 
 
 
-## (4b) List of XSE Commands with Modified Syntax
+## (5b) List of XSE Commands with Modified Syntax
 
 Below is a list of all standard XSE commands currently recognized by the compiler which are written differently in FSE compared to XSE.
 
@@ -327,7 +363,7 @@ const @myMoveSequence u u d l r r r
 setspeed normal
 move 0xFF @myMoveSequence @myMoveSequence @myMoveSequence ; Repeats the same move sequence 3 times.
 ```
-Referencing the full (speed-included) name of a movement is also allowed. The default speed is normal. See setspeed in section 3 for more information.
+Referencing the full (speed-included) name of a movement is also allowed. The default speed is normal. See setspeed in section 4 for more information.
 
 ### applymovementnowait (movement target) (movement series...)
 ###### Other Names: movenowait
@@ -410,11 +446,11 @@ Calls XSE msgbox.
 ```
 msgbox Let's go to the mall! 0x4
 ```
-(string) is a string literal (or constant), representing the text to display. (mode) is a hex integer or string (starting with "MSG_") representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 3 for more information on the automatic breaking system.
+(string) is a string literal (or constant), representing the text to display. (mode) is a hex integer or string (starting with "MSG_") representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 4 for more information on the automatic breaking system.
 
 
 
-## (4c) List of XSE Commands with Alternative Names
+## (5c) List of XSE Commands with Alternative Names
 
 ### clearflag (flag pointer)
 ###### Other Names: cf, resetflag
@@ -454,7 +490,7 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 
 
-## (5) List of all Special % Strings
+## (6) List of all Special % Strings
 
 % strings have been mentioned throughout this reference, but for the sake of simplicity, here's a list of all of them:
 ```
@@ -476,7 +512,7 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 
 
-## (6) Info/legal
+## (7) Info/legal
 
 Thanks for reading about FSE. It's something I've been working hard on over the past few weeks. As for legal stuff, feel free to distribute this as long as it's done non-commercially and credit is given to me (ps4star) for the files which I created. This means everything except the file ace.js and the ace folder - I did not create the ACE editor and any modification, distribution, etc. of that editor is subject to ACE's license.
 
