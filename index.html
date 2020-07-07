@@ -23,7 +23,7 @@
 		</div>
         <div style="position: absolute; left: 15%; top: 6.1%;">
         <label for="ts">Editor Theme:</label>
-        <select name="ts" id="theme" style="position: relative;" onclick="changeMode();">
+        <select name="ts" id="theme" style="position: relative;" onclick="changeMode();" defer>
 
         	<option>ambiance</option>
         	<option>chaos</option>
@@ -73,12 +73,15 @@
         <button id="help-button" onclick="launchHelp();" style="position: absolute; top: 11%;">Documentation/Help</button>
         <br>
         <br>
-        <p style="position: absolute; left: 10px; top: 13.65%;">FSE code (input)</p>
-        <p style="position: absolute; left: 632px; top: 13.65%;">XSE code (output; automatically copied to clipboard)</p>
+        
         <div id="in" style="position: absolute; top: 19%; right: 0%; left: .5%; bottom: 0; margin-right: 55%;"></div>
+		<p style="position: absolute; left: 0.6%; top: 13.65%;">FSE code (input)</p>
+		<p style="position: absolute; left: 46%; top: 13.65%;">XSE code (output; automatically copied to clipboard)</p>
         <textarea id="out" cols="85" rows="33" readonly style="position: absolute; left: 46%; top: 18.95%; background-color: black; color: white; font-family: 'Trebuchet MS'; overflow-y: scroll; resize: none;"></textarea>
         <br>
-        <p id = "status" style="position: absolute; top: -2.5%; padding-top: 0%; left: 15%;">Welcome to FSE. This message will tell you whether or not a conversion was successful.</p>
+		<div style="position: absolute; top: -2.5%; padding-top: 1%; left: 15%; line-height: 1;">
+        <p id = "status">Welcome to FSE. This message will tell you whether or not a conversion was successful.</p>
+		</div>
         <script src="./ace/ace.js" type="text/javascript" charset="utf-8"></script>
         <script defer>
 		
@@ -156,11 +159,15 @@ for (var i = 0; i < themeSel.options.length; i++) {
 themeSel.selectedIndex = ops.indexOf(localStorage["selection"]);
 
 function changeMode() {
-	localStorage["selection"] = themeSel.options[themeSel.selectedIndex].text;
+	try {
+		localStorage["selection"] = themeSel.options[themeSel.selectedIndex].text;
+	} catch(e) {
+		localStorage["selection"] = "twilight";
+	}
 	FSEeditor.setTheme("ace/theme/"+localStorage["selection"]);
 	document.getElementById('in').style.fontSize=csetfont;
 }
-changeMode();
+
 
 document.getElementById('in').style.fontSize=csetfont;
 
@@ -655,8 +662,10 @@ String.prototype.swapChars = function(arg1, arg2) {
 }
 
 window.onload = function() {
+	changeMode();
 	FSEeditor.setOptions({fontSize: "15pt"});
 	FSEeditor.clearSelection();
+	
 }
 
 document.addEventListener("keydown", function(e) {
