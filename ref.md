@@ -269,7 +269,7 @@ msg %LOOPITER 0x4 ;3, 4, 5, 6
 !ee
 ```
 
-A GIF of an expansion statement in action:
+A GIF of an expansion statement in action:<br>
 ![](https://i.ibb.co/r2ZFNy5/ezgif-com-video-to-gif.gif)
 
 
