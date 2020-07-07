@@ -447,7 +447,7 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 %ARGXA  ;Function argument. Specifies that it's an in-battle move name. Use only in func definitions.
 %ARGXI  ;Function argument. Specifies that it's an item name. Use only in func definitions.
 
-%ARGXH  ;Function argument. Specifies that it's a hex int. Use only in func definitions.
+%ARGXH  ;Function argument. Specifies that it's a hex int. Conforms decimal ints to hex ints. Use only in func definitions.
 
 %LOOPITER  ;Current loop iteration. Use only in loops.
 %LOOPITERH  ;Current loop iteration conformed to a hex int. Use only in loops.
