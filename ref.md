@@ -253,6 +253,16 @@ msg %ARG 0x4
 lend
 $funcend
 ```
+#### SIDE NOTE: Loop Iter Overrides
+The following are commands you use exclusively BEFORE loops for the purpose of modifying the %LOOPITER value, and are reset upon loop completion. Note that none of these alter the number of times the loop executes, and that multiter changes the rate at which %LOOPITER increases. If set to 2, %LOOPITER will increase by 2 for each iteration, and so on. 
+```
+offiter (whole decimal number) ;can be negative, though %LOOPITER cannot go below 0. offsets %LOOPITER by specified amount.
+multiter (positive whole decimal number) ;multiplies iter by specified value. can not contain a decimal point.
+```
+
+### lend
+###### Other Names: loopend
+Ends a loop.
 
 ### using namespace (lib)
 ###### Other Names: namespace
