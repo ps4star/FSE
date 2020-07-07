@@ -809,6 +809,10 @@ function getXSE(text) {
 				loopMult = Math.max(0, parseInt(arg[1]));
 				noliNewLineAre = true;
 				break;
+			case "resiter":
+				loopMult = 1;
+				loopOff = 0;
+				break;
 			case "prepmsg":
 			case "preparemsg":
 			case "prepmsgnowait":
@@ -981,6 +985,20 @@ function getXSE(text) {
 				arg = derefAllFromIndex(arg, 1);
 				
 				if (arg[0].toLowerCase() == "expstart") {
+				
+					if (arg.length >= 3) {
+						loopOff = parseInt(arg[2]);
+					}
+					
+					if (arg.length == 4) {
+						loopMult = parseInt(arg[3]);
+					}
+					
+					if (arg.length > 4) {
+						success = false;
+						alert("!se can take at most 3 arguments. More than 3 provided.");
+						return;
+					}
 				
 					let indOfStart = 0;
 					let indOfEnd = 0;
