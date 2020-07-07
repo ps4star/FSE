@@ -523,7 +523,7 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 Thanks for reading about FSE. It's something I've been working hard on over the past few weeks. As for legal stuff, feel free to distribute this as long as it's done non-commercially and credit is given to me (ps4star) for the files which I created. This means everything except the file ace.js and the ace folder - I did not create the ACE editor and any modification, distribution, etc. of that editor is subject to ACE's license.
 
-You can find the exact license within this repo as LICENSE.txt.
+You can find the exact license within this repo as LICENSE.md.
 
 
 
