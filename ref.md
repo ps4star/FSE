@@ -448,6 +448,9 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 %LOOPITER  ;Current loop iteration. Use only in loops.
 %LOOPITERH  ;Current loop iteration conformed to a hex int. Use only in loops.
+
+%PL  ;Player name. Case insensitive.
+%RI  ;Rival name. Case insensitive.
 ```
 
 
