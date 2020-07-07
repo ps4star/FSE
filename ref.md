@@ -251,7 +251,7 @@ lend
 ```
 
 ### Expansion Statements
-Expansion statements are where things get a little bit... meta. They work exactly the same way that loops do (they even share most of the exact same code in the compiler), and everything mentioned in the loops section also applies to them (even %LOOPITER, %LOOPITER commands, etc). The only difference is that they output to FSE input rather than XSE output. Also, if the compiler detects any expansion statements, the typical compilation process will be completely de-railed in order to process the expansions before actual compilation. Simply hit compile a second time after this process to truly compile.
+Expansion statements are where things get a little bit... meta. They work exactly the same way that loops do (they even share most of the exact same code in the compiler), and everything mentioned in the loops section also applies to them. The only difference is that they output to FSE input rather than XSE output. Also, if the compiler detects any expansion statements, the typical compilation process will be completely de-railed in order to process the expansions before actual compilation. Simply hit compile a second time after this process to truly compile.
 
 Expansion statements are started with "expstart" or "!se" and ended with "expend" or "!ee"
 ```
@@ -261,11 +261,18 @@ fcall nickname
 ret
 !ee
 ```
-Expansion with iter commands
+To use iter commands, add additional arguments to !se/expstart. The second (optional) is the starting iter value (positives only), and the third (optional) is the multiter value (and just a reminder, the first argument is required and represents the number of times to loop). Offiter and multiter can still be explicitly used, though it is discouraged.
 ```
-offiter 3
-!se 4
+!se 4 3 ;loops 4 times, initializes %LOOPITER at 3
 msg %LOOPITER 0x4 ;3, 4, 5, 6
+!ee
+```
+"multiter" with exp statement
+```
+!se 4 0 2 ;starts at 0, increases by 2 each loop. loops 4 times.
+@name%LOOPITER ;generates labels @name0, @name2, @name4, and @name6
+fcall stdlib.nickname
+ret
 !ee
 ```
 
