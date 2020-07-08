@@ -5,7 +5,9 @@ var allScripts = {
 		"obtain_poke" :
 
 `fanfare 0x13E
-msgbox You received a %ARG1! 0x4`,
+msgbox You received a %ARG1! 0x4
+waitfanfare
+closeonkeypress`,
 
 		"name_poke" :
 		
@@ -18,19 +20,19 @@ if 0x1 call %ARG2`,
 `fcall stdlib.obtain_poke %ARG1
 fcall stdlib.name_poke %ARG1 %ARG2`,
 
-		"nickname" :
+		"set_seen":
 		
+`setvar 0x8004 %ARG1P
+special 0x163`,
+
+		"nickname_frlg":
+
 `countpokemon
 subvar 0x800D 0x1
 copyvar 0x8004 0x800D
 fadescreen 0x1
 special 0x166
-waitstate`,
-
-		"set_seen":
-		
-`setvar 0x8004 %ARG1P
-special 0x163`
+waitstate`
 
 	}
 
