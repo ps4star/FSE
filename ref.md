@@ -86,6 +86,23 @@ Hex ints can be used as alternatives to the built-in tables, and in some cases a
 ### Floating-point Numbers
 There is currently no support for floating-point numbers, and likely never will be, as they're not used in XSE as far as I'm aware. Attempting to create a floating-point number will either cause it to be interpreted as a string or floored by JavaScript parseInt() to an integer.
 
+### Tables
+Tables can be defined as follows:
+```
+$table @my_table
+
+key1 value1
+key2 value2
+key3 value3
+
+$tabend
+```
+Accessing table elements:
+```
+;accesses element from table
+msg key1@my_table 0x4 ;displays 'value1'
+```
+
 
 
 ## (1b) Comments
@@ -486,6 +503,8 @@ Calls XSE giveitem. (item name) can be a hex ID, decimal ID, or string (such as 
 ###### Other Names: pokemon
 Calls XSE givepokemon. All 3 args can either be hex int IDs, decimal int IDs, or, for (pokemon name) and (pokemon held item) only, a string representing the name of the pokemon or held item.
 
+### gymbattle 
+
 ### msgbox (string) (mode)
 ###### Other Names: msg
 Calls XSE msgbox. 
@@ -493,6 +512,9 @@ Calls XSE msgbox.
 msgbox Let's go to the mall! 0x4
 ```
 (string) is a string literal (or constant), representing the text to display. (mode) is a hex integer or string (starting with "MSG_") representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 4 for more information on the automatic breaking system.
+
+### pause (time)
+Time can be a decimal int representing the milliseconds to pause, or raw hex data (according to Sierra's tutorial, a pause of 0x20 ~= 1 second in real time. This is also the metric used to convert milliseconds to raw hex data for when (time) is a decimal int).
 
 ### wildbattle (pokemon) (level) (item)
 Calls XSE wildbattle. (pokemon) is conformed to a hex int pokemon ID (can be string representing the pokemon name, hex int, or decimal int). (level) is conformed to a hex int representing the level of the pokemon. (item) is conformed to a hex int item ID (can be string representing the item name, hex int, or decimal int).
