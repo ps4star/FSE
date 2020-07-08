@@ -59,7 +59,7 @@ While FSE does support raw hex values for the most part, it's highly recommended
 The internal tables can be located in the tables.js file of this repo if you'd like to see for yourself how to use them.
 
 ### Case-insensitivity
-All command names are case-insensitive. Obviously, things like string literals and defined constants and flags aren't, as they are user-defined.
+All command names, and const names are case-insensitive. Functions aren't, however.
 
 
 
@@ -164,7 +164,7 @@ Internal functions are explicitly defined in-script, and cannot be called prior 
 A standard internal function definition:
 ```
 $funcstart sendm
-msg %ARG1 0x4
+msg %arg1 0x4
 $funcend
 
 fcall sendm MyMessage ;Displays "MyMessage" in a text box.
@@ -195,22 +195,22 @@ Clears the internal function cache. If you care about your cache, be weary of co
 
 ## (2e) Special Function Arguments
 
-Along with the standard "%ARGX", FSE supports explicit typing (to an extent) of function arguments. This is done by adding a "special character" to the end of an %ARGX statement to denote the type. Currently supported are:
+Along with the standard "%argX", FSE supports explicit typing (to an extent) of function arguments. This is done by adding a "special character" to the end of an %argX statement to denote the type. Currently supported are:
 - P for pokemon
 - I for item
 - A for battle move
 - H for hex value
 
-%ARGXP example
+%argXP example
 ```javascript
 ...
 "set-seen":
 	
-`setvar 0x8004 %ARG1P
+`setvar 0x8004 %arg1P
 special 0x163`
 ...
 ```
-The %ARG1P here is automatically conformed into a hex int representing a pokemon ID. For example, if you pass "mew" into the set-seen function, it will convert the string to 0x97. If you pass 0x97, it will convert to 0x97. If you pass 151, it will convert to 0x97.
+The %arg1P here is automatically conformed into a hex int representing a pokemon ID. For example, if you pass "mew" into the set-seen function, it will convert the string to 0x97. If you pass 0x97, it will convert to 0x97. If you pass 151, it will convert to 0x97.
 
 The other two types of special arguments are currently not used in any standard lib functions, but still work just the same.
 
@@ -220,35 +220,35 @@ The other two types of special arguments are currently not used in any standard 
 
 
 ### Loops
-FSE loops are quite limited. You must specify a number of times to loop, and with the exception of functions, these cannot be expressions, only static numbers. Loops begin with "loop" or "lstart" and end with "loopend" or "lend".
+FSE loops are quite limited. You must specify a number of times to loop, and with the exception of functions, these cannot be expressions, only static numbers. Loops begin with "loop" or "lstart" and end with "loopend" or "lend". Use %loopiter to specify the loop iteration number. See below for more info on %loopiter and its variations.
 
 A loop inside @main
 ```
 lf
 
 loop 5
-msg Message Number: %LOOPITER 0x4 ;%LOOPITER is the current loop iteration number
+msg Message Number: %loopiter 0x4 ;%loopiter is the current loop iteration number
 lend
 
 rel
 ```
-#### Modifying %LOOPITER
-%LOOPITER can be indirectly modified with specific commands. These are "offiter" and "multiter". Offiter offsets %LOOPITER by the specified amount (cannot be negative), and multiter increases the rate at which %LOOPITER increases (cannot be negative).
+#### Modifying %loopiter
+%loopiter can be indirectly modified by adding optional arguments to the loop start. Argument 1 is always required, and is the number of times to loop. Argument 2 is the value to initialize %loopiter at, and argument 3 is the step to increase %loopiter by for each iteration. If these optional arguments are not included, their default values will be 0 and 1 respectively (starts at 0, increases by 1 for each iter).
 
-Making %LOOPITER increase by 2 for each loop:
+Making %loopiter increase by 2 for each loop:
 ```
-multiter 2 ;%LOOPITER commands cannot be used in loops themselves, only before
-loop 5
-msg %LOOPITER 0x4 ;0, 2, 4, 6, 8
+loop 5 0 2 ;starts at 0, up by 2 each iter
+msg %loopiter 0x4 ;0, 2, 4, 6, 8
 lend
 ```
-Offsetting %LOOPITER by 3:
+Offsetting %loopiter by 3:
 ```
-offiter 3
-loop 5
-msg %LOOPITER 0x4 ;3, 4, 5, 6, 7
+loop 5 3 ;starts at 3, up by 1 each iter
+msg %loopiter 0x4 ;3, 4, 5, 6, 7
 lend
 ```
+#### %loopiter Variations
+%loopiter currently only has 1 variation: %loopiterH. It simply conforms the data passed into it to a hex int. Fun fact: in pre-release versions of FSE (which no longer exist and were never released/archived in any way), there was a second one called %loopiterL@constName, which construed %loopiter as an index of list @constName and returned the element at the specified index. However, this is now deprecated since the introduction of constant properties, and is instead accomplished with indexat%loopiter@constName
 
 ### Expansion Statements
 Expansion statements are where things get a little bit... meta. They work exactly the same way that loops do (they even share most of the exact same code in the compiler), and everything mentioned in the loops section also applies to them. The only difference is that they output to FSE input rather than XSE output. Also, if the compiler detects any expansion statements, the typical compilation process will be completely de-railed in order to process the expansions before actual compilation. Simply hit compile a second time after this process to truly compile.
@@ -256,21 +256,21 @@ Expansion statements are where things get a little bit... meta. They work exactl
 Expansion statements are started with "expstart" or "!se" and ended with "expend" or "!ee"
 ```
 !se 6 ;loops 6 times
-@name%LOOPITER ;@name0, @name1, etc...
+@name%loopiter ;@name0, @name1, etc...
 fcall nickname
 ret
 !ee
 ```
 To use iter commands, add additional arguments to !se/expstart. The second (optional) is the starting iter value (positives only), and the third (optional) is the multiter value (and just a reminder, the first argument is required and represents the number of times to loop). Offiter and multiter can still be explicitly used, though it is discouraged.
 ```
-!se 4 3 ;loops 4 times, initializes %LOOPITER at 3
-msg %LOOPITER 0x4 ;3, 4, 5, 6
+!se 4 3 ;loops 4 times, initializes %loopiter at 3
+msg %loopiter 0x4 ;3, 4, 5, 6
 !ee
 ```
 "multiter" with exp statement
 ```
 !se 4 0 2 ;starts at 0, increases by 2 each loop. loops 4 times.
-@name%LOOPITER ;generates labels @name0, @name2, @name4, and @name6
+@name%loopiter ;generates labels @name0, @name2, @name4, and @name6
 fcall stdlib.nickname
 ret
 !ee
@@ -307,6 +307,40 @@ move @birch @birchMoveSeq
 ```
 Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up to your preference. If you're going to use @, be careful of potential name collisions with org names. You must include one of these special chars at the start of your const name, or the compiler will pitch a fit (this character must also must be included in all references to the const post-definition). (value) can be literally any arbitrary type of data (string, hex int, whatever). Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. Obviously, constants are not included in XSE output.
 
+#### List Constants
+As you may know, indexat%argX@constName and indexat%loopiter@constName both take decimal integers, but more specifically, these integers represent list indices. If you define a constant which contains a string with multiple spaces, you can later have the compiler construe it as a "list/array" via indexat%argX@constName and indexat%loopiter@constName. Thus, list constants do not actually exist in the same sense that constants in general do, it's just that all constants have the ability to be construed as such under certain circumstances if the user desires.
+
+You probably have no idea what any of that means; here's an example.
+```
+const @myList twenty fourty&speight ;this list const has 2 elements. We use &sp to signify a space without breaking the rule of "space = new index"
+
+lstart getln@myList ;loops through every item in @myList
+msg indexat%loopiter@myList ;gets element of @myList corresponding to %loopiter
+lend
+```
+
+#### Constant Properties
+Whenever a constant is defined, additional constants with the same name, but with special prefixes (think of them like sister constants) are added to the const table as well.
+
+Constant properties example
+```
+;getln@constName
+
+;the value of getln differs depending on if string contains spaces (list constant) or not (standard string).
+const @myString kek ;getln@myString = 3
+const @myList kek1 kek2 ;getln@myList = 2
+
+;getlnreal@constName
+
+;always returns the string length rather than list length, even for list constants
+const @myString kek ;getlnreal@myString = 3
+const @myList kek1 kek2 ;getlnreal@myList = 9 (counts spaces)
+
+;indexat(decimal int)@constName - this one requires an argument, unlike getln.
+
+const @myList kek1 kek2 ;indexat0@myList = kek1, indexat1@myList = kek2
+```
+
 ### using namespace (lib)
 ###### Other Names: namespace
 See section 2b (external functions).
@@ -317,8 +351,8 @@ Determines whether or not to create a new page (\p) upon a linebreak. If set to 
 
 ### setbreaklimit (new limit)
 ###### Other Names: breaklimit
-###### Default Value: 30
-Sets internal text break limit to decimal int (new limit). This value is used to determine how many characters of text to read before looking for a \n or \l point. These linebreaks are only allowed to occur at spaces, thus the default value of 30 as opposed to the actual limit of 34.
+###### Default Value: 34
+Sets internal text break limit to decimal int (new limit). This value is used to determine how many characters of text to read before looking for a \n or \l point. These linebreaks are only allowed to occur at spaces, and if the linebreak limit is exceeded at any point, the processor will look for the last space it encountered, and replace it with a break point.
 
 ### setlabelname (new label name)
 ###### Default Value: offset
@@ -503,18 +537,19 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 ```
 ;Any time "X" is used, it represents an argument number (starts at 1).
 
-%ARGX  ;Function argument. Use only in func definitions.
-%ARGXP  ;Function argument. Specifies that it's a pokemon name. Use only in func definitions.
-%ARGXA  ;Function argument. Specifies that it's an in-battle move name. Use only in func definitions.
-%ARGXI  ;Function argument. Specifies that it's an item name. Use only in func definitions.
+%argX  ;Function argument. Use only in func definitions.
+%argXP  ;Function argument. Specifies that it's a pokemon name. Use only in func definitions.
+%argXA  ;Function argument. Specifies that it's an in-battle move name. Use only in func definitions.
+%argXI  ;Function argument. Specifies that it's an item name. Use only in func definitions.
 
-%ARGXH  ;Function argument. Specifies that it's a hex int. Conforms decimal ints to hex ints. Use only in func definitions.
+%argXH  ;Function argument. Specifies that it's a hex int. Conforms decimal ints to hex ints. Use only in func definitions.
 
-%LOOPITER  ;Current loop iteration. Use only in loops.
-%LOOPITERH  ;Current loop iteration conformed to a hex int. Use only in loops.
+%li ;Short for %loopiter. No differences in behavior.
+%loopiter  ;Current loop iteration. Use only in loops.
+%loopiterH  ;Current loop iteration conformed to a hex int. Use only in loops.
 
-%PL  ;Player name. Case insensitive.
-%RI  ;Rival name. Case insensitive.
+%pl  ;Player name. Case insensitive.
+%ri  ;Rival name. Case insensitive.
 ```
 
 
