@@ -290,8 +290,6 @@ var constTable = {};
 
 function deref(n) {
 
-	console.log(n);
-
 	if (Object.keys(constTable).indexOf(n.toLowerCase()) > -1) {
 		return constTable[n.toLowerCase()];
 	}
@@ -302,8 +300,6 @@ function deref(n) {
 function derefAllFromIndex(arr, index) {
 
 	arr = arr.flat();
-	
-	console.log(arr);
 
 	for (let v = index; v < arr.length; v++) {
 	
@@ -715,6 +711,9 @@ function getXSE(text) {
 	
 	let loopOff = 0;
 	let loopMult = 1;
+	
+	let indOfStart = 0;
+	let indOfEnd = 0;
 
 	//console.log(goff)
     for(var i = 0; i < lines.length; i++) {
@@ -990,29 +989,33 @@ function getXSE(text) {
 						alert("!se can take at most 3 arguments. More than 3 provided.");
 						return;
 					}
-				
-					let indOfStart = 0;
-					let indOfEnd = 0;
 					
-					let fselines = FSEeditor.getValue().split("\n");
+					let fsecont = FSEeditor.getValue();
+					let fselines = fsecont.split("\n");
+					console.log(fselines);
 					
-					for (let c = 0; c < fselines.length; c++) {
-					
-						if (fselines[c].split(" ")[0] == "expstart") {
-							indOfStart = c;
+					let indexOfStart = 0;
+					let indexOfEnd = 0;
+					for (let r = 0; r < fselines.length; r++) {
+						if (fselines[r].split(" ")[0] == "expstart") {
+							indexOfStart = r;
 						}
-						
-						if (fselines[c] == "expend") {
-							indOfEnd = c;
+						if (fselines[r] == "expend") {
+							indexOfEnd = r;
+							break;
 						}
-					
 					}
-				
-					allBef = fselines.slice(0, indOfStart);
+					console.log(indexOfStart);
+					console.log(indexOfEnd);
 					
-					allAf = fselines.slice(indOfEnd);
+					var res = fselines.slice(0, indexOfStart);
+					res.push(fselines.slice(indexOfEnd));
 					
-					FSEeditor.setValue(FSEeditor.getValue().split("\n").slice(0, indOfEnd+1).flat().join("\n"));
+					res = res.flat();
+					
+					var splicePoint = res.indexOf("expend");
+					
+					res[splicePoint] = "";
 				
 					noCompile = true;
 					
@@ -1422,32 +1425,17 @@ function getXSE(text) {
 						nloopdat = nloopdat.replace(new RegExp("%loopiter", "gi"), iterExpr);
 					}
 					if (lmode == "exp") {
-						let editorContent = FSEeditor.getValue();
-						let editorContentLns = editorContent.split("\n");
+						res.splice(splicePoint, 0, nloopdat.split("\n"));
 						
-						fin += nloopdat.split("\n").length;
-						
-						editorContentLns.splice(expEndIndex+1+fin, 0, nloopdat.split("\n"));
-						
-						editorContentLns = editorContentLns.slice(editorContentLns.indexOf("expend")+1);
+						console.log(res);
 						
 						if (j == loopTimes-1) {
-						
-							let temp = allBef;
-							temp.push(editorContentLns.flat());
-							temp.push(allAf.slice(1).flat());
-							editorContentLns = temp.flat().join("\n");
-						} else {
-							editorContentLns = editorContentLns.flat().join("\n")
+							//if last iter
+							
+							FSEeditor.setValue(res.flat().join("\n"));
+							
 						}
 						
-						let fVal = editorContentLns;
-						
-						if (j == loopTimes-1) {
-							fVal += "\n";
-						}
-						
-						FSEeditor.setValue( fVal );
 					} else {
 						lines.splice(i+1, 0, nloopdat.split("\n"));
 					}
