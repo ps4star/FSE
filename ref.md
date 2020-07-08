@@ -13,8 +13,7 @@ TABLE OF CONTENTS:
 <br>2a. fcall
 <br>2b. External Functions
 <br>2c. Internal Functions
-<br>2d. Function Saving and Cache Commands
-<br>2e. Special Function Arguments
+<br>2d. Special Function Arguments
 3. Loops and Expansion Statements
 4. FSE Commands
 5. XSE Commands (what you're probably looking for)
@@ -121,7 +120,7 @@ The @main org is automatically added to XSE output. This label does not need to 
 
 ## (2) Functions
 
-FSE has two types of functions: internal and external. External functions are located in the scripts.js file (hence the name external - they're in a different file from the compiler). Internal functions are functions which are defined in FSE code. Internal functions can be saved to the JS localStorage cache. See below for more about functions and how to call them.
+FSE has two types of functions: internal and external. External functions are located in the scripts.js file (hence the name external - they're in a different file from the compiler). Internal functions are functions which are defined in FSE code. See below for more about functions and how to call them.
 
 
 
@@ -159,7 +158,7 @@ For information on how external functions work, and how to create your own, see 
 
 ## (2c) Internal Functions
 
-Internal functions are explicitly defined in-script, and cannot be called prior to their definition. All function (and cache)-related commands start with the "$" character.
+Internal functions are explicitly defined in-script, and cannot be called prior to their definition. All function-related commands start with the "$" character.
 
 A standard internal function definition:
 ```
@@ -179,21 +178,7 @@ Ends a function definition.
 
 
 
-## (2d) Function Saving and Cache Commands
-
-Internal functions are automatically "saved" to the JS localStorage cache, though this can be disabled if the user desires. Note that this form of storage is not the same as what external functions use, and if you really care about using a function for more than a couple of sessions, you should define it in scripts.js. Any time you clear your browser history, cookies, data, etc, you run a very high risk of deleting your function cache. Look up "localStorage" online for more info on how this works.
-
-With that said, below is a list of function cache commands.
-### $autosav (boolean)
-###### Default Value: true
-Determines whether or not to cache internal functions. Can be set at multiple points in the script. If a function is defined while this is false, it will not be written to the cache, otherwise it will. Note that this, like all other compiler variables with default values, will be reset to true every time the compiler is executed, even within the same session.
-
-### $clearall
-Clears the internal function cache. If you care about your cache, be weary of copying and pasting FSE code into the editor from other sources or websites, as there are no restrictions on this command.
-
-
-
-## (2e) Special Function Arguments
+## (2d) Special Function Arguments
 
 Along with the standard "%argX", FSE supports explicit typing (to an extent) of function arguments. This is done by adding a "special character" to the end of an %argX statement to denote the type. Currently supported are:
 - P for pokemon
