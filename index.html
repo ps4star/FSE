@@ -1479,7 +1479,7 @@ function getXSE(text) {
 
     }
 	
-	if (isFuncDef != false) {
+	if (isFuncDef != false && !noCompile) {
 		success = false;
 		alert("Compiler is not in main state. A function or loop somewhere was not closed properly.");
 		return;
