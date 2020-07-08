@@ -144,13 +144,13 @@ Writes all library functions represented by string (lib) to top-level namespace.
 
 Example:
 ```
-fcall stdlib.nickname ;valid
-fcall nickname ;invalid, will error
+fcall stdlib.nickname_frlg ;valid
+fcall nickname_frlg ;invalid, will error
 
-namespace stdlib
+namespace stdlib ;nickname is currently only available for FRLG until I figure out how to make it not crash in RSE. Sorry :(
 
-fcall nickname ;valid
-fcall stdlib.nickname ;still valid
+fcall nickname_frlg ;valid
+fcall stdlib.nickname_frlg ;still valid
 ```
 
 For information on how external functions work, and how to create your own, see [external function guide](https://github.com/ps4star/FSE/blob/master/functionguide.md).
@@ -267,11 +267,11 @@ To use iter commands, add additional arguments to !se/expstart. The second (opti
 msg %loopiter 0x4 ;3, 4, 5, 6
 !ee
 ```
-"multiter" with exp statement
+Loop with increase of 2 per iteration with exp statement
 ```
 !se 4 0 2 ;starts at 0, increases by 2 each loop. loops 4 times.
 @name%loopiter ;generates labels @name0, @name2, @name4, and @name6
-fcall stdlib.nickname
+;some code
 ret
 !ee
 ```
