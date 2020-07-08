@@ -17,7 +17,7 @@ TABLE OF CONTENTS:
 3. Loops and Expansion Statements
 4. FSE Commands
 5. XSE Commands (what you're probably looking for)
-<br>5a. **(READ THIS BEFORE 4B AND 4C) Note About XSE Commands**
+<br>5a. **(READ THIS BEFORE 5B AND 5C) Note About XSE Commands**
 <br>5b. List of XSE Commands with Modified Syntax
 <br>5c. List of XSE Commands with Alternative Names
 6. List of all Special % Strings
