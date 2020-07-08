@@ -146,7 +146,8 @@ Example:
 fcall stdlib.nickname_frlg ;valid
 fcall nickname_frlg ;invalid, will error
 
-namespace stdlib ;nickname is currently only available for FRLG until I figure out how to make it not crash in RSE. Sorry :(
+namespace stdlib ;nickname is currently only available for FRLG until I figure out
+;how to make it not crash in RSE. Sorry :(
 
 fcall nickname_frlg ;valid
 fcall stdlib.nickname_frlg ;still valid
@@ -246,7 +247,7 @@ fcall nickname
 ret
 !ee
 ```
-To use iter commands, add additional arguments to !se/expstart. The second (optional) is the starting iter value (positives only), and the third (optional) is the multiter value (and just a reminder, the first argument is required and represents the number of times to loop). Offiter and multiter can still be explicitly used, though it is discouraged.
+To use iter commands, add additional arguments to !se/expstart. The second (optional) is the starting iter value (positives only), and the third (optional) is the multiter value (and just a reminder, the first argument is required and represents the number of times to loop).
 ```
 !se 4 3 ;loops 4 times, initializes %loopiter at 3
 msg %loopiter 0x4 ;3, 4, 5, 6
@@ -290,14 +291,15 @@ const @birch 0x00
 
 move @birch @birchMoveSeq
 ```
-Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up to your preference. If you're going to use @, be careful of potential name collisions with org names. You must include one of these special chars at the start of your const name, or the compiler will pitch a fit (this character must also must be included in all references to the const post-definition). (value) can be literally any arbitrary type of data (string, hex int, whatever). Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. Obviously, constants are not included in XSE output.
+Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up to your preference. If you're going to use @, be careful of potential name collisions with org names. You must include one of these special chars at the start of your const name, or the compiler will pitch a fit (this character must also must be included in all references to the const post-definition). (value) can be literally any arbitrary type of data (string, hex int, whatever). Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. The only exception to this is command names.
 
 #### List Constants
-As you may know, indexat%argX@constName and indexat%loopiter@constName both take decimal integers, but more specifically, these integers represent list indices. If you define a constant which contains a string with multiple spaces, you can later have the compiler construe it as a "list/array" via indexat%argX@constName and indexat%loopiter@constName. Thus, list constants do not actually exist in the same sense that constants in general do, it's just that all constants have the ability to be construed as such under certain circumstances if the user desires.
+As you may know, indexat%argX@constName and indexat%loopiter@constName both take decimal integers, but more specifically, these integers represent list indices. If you define a constant which contains a string with multiple spaces, you can later have the compiler construe it as a "list/array" via indexat%argX@constName for funcs and indexat%loopiter@constName for loops. Thus, list constants do not actually exist in the same sense that constants in general do, it's just that all constants have the ability to be construed as such under certain circumstances if the user desires.
 
 You probably have no idea what any of that means; here's an example.
 ```
-const @myList twenty fourty&speight ;this list const has 2 elements. We use &sp to signify a space without breaking the rule of "space = new index"
+const @myList twenty fourty&speight ;this list const has 2 elements. We use &sp to signify a space without
+;breaking the rule of "space = new index"
 
 lstart getln@myList ;loops through every item in @myList
 msg indexat%loopiter@myList ;gets element of @myList corresponding to %loopiter
@@ -305,7 +307,7 @@ lend
 ```
 
 #### Constant Properties
-Whenever a constant is defined, additional constants with the same name, but with special prefixes (think of them like sister constants) are added to the const table as well.
+Whenever a constant is defined, additional constants with the same name, but with special prefixes (think of them like sister constants) are added to the const table as well. Constant properties are used to get the length of constants (getln@myConst), and, for list constants, the element stored at a specified index (indexat(index)@myConst).
 
 Constant properties example
 ```
@@ -321,13 +323,14 @@ const @myList kek1 kek2 ;getln@myList = 2
 const @myString kek ;getlnreal@myString = 3
 const @myList kek1 kek2 ;getlnreal@myList = 9 (counts spaces)
 
-;indexat(decimal int)@constName - this one requires an argument, unlike getln.
+;indexat(decimal int)@constName - this one requires a number, (decimal int), specifying the index to access, unlike getln
+;which doesn't take any special pseudo-arguments like this.
 
 const @myList kek1 kek2 ;indexat0@myList = kek1, indexat1@myList = kek2
 ```
 
 ### using namespace (lib)
-###### Other Names: namespace
+###### Other Names: namespace, writetop, loadlib, surface
 See section 2b (external functions).
 
 ### pageonbreak (boolean)
@@ -538,7 +541,7 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 ## (6) List of all Special % Strings
 
-% strings have been mentioned throughout this reference, but for the sake of simplicity, here's a list of all of them:
+% strings have been mentioned throughout this reference, but for the sake of simplicity, here's a list of all of them (they are all case-insensitive):
 ```
 ;Any time "X" is used, it represents an argument number (starts at 1).
 
@@ -553,8 +556,8 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 %loopiter  ;Current loop iteration. Use only in loops.
 %loopiterH  ;Current loop iteration conformed to a hex int. Use only in loops.
 
-%pl  ;Player name. Case insensitive.
-%ri  ;Rival name. Case insensitive.
+%pl  ;Player name.
+%ri  ;Rival name.
 ```
 
 
