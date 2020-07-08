@@ -473,6 +473,23 @@ Example:
 compseqexplicit 0x8000 0x0 @option1 0x1 @option2 0x2 @option3 0x3 @option4 0x4 @option5 0x5 @option6 0x7F @canceled
 ```
 
+### cry (pokemon)
+Calls XSE cry (pokemon) 0x0.
+
+### fadein
+###### Other Names: fadeinb
+Calls XSE fadescreen 0x0 (black to screen).
+
+### fadeout
+###### Other Names: fadeoutb
+Calls XSE fadescreen 0x1 (screen to black).
+
+### fadeinw
+Calls XSE fadescreen 0x2 (white to screen).
+
+### fadeoutw
+Calls XSE fadescreen 0x3 (screen to white).
+
 ### giveitem (item name) (item quantity)
 ###### Other Names: item
 Calls XSE giveitem. (item name) can be a hex ID, decimal ID, or string (such as "potion"). (item quantity) can be any kind of integer (hex or decimal).
@@ -488,6 +505,9 @@ Calls XSE msgbox.
 msgbox Let's go to the mall! 0x4
 ```
 (string) is a string literal (or constant), representing the text to display. (mode) is a hex integer or string (starting with "MSG_") representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 4 for more information on the automatic breaking system.
+
+### wildbattle (pokemon) (level) (item)
+Calls XSE wildbattle. (pokemon) is conformed to a hex int pokemon ID (can be string representing the pokemon name, hex int, or decimal int). (level) is conformed to a hex int representing the level of the pokemon. (item) is conformed to a hex int item ID (can be string representing the item name, hex int, or decimal int).
 
 
 
