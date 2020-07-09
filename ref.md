@@ -17,9 +17,8 @@ TABLE OF CONTENTS:
 3. Loops and Expansion Statements
 4. FSE Commands
 5. XSE Commands (what you're probably looking for)
-<br>5a. **(READ THIS BEFORE 5B AND 5C) Note About XSE Commands**
+<br>5a. **(READ THIS BEFORE 5B) Note About XSE Commands**
 <br>5b. List of XSE Commands with Modified Syntax
-<br>5c. List of XSE Commands with Alternative Names
 6. List of all Special % Strings
 7. Info/legal
 
@@ -444,6 +443,10 @@ Calls XSE bufferitem. (item name) can be a string representing the name of the i
 ### bufferpokemon (buffer) (pokemon name)
 Calls XSE bufferpokemon. (pokemon name) can be a string representing the name of the pokemon, a decimal int representing the pokemon ID, or a hex int representing the pokemon ID.
 
+### clearflag (flag pointer)
+###### Other Names: cf, resetflag
+Calls XSE clearflag. I would recommend making (flag pointer) a constant rather than a hex literal, especially if you're modifying multiple different flags in 1 script.
+
 ### compare (value to compare) (value to compare against)
 ###### Other Names: comp
 Calls XSE compare. (value to compare) is a hex int representing an in-game variable, and (value to compare against) is a hex or decimal int representing the value to compare (value to compare) against. If you need to use a sequence of compare calls, see compseq below for a faster method of doing it.
@@ -491,6 +494,10 @@ Calls XSE cry (pokemon) 0x0.
 ### doublebattle (trainer ID) (before label) (after label)
 Calls XSE trainerbattle with (type) 0x2.
 
+### faceplayer
+###### Other Names: face
+Calls XSE faceplayer.
+
 ### fadein
 ###### Other Names: fadeinb
 Calls XSE fadescreen 0x0 (black to screen).
@@ -505,6 +512,12 @@ Calls XSE fadescreen 0x2 (white to screen).
 ### fadeoutw
 Calls XSE fadescreen 0x3 (screen to white).
 
+### giveegg (pokemon)
+Calls XSE giveegg. (pokemon) is either a dec int, hex int, or string representing the pokemon name.
+```
+giveegg treecko
+```
+
 ### giveitem (item name) (item quantity)
 ###### Other Names: item
 Calls XSE giveitem. (item name) can be a hex ID, decimal ID, or string (such as "potion"). (item quantity) can be any kind of integer (hex or decimal).
@@ -515,6 +528,14 @@ Calls XSE givepokemon. All 3 args can either be hex int IDs, decimal int IDs, or
 
 ### gymbattle (trainer ID) (before label) (after label)
 Calls XSE trainerbattle with (type) 0x1. See trainerbattle below.
+
+### lf
+###### Other Names: lockface, lockfaceplayer
+Calls XSE lock and faceplayer.
+
+### lock
+###### Other Names: l
+Calls XSE lock.
 
 ### msgbox (string) (mode)
 ###### Other Names: msg
@@ -527,34 +548,11 @@ msgbox Let's go to the mall! 0x4
 ### pause (time)
 Time can be a decimal int representing the milliseconds to pause, or raw hex data (according to Sierra's tutorial, a pause of 0x20 ~= 1 second in real time. This is also the metric used to convert milliseconds to raw hex data for when (time) is a decimal int).
 
-### trainerbattle (trainer ID) (before) (after)
-Calls XSE trainerbattle 0x0 with (trainer ID), (before), and (after). Use "xse trainerbattle (type) (hex ID) 0x0 (before) (after)" if you'd like to use the original XSE syntax. Otherwise, use doublebattle for double battles and gymbattle for gym battles. Bar syntax can be used here (see note in fcall documentation for more info):
+### pokemart (values...)
+Generates an ORG label automatically for this. (values...) is just a space-separated list of item names (or decimal/hex IDs of the items).
 ```
-trainerbattle 0x00 Time to battle! | Oh, I lost.
+pokemart pokeball greatball masterball potion superpotion hyperpotion
 ```
-
-### wildbattle (pokemon) (level) (item)
-Calls XSE wildbattle. (pokemon) is conformed to a hex int pokemon ID (can be string representing the pokemon name, hex int, or decimal int). (level) is conformed to a hex int representing the level of the pokemon. (item) is conformed to a hex int item ID (can be string representing the item name, hex int, or decimal int).
-
-
-
-## (5c) List of XSE Commands with Alternative Names
-
-### clearflag (flag pointer)
-###### Other Names: cf, resetflag
-Calls XSE clearflag. I would recommend making (flag pointer) a constant rather than a hex literal, especially if you're modifying multiple different flags in 1 script.
-
-### faceplayer
-###### Other Names: face
-Calls XSE faceplayer.
-
-### lf
-###### Other Names: lockface, lockfaceplayer
-Calls XSE lock and faceplayer.
-
-### lock
-###### Other Names: l
-Calls XSE lock.
 
 ### preparemsg (pointer)
 ###### Other Names: prepmsg
@@ -572,15 +570,27 @@ Calls XSE release.
 ###### Other Names: sf
 Calls XSE setflag. (flag) is a hex int representing the flag ID.
 
+### textcolor (color)
+Calls XSE textcolor. (color) can be a dec int, hex int, or string color name (red, black, or blue).
+
+### trainerbattle (trainer ID) (before) (after)
+Calls XSE trainerbattle 0x0 with (trainer ID), (before), and (after). Use "xse trainerbattle (type) (hex ID) 0x0 (before) (after)" if you'd like to use the original XSE syntax. Otherwise, use doublebattle for double battles and gymbattle for gym battles. Bar syntax can be used here (see note in fcall documentation for more info):
+```
+trainerbattle 0x00 Time to battle! | Oh, I lost.
+```
+
 ### warp (map bank) (map number) (warp number)
 ##### Other Names: warpto
 Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and (warp number) is the warp number. All of these are decimal ints.
 
+### wildbattle (pokemon) (level) (item)
+Calls XSE wildbattle. (pokemon) is conformed to a hex int pokemon ID (can be string representing the pokemon name, hex int, or decimal int). (level) is conformed to a hex int representing the level of the pokemon. (item) is conformed to a hex int item ID (can be string representing the item name, hex int, or decimal int).
 
 
-## (6) List of all Special % Strings
 
-% strings have been mentioned throughout this reference, but for the sake of simplicity, here's a list of all of them (they are all case-insensitive):
+## (6) List of all Special Strings
+
+Special strings have been mentioned throughout this reference, but for the sake of simplicity, here's a list of all of them (they are all case-insensitive):
 ```
 ;Any time "X" is used, it represents an argument number (starts at 1).
 
@@ -597,6 +607,8 @@ Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and 
 
 %pl  ;Player name.
 %ri  ;Rival name.
+
+&sp ;Space
 ```
 
 
