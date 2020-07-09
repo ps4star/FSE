@@ -69,12 +69,6 @@ Since technically everything in FSE is initially processed as a JavaScript strin
 ```
 Hello, I am a string (look ma, no quotes).
 ```
-In any case where a string is being used as a function argument, it can not contain the character " ". Instead, the signifier "&sp" can be used. These scenarios are generally rare, however, as function arguments are almost always label names or item or pokemon names. Also, you can use const (see section 5) to automatically convert spaces to this signifier, and then reference said const as a function argument to avoid having to write out every "&sp". Example:
-```
-const @lookMa Hello, I am a string (look ma, no quotes).
-
-fcall function_that_takes_a_string @lookMa ; passes multi-space string as function argument
-```
 Special characters require an extra escape character before them to work properly. This means \\\\n rather than simply \n.
 
 ### Decimal Int
@@ -147,6 +141,16 @@ fcall is the most important command in all of FSE. It calls a function (whether 
 
 ### fcall (func name) (args...)
 Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this. Like with all strings, use escape characters for linebreaks (\\n not \n). Additionally, you can use a const to get around this "&sp" limitation, as consts automatically convert spaces to &sp.
+
+#### Bar Syntax
+Another way to get around the space problem is to use an alternative kind of argument seperator called "bar syntax." Here's an example:
+```
+fcall stdlib.obtain_and_name Charmander | @name
+
+@name
+;....
+ret
+```
 
 
 
@@ -308,7 +312,7 @@ const @birch 0x00
 
 move @birch @birchMoveSeq
 ```
-Note the "@" before (const name). It can actually be %, $, #, @, or !, it's up to your preference. If you're going to use @, be careful of potential name collisions with org names. You must include one of these special chars at the start of your const name, or the compiler will pitch a fit (this character must also must be included in all references to the const post-definition). (value) can be literally any arbitrary type of data (string, hex int, whatever). Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. The only exception to this is command names.
+Note the "@" before (const name). You must include this @ at the start of all const definitions as well as references. (value) can be any type of data. Const here works exactly as const does in JavaScript, or any other language that supports them. They simply replace the instances where they are referenced with their defined value via the JavaScript String.replace() method. Note that this does mean literally ANY reference to @(const name) will be replaced, even if it's unintentional, such as in the middle of a string literal, so be careful about using special chars if you're not trying to reference a const. The only exception to this is command names.
 
 #### List Constants
 As you may know, indexat%argX@constName and indexat%loopiter@constName both take decimal integers, but more specifically, these integers represent list indices. If you define a constant which contains a string with multiple spaces, you can later have the compiler construe it as a "list/array" via indexat%argX@constName for funcs and indexat%loopiter@constName for loops. Thus, list constants do not actually exist in the same sense that constants in general do, it's just that all constants have the ability to be construed as such under certain circumstances if the user desires.
@@ -481,6 +485,9 @@ compseqexplicit 0x8000 0x0 @option1 0x1 @option2 0x2 @option3 0x3 @option4 0x4 @
 ### cry (pokemon)
 Calls XSE cry (pokemon) 0x0.
 
+### doublebattle (trainer ID) (before label) (after label)
+Calls XSE trainerbattle with (type) 0x2.
+
 ### fadein
 ###### Other Names: fadeinb
 Calls XSE fadescreen 0x0 (black to screen).
@@ -503,7 +510,8 @@ Calls XSE giveitem. (item name) can be a hex ID, decimal ID, or string (such as 
 ###### Other Names: pokemon
 Calls XSE givepokemon. All 3 args can either be hex int IDs, decimal int IDs, or, for (pokemon name) and (pokemon held item) only, a string representing the name of the pokemon or held item.
 
-### gymbattle 
+### gymbattle (trainer ID) (before label) (after label)
+Calls XSE trainerbattle with (type) 0x1. See trainerbattle below.
 
 ### msgbox (string) (mode)
 ###### Other Names: msg
@@ -515,6 +523,12 @@ msgbox Let's go to the mall! 0x4
 
 ### pause (time)
 Time can be a decimal int representing the milliseconds to pause, or raw hex data (according to Sierra's tutorial, a pause of 0x20 ~= 1 second in real time. This is also the metric used to convert milliseconds to raw hex data for when (time) is a decimal int).
+
+### trainerbattle (trainer ID) (before) (after)
+Calls XSE trainerbattle 0x0 with (trainer ID), (before), and (after). Use "xse trainerbattle (type) (hex ID) 0x0 (before) (after)" if you'd like to use the original XSE syntax. Otherwise, use doublebattle for double battles and gymbattle for gym battles. Bar syntax can be used here (see note in fcall documentation for more info):
+```
+trainerbattle 0x00 Time to battle! | Oh, I lost.
+```
 
 ### wildbattle (pokemon) (level) (item)
 Calls XSE wildbattle. (pokemon) is conformed to a hex int pokemon ID (can be string representing the pokemon name, hex int, or decimal int). (level) is conformed to a hex int representing the level of the pokemon. (item) is conformed to a hex int item ID (can be string representing the item name, hex int, or decimal int).
