@@ -18,7 +18,7 @@ if 0x1 call %ARG2`,
 		"obtain_and_name" :
 		
 `fcall stdlib.obtain_poke %ARG1
-fcall stdlib.name_poke %ARG1 %ARG2`,
+fcall stdlib.name_poke %ARG1|%ARG2`,
 
 		"set_seen":
 		

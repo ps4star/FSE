@@ -69,15 +69,15 @@
     	</div>
         <br>
         <br>
-        <button id="convert_button" onclick="convert(); FSEeditor.clearSelection();" style="position: absolute; top: 11%; left: 12%;">Convert/Expand {Ctrl+Q}</button>
+        <button id="convert_button" onclick="convert(); FSEeditor.clearSelection(); convert(); FSEeditor.clearSelection();" style="position: absolute; top: 11%; left: 12%;">Convert/Expand {Ctrl+Q}</button>
         <button id="help-button" onclick="launchHelp();" style="position: absolute; top: 11%;">Documentation/Help</button>
         <br>
         <br>
         
-        <div id="in" style="position: absolute; top: 19%; right: 0%; left: .5%; bottom: 0%; margin-right: 55%;"></div>
+        <div id="in" style="position: absolute; top: 19%; right: 0%; left: .5%; bottom: 1%; margin-right: 55%;"></div>
 		<p style="position: absolute; left: 0.6%; top: 13.65%;">FSE code (input)</p>
 		<p style="position: absolute; left: 46%; top: 13.65%;">XSE code (output; automatically copied to clipboard)</p>
-        <textarea id="out" cols="85" rows="33" readonly style="position: absolute; left: 46%; top: 18.95%; background-color: black; color: white; font-family: 'Trebuchet MS'; overflow-y: scroll; resize: none;"></textarea>
+        <textarea id="out" cols="85" rows="33" readonly style="position: absolute; left: 46%; top: 18.95%; bottom: 1%; background-color: black; color: white; font-family: 'Trebuchet MS'; overflow-y: scroll; resize: none;"></textarea>
         <br>
 		<div style="position: absolute; top: -2.5%; padding-top: 1%; left: 15%; line-height: 1;">
         <p id = "status">Welcome to FSE. This message will tell you whether or not a conversion was successful.</p>
@@ -210,9 +210,22 @@ function nextOff() {
 	currOff++;
 }
 
+function changeOff(n) {
+	currOff += n;
+}
 
-String.prototype.addOrg = function(data) {
-    var toReturn = "#org "+getOff()+"\n"+data;
+
+String.prototype.addOrg = function(data, specifyOrg) {
+
+	if (typeof specifyOrg == 'undefined' || specifyOrg == 'undefined') {
+
+		var toReturn = "#org "+getOff()+"\n"+data;
+		
+	} else {
+	
+		var toReturn = "#org "+specifyOrg+"\n"+data;
+		
+	}
     nextOff();
     goff = parseInt(goff, 16);
     goff += calcBytes(determineType(data), data);
@@ -240,9 +253,17 @@ function parseMoves(input) {
     }
 
     var res = "";
+	
+	console.log(input);
 
     for(var i = 0; i < input.length; i++) {
-		input[i] = input[i].replace("u", "up").replace("d", "down").replace("l", "left").replace("r", "right");
+	
+		if (["up", "down", "left", "right"].indexOf(input[i]) == -1) {
+	
+			input[i] = input[i].replace("u", "up").replace("d", "down").replace("l", "left").replace("r", "right");
+		
+		}
+		
 		if (input[i] == "") {
 			success = false;
 			alert("Unnecessary space/empty string in applymovement move sequence.");
@@ -297,13 +318,26 @@ function deref(n) {
 	
 }
 
-function derefAllFromIndex(arr, index) {
+function derefAllFromIndex(arr, index, keepsp) {
+
+	keepsp = keepsp || 0;
+	if (keepsp == 0) {
+		keepsp = false;
+	}
 
 	arr = arr.flat();
 
 	for (let v = index; v < arr.length; v++) {
 	
-		arr[v] = deref(arr[v]).split("&sp");
+		if (keepsp) {
+		
+			arr[v] = deref(arr[v]).replace(/&sp/gi, " ");
+			
+		} else {
+	
+			arr[v] = deref(arr[v]).split("&sp");
+			
+		}
 	
 	}
 	
@@ -680,8 +714,87 @@ document.addEventListener("keydown", function(e) {
 
 });
 
+function conformSyntax(argument, times) {
+
+	times = times || 2;
+
+	let arg = argument.slice(times);
+
+	let mode = " ";
+	
+	for (let n = 0; n < arg.length; n++) {
+		if (arg[n].includes("|")) {
+			mode = ","
+			break;
+		} else if (arg[n].includes(" ")) {
+			arg[n] = arg[n].replace(new RegExp(" ", "g"), "&sp");
+		} else {
+			mode = " ";
+		}
+	}
+	
+	if (mode == " ") {
+		let res = arg;
+		for (let f = 0; f < times; f++) {
+			res.unshift(argument[(times-f-1)]);
+		}
+		return res;
+	} else {
+		let res = arg.join(" ").split("|");
+		for (let f = 0; f < times; f++) {
+			res.unshift(argument[(times-f-1)]);
+		}
+		return res.flat();
+	}
+
+}
+
+function repComs(arg, s) {
+
+	let res = arg;
+	
+	for (let u = s || 2; u < arg.length; u++) {
+		
+		res[u] = res[u].replace(new RegExp("&bar", "gi"), "|");
+		
+	}
+	
+	return res;
+
+}
+
+function globalBarRep(arr) {
+
+	let lines = arr;
+	
+	for (let g = 0; g < lines.length; g++) {
+	
+		let lnspace = lines[g].split("");
+		
+		for (let h = 0; h < lnspace.length; h++) {
+		
+			if (lnspace[h-1]+lnspace[h]+lnspace[h+1] == " | ") {
+		
+				lnspace[h-1] = "";
+				lnspace[h+1] = "";
+				
+			}
+			
+		}
+		
+		lines[g] = lnspace.join("");
+		
+	}
+	
+	return lines;
+	
+}
+
 function getXSE(text) {
     let lines = (text.replace(new RegExp("    ", "g"), "").replace(new RegExp("\t", "g"), "").replace(new RegExp("\r\n", "g"), "\n").replace(new RegExp("%PL", "gi"), "[player]").replace(new RegExp("%RI", "gi"), "[rival]")+"\n").split(/\n/);
+	
+	lines = globalBarRep(lines);
+	
 	let actualLength = lines.length;
     let header1 = "#dynamic "+goff;
 	let scriptText = "\n";
@@ -714,6 +827,8 @@ function getXSE(text) {
 	
 	let indOfStart = 0;
 	let indOfEnd = 0;
+	
+	let tableName = "!undef";
 
 	//console.log(goff)
     for(var i = 0; i < lines.length; i++) {
@@ -740,6 +855,27 @@ function getXSE(text) {
 			case "&comstart":
 				oldFuncValue = isFuncDef;
 				isFuncDef = "com";
+				break;
+			case "$table":
+			case "$tabstart":
+			case "$tablestart":
+			
+				noliNewLineAre = true;
+			
+				arg[1] = "@"+arg[1].lstrip("@");
+			
+				if (arg.length != 2) {
+					success = false;
+					alert("Too few or too many arguments provided for "+arg[0]+".");
+					return;
+				}
+				
+				isFuncDef = "tab";
+				
+				tableName = arg[1];
+				
+				constTable[arg[1]] = {};
+				
 				break;
 			case "$funcstart":
 				if (arg.length < 2 || arg[1].length < 1) {
@@ -768,6 +904,323 @@ function getXSE(text) {
 				autolabelname = arg[1];
 				
 				break;
+			case "compare":
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "compare "+arg[1]+" "+arg[2];
+			
+				break;
+			case "if":
+			
+				if (arg.length < 4) {
+					success = false;
+					alert("if requires 3 arguments.");
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+			
+				arg[1] = conformHex(arg[1], {"<": "0x0", "=": "0x1", ">": "0x2", "<=" : "0x3", ">=" : "0x4", "!=": "0x5"});
+				
+				body += "if "+arg[1]+" "+arg[2]+" "+arg[3];
+			
+				break;
+			case "checkitem":
+			
+				if (arg.length < 3) {
+					success = false;
+					alert("checkitem requires 2 arguments.");
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				arg[1] = conformHex(arg[1], itemstable, true);
+				
+				arg[2] = conformHex(arg[2]);
+				
+				body += "checkitem "+arg[1]+" "+arg[2];
+			
+				break;
+			case "removitem":
+			
+				if (arg.length < 3) {
+					success = false;
+					alert("removeitem requires 2 arguments.");
+					return;
+				}
+				
+				arg = derefAllFromIndex(arg, 1);
+				
+				arg[1] = conformHex(arg[1], itemstable, true);
+				
+				arg[2] = conformHex(arg[2]);
+				
+				body += "removeitem "+arg[1]+" "+arg[2];
+			
+				break;
+			case "givemoney":
+			
+				if (arg.length > 2) {
+					alert("givemoney in FSE only takes 1 arg: the money amount.");
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+			
+				body += "givemoney "+conformHex(arg[1])+" 0x0";
+			
+				break;
+			case "takemoney":
+			
+				if (arg.length > 2) {
+					alert("takemoney in FSE only takes 1 arg: the money amount.");
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+			
+				body += "takemoney "+conformHex(arg[1])+" 0x0";
+			
+				break;
+			case "showmoney":
+			
+				if (arg.length < 3) {
+					alert("showmoney requires 2 arguments.");
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "showmoney "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "hidemoney":
+			
+				if (arg.length < 3) {
+					alert("hidemoney requires 2 arguments.");
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "hidemoney "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "updatemoney":
+			
+				if (arg.length < 3) {
+					alert("updatemoney requires 2 arguments.");
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "updatemoney "+conformHex(arg[1])+" "+conformHex(arg[2])+" 0x0";
+			
+				break;
+			case "addvar":
+			
+				if (arg.length < 3) {
+					alert("addvar requires 2 arguments.");
+					success = false;
+					return;
+				}
+				
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "addvar "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "subvar":
+			
+				if (arg.length < 3) {
+					alert("subvar requires 2 arguments.");
+					success = false;
+					return;
+				}
+				
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "subvar "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "setvar":
+			
+				if (arg.length < 3) {
+					alert("setvar requires 2 arguments.");
+					success = false;
+					return;
+				}
+				
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "setvar "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "showpokepic":
+			
+				if (arg.length < 4) {
+					alert('showpokepic requires 3 arguments.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+			
+				body += "showpokepic "+conformHex(arg[1], pokemontable, true)+" "+conformHex(arg[2])+" "+conformHex(arg[3]);
+			
+				break;
+			case "setdooropened":
+			
+				if (arg.length < 3) {
+					alert('setdooropened requires 2 arguments.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "setdooropened "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "setdoorclosed":
+			
+				if (arg.length < 3) {
+					alert('setdoorclosed requires 2 arguments.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "setdoorclosed "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "opendoor":
+			
+				if (arg.length < 3) {
+					alert('opendoor requires 2 arguments.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "setdooropened "+conformHex(arg[1])+" "+conformHex(arg[2]);
+				body += "\ndoorchange";
+			
+				break;
+			case "checkcoins":
+			
+				if (arg.length < 2) {
+					alert('checkcoins requires 1 argument.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "checkcoins "+conformHex(arg[1]);
+			
+				break;
+			case "givecoins":
+			
+				if (arg.length < 2) {
+					alert('givecoins requires 1 argument.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "givecoins "+conformHex(arg[1]);
+			
+				break;
+			case "removecoins":
+			
+				if (arg.length < 2) {
+					alert('removecoins requires 1 argument.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "removecoins "+conformHex(arg[1]);
+			
+				break;
+			case "showcoins":
+			
+				if (arg.length < 3) {
+					alert('showcoins requires 2 arguments.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "showcoins "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "hidecoins":
+			
+				if (arg.length < 3) {
+					alert('updatecoins requires 2 arguments.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "hidecoins "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "updatecoins":
+			
+				if (arg.length < 3) {
+					alert('updatecoins requires 2 arguments.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "updatecoins "+conformHex(arg[1])+" "+conformHex(arg[2]);
+				
+				break;
+			case "yesnobox":
+			
+				if (arg.length < 3) {
+					alert('yesnobox requires 2 arguments.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "yesnobox "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "getplayerpos":
+			
+				if (arg.length < 3) {
+					alert('getplayerpos requires 2 arguments.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "getplayerpos "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
 			case "compseqe":
 			case "compareseqexplicit":
 			case "compsequenceexplicit":
@@ -775,6 +1228,12 @@ function getXSE(text) {
 				let startOfArgSeqe = 2;
 				
 				arg = derefAllFromIndex(arg, 1);
+				
+				if (arg.length < 3) {
+					success = false;
+					alert("compseqexplicit requires at least 2 arguments.");
+					return;
+				}
 				
 				if (!isHex(arg[1])) {
 					success = false;
@@ -814,7 +1273,13 @@ function getXSE(text) {
 				
 				arg = derefAllFromIndex(arg, 1);
 				
-				if (!isHex(arg[1])) {
+				if (arg.length < 3) {
+					success = false;
+					alert("compseq requires at least 2 arguments.");
+					return;
+				}
+				
+				if (!isHex(arg[1]) && arg[1].toLowerCase() != "lastresult") {
 					success = false;
 					alert("compseq arg 1 is not hex. Exception on line.");
 					return;
@@ -834,6 +1299,41 @@ function getXSE(text) {
 				noliNewLineAre = true;
 				
 				break;
+			case "doublebattle":
+			case "gymbattle":
+			case "trainerbattle":
+			
+				arg = conformSyntax(arg); //conforms comma to space
+				
+				arg = derefAllFromIndex(arg, 1, true);
+				
+				if (arg.length != 4) {
+					success = false;
+					alert("trainer/double/gymbattle all require 3 arguments. Provided: "+arg.length+".");
+					return;
+				}
+				
+				if (autobreak) {
+					arg[2] = doLines(arg[2]);
+					arg[3] = doLines(arg[3]);
+				}
+				
+				let id = 0;
+				id = (arg[0].toLowerCase() == "gymbattle") ? 1 : id;
+				id = (arg[0].toLowerCase() == "doublebattle") ? 2 : id;
+				
+				let firstoff = getOff();
+				nextOff();
+				let secondoff = getOff();
+				
+				body += "trainerbattle "+conformHex(id.toString())+" "+arg[1]+" 0x0 "+firstoff+" "+secondoff;
+				
+				changeOff(-1);
+				
+				footer += footer.addOrg("= "+arg[2]);
+				footer += footer.addOrg("= "+arg[3]);
+				
+				break;
 			case "applymovementreverse":
 			case "applymovementnowaitreverse":
 			case "movereverse":
@@ -850,18 +1350,45 @@ function getXSE(text) {
 				}
 				arg = derefAllFromIndex(arg, 1);
 				if (arg[0].toLowerCase().includes("r")) {
+				
+					console.log(arg);
+				
 					arg = arg.reverse();
 					arg.unshift(arg.pop());
 					arg.unshift(arg.pop());
 					let k = arg[1];
 					arg[1] = arg[0];
 					arg[0] = k;
+					
 					for (let thisa = 2; thisa < arg.length; thisa++) {
-						arg[thisa] = arg[thisa].swapChars("u", "d");
-						arg[thisa] = arg[thisa].swapChars("l", "r");
 						
-						arg[thisa] = arg[thisa].swapChars("up", "down");
-						arg[thisa] = arg[thisa].swapChars("left", "right");
+						switch (arg[thisa].toLowerCase()) {
+							case "up":
+								arg[thisa] = "down";
+								break;
+							case "u":
+								arg[thisa] = "down";
+								break;
+							case "left":
+								arg[thisa] = "right";
+								break;
+							case "l":
+								arg[thisa] = "right";
+								break;
+							case "r":
+								arg[thisa] = "left";
+								break;
+							case "right":
+								arg[thisa] = "left";
+								break;
+							case "down":
+								arg[thisa] = "up";
+								break;
+							case "d":
+								arg[thisa] = "up";
+								break;
+								
+						}
 						
 					}
 				}
@@ -873,6 +1400,33 @@ function getXSE(text) {
 
                 footer += footer.addOrg(parseMoves(arg.slice(2)));
                 break;
+			case "pokemart":
+			
+				if (arg.length == 1) {
+					success = false;
+					alert("pokemart requires at least 1 argument.");
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				let orgStatement = "";
+				
+				for (let j = 1; j < arg.length; j++) {
+					
+					orgStatement += "#raw word "+conformHex(arg[j], itemstable, true)+"\n";
+					
+				}
+				
+				orgStatement += "#raw word 0x0";
+				
+				console.log(arg);
+				console.log(orgStatement);
+				
+				body += "pokemart "+getOff();
+				
+				footer += footer.addOrg( orgStatement );
+			
+				break;
 			case "bufferattack":
 				arg = arg.join("\n").toLowerCase().split("\n");
 				
@@ -926,6 +1480,12 @@ function getXSE(text) {
 			case "func":
 			case "fcall":
 			
+				arg = conformSyntax(arg); //conforms to space mode
+				
+				arg = derefAllFromIndex(arg);
+				
+				console.log(arg);
+			
 				try {
 			
 					var reference = eval('allScripts.'+arg[1]);
@@ -960,12 +1520,42 @@ function getXSE(text) {
 					return;
 				}
 				
+				if (arg.length-2 > thisHighestArg && false) {
+					success = false;
+					alert("Too many args in function "+arg[1]+". Remember to use bar syntax (|) for passing multi-space strings as func args.");
+					return;
+				}
+				
+				if (arg.length > 2 && thisHighestArg == 1) {
+					arg[2] = arg.slice(2).join(" ");
+				}
+				
 				let finalVal = repArgs(reference, thisHighestArg, arg, thisHighestArg);
 				
 				lines.splice(i+1, 0, finalVal);
 				lines = lines.flat();
 				
 				noliNewLineAre = true;
+				
+				break;
+			case "pause":
+				arg = derefAllFromIndex(arg, 1);
+				
+				if (arg.length > 2 || arg.length == 1) {
+					alert("pause takes 1 argument (times). Either too many or too few args provided.");
+					success = false;
+					return;
+				}
+				
+				if (isHex(arg[1])) {
+					
+					body += "pause "+arg[1];
+					
+				} else {
+				
+					body += "pause "+toXSEhex(Math.round(parseInt(arg[1])/1000*32));
+					
+				}
 				
 				break;
 			case "expstart":
@@ -992,7 +1582,7 @@ function getXSE(text) {
 					
 					let fsecont = FSEeditor.getValue();
 					let fselines = fsecont.split("\n");
-					console.log(fselines);
+					//console.log(fselines);
 					
 					let indexOfStart = 0;
 					let indexOfEnd = 0;
@@ -1005,8 +1595,6 @@ function getXSE(text) {
 							break;
 						}
 					}
-					console.log(indexOfStart);
-					console.log(indexOfEnd);
 					
 					var res = fselines.slice(0, indexOfStart);
 					res.push(fselines.slice(indexOfEnd));
@@ -1139,14 +1727,18 @@ function getXSE(text) {
 			case "const":
 			case "define":
 			case "sconst":
+				if (arg[2] == "=") {
+					arg.splice(2, 1);
+				}
 				if (arg.length < 3) {
 					success = false;
 					alert("Consts require a name and value (2 params). Params given: "+(globalLine+1)+".");
 				}
-				if (["@", "%", "!", "#", "$"].indexOf(arg[1].charAt(0)) == -1 || Object.keys(constTable).indexOf(arg[1]) > -1) {
+				if (["@"].indexOf(arg[1].charAt(0)) == -1 || Object.keys(constTable).indexOf(arg[1]) > -1) {
 					success = false;
 					alert("Const on line either does not start with const identifier (%) or has already been defined.");
 				}
+				
 				let constVal = arg.slice(2).join(" ");
 				let constLn = 0;
 				
@@ -1261,6 +1853,51 @@ function getXSE(text) {
 				}
 			
 				break;
+			case "random":
+				
+				arg = derefAllFromIndex(arg, 1);
+				
+				arg[1] = conformHex(arg[1]);
+				
+				body += "random "+arg[1];
+			
+				break;
+			case "special2":
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "special2 "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "hidesprite":
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "hidesprite "+conformHex(arg[1]);
+			
+				break;
+			case "showsprite":
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "showsprite "+conformHex(arg[1]);
+			
+				break;
+			case "setweather":
+			
+				arg = derefAllFromIndex(arg, 1);
+			
+				body += "setweather "+conformHex(arg[1]);
+				
+				break;
+			case "weather":
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "setweather "+conformHex(arg[1]);
+				body += "\ndoweather";
+			
+				break;
             case "msgbox":
             case "msg":
 				if (arg.length < 3) {
@@ -1286,7 +1923,11 @@ function getXSE(text) {
 				}
             	let txtOff = getOff();
                 body += "msgbox "+txtOff+" "+arg.slice(-1)[0];
-                footer += footer.addOrg("= "+doLines(arg.slice(1, -1).join(" "))); //Adds our text data.
+				if (autobreak) {
+					footer += footer.addOrg("= "+doLines(arg.slice(1, -1).join(" "))); //Adds our text data.
+				} else {
+					footer += footer.addOrg("= "+arg.slice(1, -1).join(" "));
+				}
                 break;
 			case "xse":
 			case "xsed":
@@ -1328,6 +1969,34 @@ function getXSE(text) {
 				arg[1] = conformHex(arg[1], pokemontable, true);
 				
 				body += "cry "+arg[1]+" 0x0";
+				
+				break;
+			case "giveegg":
+			
+				if (arg.length == 1 || arg.length > 2) {
+					success = false;
+					alert("Too many or too few giveegg arguments provided.");
+					return;
+				}
+				
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "giveegg "+conformHex(arg[1], pokemontable, true);
+			
+				break;
+			case "textcolor":
+			
+				if (arg.length == 1 || arg.length > 2) {
+					success = false;
+					alert("Too many or too few textcolor arguments provided.");
+					return;
+				}
+			
+				arg[1] = arg[1].toLowerCase();
+				
+				arg[1] = conformHex(arg[1], {"blue": "0x00", "red" : "0x01", "black" : "0x02"});
+				
+				body += "textcolor "+arg[1];
 				
 				break;
 			case "wildbattle":
@@ -1379,6 +2048,11 @@ function getXSE(text) {
 				isFuncDef = false;
 				funcName = "";
 			} else {
+				if (arg[0] == "const") {
+					success = false;
+					alert("Consts cannot be defined in functions.");
+					return;
+				}
 				let val = arg.slice(0).join(" ")+"\n";
 				if (autosav) {
 					let obj = JSON.parse(localStorage.func);
@@ -1411,13 +2085,10 @@ function getXSE(text) {
 				for (let j = 0; j < loopTimes; j++) {
 					let nloopdat = cLoopData;
 					
-					let iterExpr;
+					let iterExpr = ((loopTimes-j-1)*(loopMult)+(loopOff)).toString();
 					
-					if (lmode == "exp") {
-						iterExpr = ((j*loopMult)+(loopOff)).toString();
-					} else {
-						iterExpr = ((loopTimes-j-1)*(loopMult)+(loopOff)).toString();
-					}
+					console.log(iterExpr);
+					
 					if (nloopdat.toLowerCase().includes("%loopiterh")) {
 						nloopdat = nloopdat.replace(new RegExp("%loopiterh", "gi"), conformHex(iterExpr));
 					}
@@ -1427,7 +2098,6 @@ function getXSE(text) {
 					if (lmode == "exp") {
 						res.splice(splicePoint, 0, nloopdat.split("\n"));
 						
-						console.log(res);
 						
 						if (j == loopTimes-1) {
 							//if last iter
@@ -1456,6 +2126,19 @@ function getXSE(text) {
 			noliNewLineAre = true;
 			
 			FSEeditor.clearSelection();
+		} else if (isFuncDef == "tab") {
+			arg[0] = arg[0].toLowerCase();
+			
+			let endList = ["$tabend", "$endtable"];
+			
+			if (endList.indexOf(arg[0]) > -1) {
+				isFuncDef = false;
+			} else if (arg[0] != "") {
+				constTable[arg[0].toLowerCase()+tableName.toLowerCase()] = arg.slice(1).join(" ").replace(new RegExp(" ", "g"), "&sp");
+			}
+			
+			noliNewLineAre = true;
+			
 		}
         
         if (!noliNewLineAre) {
