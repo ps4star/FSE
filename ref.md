@@ -69,7 +69,7 @@ Since technically everything in FSE is initially processed as a JavaScript strin
 ```
 Hello, I am a string (look ma, no quotes).
 ```
-Special characters require an extra escape character before them to work properly. This means \\\\n rather than simply \n.
+Special characters require an extra escape character before them to work properly. This means \\\\n rather than simply \\n.
 
 ### Decimal Int
 If you really want to, you can use decimal int IDs for items and pokemon (again, just use the built-in table). They are also used for certain commands, such as warp.
@@ -140,7 +140,7 @@ FSE has two types of functions: internal and external. External functions are lo
 fcall is the most important command in all of FSE. It calls a function (whether it's internal or external doesn't matter) and passes parameters into it as specified in the function definition.
 
 ### fcall (func name) (args...)
-Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this. Like with all strings, use escape characters for linebreaks (\\n not \n). Additionally, you can use a const to get around this "&sp" limitation, as consts automatically convert spaces to &sp.
+Not to be confused with call. Since arguments are separated by " ", any string arguments containing spaces are necessarily forbidden. However, you can use the special "&sp" signifier to get around this. Like with all strings, use escape characters for linebreaks (\\\\n not \\n). Additionally, you can use a const to get around this "&sp" limitation, as consts automatically convert spaces to &sp.
 
 #### Bar Syntax
 Another way to get around the space problem is to use an alternative kind of argument seperator called "bar syntax." Here's an example:
