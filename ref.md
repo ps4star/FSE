@@ -287,7 +287,7 @@ ret
 ```
 
 A GIF of an expansion statement in action:<br>
-![](https://i.ibb.co/r2ZFNy5/ezgif-com-video-to-gif.gif)
+![](https://i.ibb.co/StXth68/ezgif-com-video-to-gif-1.gif)
 
 
 
