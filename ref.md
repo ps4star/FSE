@@ -145,11 +145,14 @@ Not to be confused with call. Since arguments are separated by " ", any string a
 #### Bar Syntax
 Another way to get around the space problem is to use an alternative kind of argument seperator called "bar syntax." Here's an example:
 ```
-fcall stdlib.obtain_and_name Charmander | @name
+$funcstart myFunc
 
-@name
-;....
-ret
+msg %arg1 0x4
+msg %arg2 0x4
+
+$funcend
+
+fcall myFunc A multi-space string | A multi-space string part 2
 ```
 
 
