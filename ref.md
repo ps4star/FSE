@@ -16,9 +16,7 @@ TABLE OF CONTENTS:
 <br>2d. Special Function Arguments
 3. Loops and Expansion Statements
 4. FSE Commands
-5. XSE Commands (what you're probably looking for)
-<br>5a. **(READ THIS BEFORE 5B) Note About XSE Commands**
-<br>5b. List of XSE Commands with Modified Syntax
+5. List of XSE Commands
 6. List of all Special % Strings
 7. Info/legal
 
@@ -382,25 +380,14 @@ Copies (raw xse...) to XSE output. Does not de-reference constants.
 Copies (raw xse...) to XSE output. De-references constants.
 
 
-## (5) XSE Commands
 
-
-
-## (5a) Note About XSE Commands
-
-FSE has support for all XSE commands, but not in the way that you might think. If FSE does not "recognize" a command, it will assume it's XSE code, and will simply copy and paste it to XSE output, with the only modifications being that it will still scan for const references. This means only some XSE commands (those which are particularly inconvenient or have optimization potential, or those which have alternative names) are actually "recognized", while the rest are simply de-referenced and copied without any special attention given to them by the compiler.
-
-For this reason, the below list is NOT a complete or comprehensive list of all commands in XSE, simply a list of all the ones that work differently (or have "modified syntax") in FSE than XSE. Note that 4c contains a different XSE command list. The commands in the 4c list do not need to be written differently, but simply have alternative (shortened) names (though all of these also retain their original XSE names, i.e. you're not forced to use any of these alternative names if you don't want to). Some commands in the list also have additional XSE command calls automatically performed after them. "lf" for example calls XSE lock, then XSE faceplayer, both in 1 command. These are technically recognized by the compiler, but generally don't have any "modified syntax", thus they are in a separate list.
-
-
-
-## (5b) List of XSE Commands with Modified Syntax
+## (5) List of XSE Commands
 
 Below is a list of all standard XSE commands currently recognized by the compiler which are written differently in FSE compared to XSE.
 
 ### @(label name)
 ###### Other Names: label, lbl, @
-Creates an XSE org with (label name). Note that "@" is specified as an "other name" despite already being the primary name. This is because it can be used both with a space and without a space ("@lblname" vs "@ lblname"). @ is the only name this applies to (i.e. the other names require a space and cannot be used without one). Any non-leading @s found in the label name will cause an error. Note that all labels must come after your @main code. Code found outside of any labels will throw a compiler error. All label references MUST start with @, otherwise invalid XSE code will be generated, as there is minimal error-checking for label references.
+Creates an XSE org with (label name). Note that "@" is specified as an "other name" despite already being the primary name. This is because it can be used both with a space and without a space ("@lblname" vs "@ lblname"). @ is the only name this applies to (i.e. the other names require a space and cannot be used without one). Any non-leading @s found in the label name will cause an error. Note that all labels must come after your @main code. Code found outside of any labels will throw a compiler error. All label references MUST start with @, otherwise invalid XSE code will be generated.
 
 ### applymovement (movement target) (movement series...)
 ###### Other Names: move
@@ -443,9 +430,15 @@ Calls XSE bufferitem. (item name) can be a string representing the name of the i
 ### bufferpokemon (buffer) (pokemon name)
 Calls XSE bufferpokemon. (pokemon name) can be a string representing the name of the pokemon, a decimal int representing the pokemon ID, or a hex int representing the pokemon ID.
 
+### checkcoins (amount)
+
+
 ### clearflag (flag pointer)
 ###### Other Names: cf, resetflag
 Calls XSE clearflag. I would recommend making (flag pointer) a constant rather than a hex literal, especially if you're modifying multiple different flags in 1 script.
+
+### closedoor (x) (y)
+Calls XSE setdoorclosed, followed by a call to doorchange. (x) and (y) can be any kind of int.
 
 ### compare (value to compare) (value to compare against)
 ###### Other Names: comp
@@ -453,13 +446,13 @@ Calls XSE compare. (value to compare) is a hex int representing an in-game varia
 
 ### compseq (value to compare) (label name...)
 ###### Other Names: compareseq, compsequence, comparesequence
-Repeatedly calls XSE compare (using (value to compare) and the value to compare against) and if 0x1 goto (label name). The value to compare against increases by 1 for each (label name...), and is initialized at 0x0. The final value to compare against in the sequence is set to 0x7F (the menu cancel option). This can be avoided by using the explicit form of this command: compseqexplicit.
+Repeatedly calls XSE compare (using (value to compare) and the value to compare against) and if 0x1 goto (label name). The value to compare against increases by 1 for each (label name...), and is initialized at 0x0.
 
 Since this is easily the most confusing command in the entire language, here's an example with compiler output:
 
 FSE
 ```
-compseq 0x8000 0x0 @option1 @option2 @option3 @option4 @option5 @option6 @canceled
+compseq 0x8000 0x0 @option1 @option2 @option3 @option4 @option5 @option6 @option7
 ```
 XSE (this was copied from [Sierra's MEGA-HUGE XSE Scripting Tutorial](https://www.pokecommunity.com/showthread.php?t=164276))
 ```
@@ -475,8 +468,8 @@ compare 0x8000 0x4
 if 0x1 goto @option5
 compare 0x8000 0x5
 if 0x1 goto @option6
-compare 0x8000 0x7F
-if 0x1 goto @canceled
+compare 0x8000 0x6
+if 0x1 goto @option7
 ```
 
 ### compseqexplicit (value to compare) \[(value to compare against) (label name)...\]
@@ -493,6 +486,9 @@ Calls XSE cry (pokemon) 0x0.
 
 ### doublebattle (trainer ID) (before label) (after label)
 Calls XSE trainerbattle with (type) 0x2.
+
+### doweather
+Calls XSE doweather.
 
 ### faceplayer
 ###### Other Names: face
@@ -512,6 +508,9 @@ Calls XSE fadescreen 0x2 (white to screen).
 ### fadeoutw
 Calls XSE fadescreen 0x3 (screen to white).
 
+### givecoins (amount)
+Calls XSE givecoins. (amount) can be any kind of int.
+
 ### giveegg (pokemon)
 Calls XSE giveegg. (pokemon) is either a dec int, hex int, or string representing the pokemon name.
 ```
@@ -522,12 +521,21 @@ giveegg treecko
 ###### Other Names: item
 Calls XSE giveitem. (item name) can be a hex ID, decimal ID, or string (such as "potion"). (item quantity) can be any kind of integer (hex or decimal).
 
+### givemoney (amount)
+Callse XSE givemoney. (amount) can be any type of int.
+
 ### givepokemon (pokemon name) (pokemon level) (pokemon held item)
 ###### Other Names: pokemon
 Calls XSE givepokemon. All 3 args can either be hex int IDs, decimal int IDs, or, for (pokemon name) and (pokemon held item) only, a string representing the name of the pokemon or held item.
 
 ### gymbattle (trainer ID) (before label) (after label)
 Calls XSE trainerbattle with (type) 0x1. See trainerbattle below.
+
+### hidepokepic
+Calls XSE hidepokepic.
+
+### hidesprite (sprite ID)
+Calls XSE hidesprite. (sprite ID) can be any kind of int.
 
 ### lf
 ###### Other Names: lockface, lockfaceplayer
@@ -544,6 +552,9 @@ Calls XSE msgbox.
 msgbox Let's go to the mall! 0x4
 ```
 (string) is a string literal (or constant), representing the text to display. (mode) is a hex integer or string (starting with "MSG_") representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 4 for more information on the automatic breaking system.
+
+### opendoor (x) (y)
+Calls XSE setdooropened, followed by a call to doorchange. (x) and (y) can be any kind of int.
 
 ### pause (time)
 Time can be a decimal int representing the milliseconds to pause, or raw hex data (according to Sierra's tutorial, a pause of 0x20 ~= 1 second in real time. This is also the metric used to convert milliseconds to raw hex data for when (time) is a decimal int).
@@ -562,13 +573,65 @@ Calls XSE preparemsg with specified (pointer), and adds a waitmsg call afterward
 ###### Other Names: prepmsgnowait
 Calls XSE preparemsg with specified (pointer).
 
+### random (max value)
+Calls XSE random. (max value) can be a decimal or hex int.
+```
+random 2
+compseq 0x800D @if0 @if1 @if2 ;runs compare/if checks for each possible value (0-2)
+```
+
 ### release
 ###### Other Names: rel
 Calls XSE release.
 
+### setdoorclosed (x) (y)
+Calls XSE setdoorclosed. (x) and (y) can be any kind of int.
+
+### setdooropened (x) (y)
+Calls XSE setdooropened. (x) and (y) can be any kind of int.
+
 ### setflag (flag)
 ###### Other Names: sf
 Calls XSE setflag. (flag) is a hex int representing the flag ID.
+
+### setmaptile (x) (y) (tile ID) (movement?)
+Calls XSE setmaptile. All args must be ints, either dec or hex.
+
+### setweather (weather type)
+Calls XSE setweather. (weather type) can be a string or a hex/decimal int ID. String possibilities are:
+```
+house (0x0)
+sunny (0x1)
+regular (0x2)
+rainy (0x3)
+threesnowflakes (0x4)
+rainthunder (0x5)
+mist (0x6)
+snow (0x7)
+sandstorm (0x8)
+mistfromtoprightcorner (0x9)
+densemist (0xA)
+cloudy (0xB)
+undergroundflashes (0xC)
+heavyrainthunder (0xD)
+underwatermist (0xE)
+??? (0xF)
+```
+
+### showmoney (x) (y)
+Calls XSE showmoney. (x) and (y) can both be any kind of int.
+
+### showpokepic (pokemon) (x) (y)
+Calls XSE showpokepic. (pokemon) can be any kind of int or a string representing a pokemon name, and (x) and (y) can be any kind of int.
+
+### showsprite (sprite ID)
+Calls XSE showsprite. (sprite ID) can be any kind of int.
+
+### special (special ID)
+Calls XSE special. (special ID) can be any kind of int.
+
+### special2 (var) (special ID)
+Calls XSE special2. (var) is a hex variable to store event in, and (special ID) is the event ID.
 
 ### textcolor (color)
 Calls XSE textcolor. (color) can be a dec int, hex int, or string color name (red, black, or blue).
@@ -579,9 +642,15 @@ Calls XSE trainerbattle 0x0 with (trainer ID), (before), and (after). Use "xse t
 trainerbattle 0x00 Time to battle! | Oh, I lost.
 ```
 
+### updatemoney (x) (y)
+Calls XSE updatemoney. (x) and (y) can be any kind of int.
+
 ### warp (map bank) (map number) (warp number)
 ##### Other Names: warpto
 Calls XSE warp. (map bank) is the map bank, (map number) is the map number, and (warp number) is the warp number. All of these are decimal ints.
+
+### weather (weather type)
+Calls XSE setweather and then doweather. (weather type) is a string or dec/hex ID. See table above in setweather for a list of these string names.
 
 ### wildbattle (pokemon) (level) (item)
 Calls XSE wildbattle. (pokemon) is conformed to a hex int pokemon ID (can be string representing the pokemon name, hex int, or decimal int). (level) is conformed to a hex int representing the level of the pokemon. (item) is conformed to a hex int item ID (can be string representing the item name, hex int, or decimal int).
@@ -607,6 +676,8 @@ Special strings have been mentioned throughout this reference, but for the sake 
 
 %pl  ;Player name.
 %ri  ;Rival name.
+
+%lr ;LASTRESULT
 
 &sp ;Space
 ```
