@@ -342,7 +342,7 @@ end
 
 ### compseq
 ```
-compseq 0x8000 0x0 @option1 @option2 @option3 @option4 @option5 @option6 @canceled
+compseq 0x8000 0x0 @option1 @option2 @option3 @option4 @option5 @option6 @option7
 
 @option1
 ;option 1 code
@@ -368,7 +368,7 @@ ret
 ;option 6 code
 ret
 
-@canceled
+@option7
 ;code to run when user presses cancel on the menu
 ret
 ```
@@ -393,7 +393,7 @@ if 0x1 goto @option5
 compare 0x8000 0x6
 if 0x1 goto @option6
 compare 0x8000 0x7
-if 0x7F goto @canceled
+if 0x1 goto @option7
 
 end
 
@@ -441,7 +441,7 @@ return
 
 ### Expansion Statement with compseq
 ```
-compseq 0x8000 0x0 @option1 @option2 @option3 @option4 @option5 @option6 @canceled
+compseq 0x8000 0x0 @option1 @option2 @option3 @option4 @option5 @option6 @option7
 
 expstart 6 1 ;inits %loopiter at 1, loops 6 times
 @option%loopiter ;adds %loopiter to end of option name (1, 2, 3...)
@@ -477,7 +477,7 @@ if 0x1 goto @option5
 compare 0x8000 0x6
 if 0x1 goto @option6
 compare 0x8000 0x7
-if 0x7F goto @canceled
+if 0x1 goto @option7
 
 end
 
@@ -517,7 +517,7 @@ return
 return
 
 
-#org @canceled
+#org @option7
 
 
 return
