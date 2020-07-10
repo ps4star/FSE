@@ -1311,3 +1311,34 @@ var itemstable = {
 	"ruby" : "373",
 	"sapphire" : "374"
 }
+
+var weathertable = {
+	"house" : "0x0",
+	"inhouse" : "0x0",
+	"inhouseweather" : "0x0",
+	"sunny" : "0x1",
+	"bright" : "0x1",
+	"regular" : "0x2",
+	"normal" : "0x2",
+	"rainy" : "0x3",
+	"threesnowflakes" : "0x4",
+	"unusedsnow" : "0x4",
+	"rainthunder" : "0x5",
+	"thunder" : "0x5",
+	"mist" : "0x6",
+	"snow" : "0x7",
+	"snowstorm" : "0x7",
+	"sandstorm" : "0x8",
+	"mistfromtoprightcorner" : "0x9",
+	"densemist" : "0xA",
+	"cloudy" : "0xB",
+	"undergroundflashes" : "0xC",
+	"heavyrainthunder" : "0xD",
+	"heavyrainwiththunder" : "0xD",
+	"thunderstorm" : "0xD",
+	"underwatermist" : "0xE",
+	"???" : "0xF"
+}
+
+
+

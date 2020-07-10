@@ -258,7 +258,7 @@ function parseMoves(input) {
 
     for(var i = 0; i < input.length; i++) {
 	
-		if (["up", "down", "left", "right"].indexOf(input[i]) == -1) {
+		if (["up", "down", "left", "right"].indexOf(input[i]) == -1 && Object.keys(currentTable).indexOf(input[i]) == -1) {
 	
 			input[i] = input[i].replace("u", "up").replace("d", "down").replace("l", "left").replace("r", "right");
 		
@@ -268,7 +268,10 @@ function parseMoves(input) {
 			success = false;
 			alert("Unnecessary space/empty string in applymovement move sequence.");
 		}
-        if (["up", "down", "left", "right"].indexOf(input[i]) > -1) {
+		
+		console.log(input[i]);
+		
+        if (["up", "down", "left", "right"].indexOf(input[i]) > -1 && Object.keys(currentTable).indexOf(input[i]) == -1) {
             input[i] += cSpeed;
         }
 		if (isHex(input[i])) {
@@ -311,8 +314,8 @@ var constTable = {};
 
 function deref(n) {
 
-	if (Object.keys(constTable).indexOf(n.toLowerCase()) > -1) {
-		return constTable[n.toLowerCase()];
+	if (Object.keys(constTable).indexOf(n) > -1) {
+		return constTable[n];
 	}
 	return n;
 	
@@ -791,7 +794,7 @@ function globalBarRep(arr) {
 }
 
 function getXSE(text) {
-    let lines = (text.replace(new RegExp("    ", "g"), "").replace(new RegExp("\t", "g"), "").replace(new RegExp("\r\n", "g"), "\n").replace(new RegExp("%PL", "gi"), "[player]").replace(new RegExp("%RI", "gi"), "[rival]")+"\n").split(/\n/);
+    let lines = (text.replace(new RegExp("    ", "g"), "").replace(new RegExp("\t", "g"), "").replace(new RegExp("\r\n", "g"), "\n").replace(new RegExp("%PL", "gi"), "[player]").replace(new RegExp("%RI", "gi"), "[rival]")+"\n").replace(new RegExp("%lr", "gi"), "LASTRESULT").split(/\n/);
 	
 	lines = globalBarRep(lines);
 	
@@ -848,6 +851,8 @@ function getXSE(text) {
 				delete arg[b];
 			}
 		}
+		
+		let originalArgs = arg;
 		
 		if (isFuncDef == false) {
 
@@ -913,17 +918,50 @@ function getXSE(text) {
 				break;
 			case "if":
 			
+				console.log(arg);
+			
 				if (arg.length < 4) {
 					success = false;
 					alert("if requires 3 arguments.");
 					return;
 				}
+				
+				if (arg[1].toLowerCase() == "last") {
+					arg[1] = "LASTRESULT";
+				}
+				
+				if (arg.slice(1).join(" ").includes("|")) {
+					arg = conformSyntax(arg);
+					arg = arg.join(" ").split(" ");
+					
+					body += "compare "+arg[1]+" "+conformHex(arg[3])+"\n";
+					arg.splice(1, 1);
+					arg.splice(2, 1);
+					
+					
+					
+					console.log(arg);
+				}
 			
 				arg = derefAllFromIndex(arg, 1);
 			
-				arg[1] = conformHex(arg[1], {"<": "0x0", "=": "0x1", ">": "0x2", "<=" : "0x3", ">=" : "0x4", "!=": "0x5"});
+				arg[1] = conformHex(arg[1], {"<": "0x0", "=": "0x1", "==" : "0x1", ">": "0x2", "<=" : "0x3", ">=" : "0x4", "!=": "0x5"});
 				
 				body += "if "+arg[1]+" "+arg[2]+" "+arg[3];
+			
+				break;
+			case "copyvar":
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "copyvar "+arg[1]+" "+arg[2];
+			
+				break;
+			case "copyvarifnotzero":
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "copyvarifnotzero "+arg[1]+" "+arg[2];
 			
 				break;
 			case "checkitem":
@@ -943,7 +981,7 @@ function getXSE(text) {
 				body += "checkitem "+arg[1]+" "+arg[2];
 			
 				break;
-			case "removitem":
+			case "removeitem":
 			
 				if (arg.length < 3) {
 					success = false;
@@ -1117,6 +1155,20 @@ function getXSE(text) {
 				body += "\ndoorchange";
 			
 				break;
+			case "closedoor":
+			
+				if (arg.length < 3) {
+					alert('closedoor requires 2 arguments.');
+					success = false;
+					return;
+				}
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "setdoorclosed "+conformHex(arg[1])+" "+conformHex(arg[2]);
+				body += "\ndoorchange";
+			
+				break;
 			case "checkcoins":
 			
 				if (arg.length < 2) {
@@ -1273,6 +1325,8 @@ function getXSE(text) {
 				
 				arg = derefAllFromIndex(arg, 1);
 				
+				console.log("iscomp");
+				
 				if (arg.length < 3) {
 					success = false;
 					alert("compseq requires at least 2 arguments.");
@@ -1288,16 +1342,19 @@ function getXSE(text) {
 				for (startOfArgSeq; startOfArgSeq < arg.length; sValue++, startOfArgSeq++) {
 				
 					body += "compare "+arg[1]+" "+conformHex(sValue.toString());
-					if (startOfArgSeq == arg.length-1) {
-						body += "\nif 0x7F goto "+arg[startOfArgSeq]+"\n";
-					} else {
-						body += "\nif 0x1 goto "+arg[startOfArgSeq]+"\n";
-					}
+					body += "\nif 0x1 goto "+arg[startOfArgSeq]+"\n";
 				
 				}
 				
 				noliNewLineAre = true;
 				
+				break;
+			case "setmaptile":
+			
+				arg = derefAllFromIndex(arg, 1);
+				
+				body += "setmaptile "+conformHex(arg[1])+" "+conformHex(arg[2])+" "+conformHex(arg[3])+" "+conformHex(arg[4]);
+			
 				break;
 			case "doublebattle":
 			case "gymbattle":
@@ -1654,9 +1711,6 @@ function getXSE(text) {
 				pageonbreak = ( arg[1] == 'true' );
 				
 				break;
-			case "if":
-				body += "if "+arg.slice(1).join(" ");
-				break;
 			case "goto":
 				arg = derefAllFromIndex(arg, 1);
 				
@@ -1704,7 +1758,8 @@ function getXSE(text) {
 					alert("Labels must start with @, but cannot contain @ elsewhere, only the first char. Pls fix. Exception on line.");
 					return;
 				}
-				body += "\n#org "+arg[1]+"\n";
+				body += "\n#org "+originalArgs[1]+"\n";
+				console.log(arg);
 				break;
 			case "ret":
 			case "return":
@@ -1749,8 +1804,6 @@ function getXSE(text) {
 				} else {
 					constLn = constVal.length;
 				}
-				
-				arg[1] = arg[1].toLowerCase();
 				
 				constVal = constVal.replace(/&sp/g, "&lsp");
 				constVal = constVal.split(" ").join("&sp");
@@ -2030,7 +2083,6 @@ function getXSE(text) {
 			case "":
 				noliNewLineAre = true;
             default:
-				arg[0] = arg[0].toLowerCase();
 				if (arg[0].charAt(0) == "@" && arg[0].length > 1) { //label name case
 					lines.splice((i+1), 0, "@ "+arg[0]);
 					continue;
