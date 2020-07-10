@@ -523,6 +523,38 @@ return
 return
 ```
 
+### if statement using bar syntax
+```
+checkcoins 500
+
+if 0x800D >= 1 | call @myLabel
+
+@myLabel
+msg You have 500+ coins! 0x4
+ret
+```
+XSE:
+```
+#dynamic 0x800000
+
+#org @main
+
+checkcoins 0x1F4
+compare 0x800D 0x1
+if 0x4 call @myLabel
+
+end
+
+#org @myLabel
+
+msgbox @offset0 0x4
+
+return
+
+
+#org @offset0
+= You have 500+ coins!
+```
 
 
 
