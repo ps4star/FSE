@@ -55,7 +55,7 @@ While FSE does support raw hex values for the most part, it's highly recommended
 The internal tables can be located in the tables.js file of this repo if you'd like to see for yourself how to use them.
 
 ### Case-insensitivity
-All command names, and const names are case-insensitive. Functions aren't, however.
+All command names are case-insensitive. Functions and consts aren't, however.
 
 
 
@@ -389,6 +389,9 @@ Below is a list of all standard XSE commands currently recognized by the compile
 ###### Other Names: label, lbl, @
 Creates an XSE org with (label name). Note that "@" is specified as an "other name" despite already being the primary name. This is because it can be used both with a space and without a space ("@lblname" vs "@ lblname"). @ is the only name this applies to (i.e. the other names require a space and cannot be used without one). Any non-leading @s found in the label name will cause an error. Note that all labels must come after your @main code. Code found outside of any labels will throw a compiler error. All label references MUST start with @, otherwise invalid XSE code will be generated.
 
+### addvar (var name) (amount)
+Calls XSE addvar. (var name) is a hex int representing the var, and (amount) is any kind of int representing the amount to add to (var name).
+
 ### applymovement (movement target) (movement series...)
 ###### Other Names: move
 Calls XSE applymovement, and adds a "waitmovement 0x0" call afterwards. (movement target) is a hex int representing the target of (movement series...), and (movement series...) is a list of space-delimited movement commands. See the SIDE NOTE below for information on how to format movement commands. Hex codes may still be used here if desired. See XSE documentation for more info on (movement target) values. To prevent the waitmovement call, see applymovementnowait below.
@@ -431,7 +434,16 @@ Calls XSE bufferitem. (item name) can be a string representing the name of the i
 Calls XSE bufferpokemon. (pokemon name) can be a string representing the name of the pokemon, a decimal int representing the pokemon ID, or a hex int representing the pokemon ID.
 
 ### checkcoins (amount)
+Calls XSE checkcoins. (amount) is any kind of int representing the number to compare the coins against.
 
+Use:
+```
+checkcoins 500
+if last >= 500
+```
+
+### checkitem (item) (quantity)
+Calls XSE checkitem. (item) is any kind of int, or a string representing the item name. (quantity) is any kind of int representing the quantity of (item) to check for.
 
 ### clearflag (flag pointer)
 ###### Other Names: cf, resetflag
@@ -480,6 +492,12 @@ Example:
 ```
 compseqexplicit 0x8000 0x0 @option1 0x1 @option2 0x2 @option3 0x3 @option4 0x4 @option5 0x5 @option6 0x7F @canceled
 ```
+
+### copyvar (destination) (tocopy)
+Calls XSE copyvar. (destination) and (tocopy) are any kind of int.
+
+### copyvarifnotzero (destination) (tocopy)
+Calls XSE copyvarifnotzero. (destination) and (tocopy) are any kind of int.
 
 ### cry (pokemon)
 Calls XSE cry (pokemon) 0x0.
@@ -530,6 +548,12 @@ Calls XSE givepokemon. All 3 args can either be hex int IDs, decimal int IDs, or
 
 ### gymbattle (trainer ID) (before label) (after label)
 Calls XSE trainerbattle with (type) 0x1. See trainerbattle below.
+
+### hidecoins (x) (y)
+Calls XSE hidecoins. (x) and (y) are any kind of int.
+
+### hidemoney (x) (y)
+Calls XSE hidemoney. (x) and (y) are any kind of int.
 
 ### hidepokepic
 Calls XSE hidepokepic.
@@ -584,6 +608,12 @@ compseq 0x800D @if0 @if1 @if2 ;runs compare/if checks for each possible value (0
 ###### Other Names: rel
 Calls XSE release.
 
+### removecoins (amount)
+Calls XSE removecoins. (amount) is any kind of int.
+
+### removeitem (item) (amount)
+Calls XSE removeitem. (item) is any kind of int, or a string representing the item name. (amount) is any kind of int representing the amount of (item) to take away.
+
 ### setdoorclosed (x) (y)
 Calls XSE setdoorclosed. (x) and (y) can be any kind of int.
 
@@ -596,6 +626,9 @@ Calls XSE setflag. (flag) is a hex int representing the flag ID.
 
 ### setmaptile (x) (y) (tile ID) (movement?)
 Calls XSE setmaptile. All args must be ints, either dec or hex.
+
+### setvar (name) (value)
+Calls XSE setvar. (name) and (value) are any kind of int.
 
 ### setweather (weather type)
 Calls XSE setweather. (weather type) can be a string or a hex/decimal int ID. String possibilities are:
@@ -618,6 +651,9 @@ underwatermist (0xE)
 ??? (0xF)
 ```
 
+### showcoins (x) (y)
+Calls XSE showcoins. (x) and (y) are any kind of int.
+
 ### showmoney (x) (y)
 Calls XSE showmoney. (x) and (y) can both be any kind of int.
 
@@ -633,6 +669,12 @@ Calls XSE special. (special ID) can be any kind of int.
 ### special2 (var) (special ID)
 Calls XSE special2. (var) is a hex variable to store event in, and (special ID) is the event ID.
 
+### subvar (var name) (amount)
+Calls XSE subvar. (var name) is a hex int representing the variable, and (amount) is any kind of int representing the amount to subtract from (var name).
+
+### takemoney (amount)
+Calls XSE takemoney. (amount) is any kind of int representing the amount of money to take away.
+
 ### textcolor (color)
 Calls XSE textcolor. (color) can be a dec int, hex int, or string color name (red, black, or blue).
 
@@ -642,8 +684,11 @@ Calls XSE trainerbattle 0x0 with (trainer ID), (before), and (after). Use "xse t
 trainerbattle 0x00 Time to battle! | Oh, I lost.
 ```
 
+### updatecoins (x) (y)
+Calls XSE updatecoins. (x) and (y) are any kind of int.
+
 ### updatemoney (x) (y)
-Calls XSE updatemoney. (x) and (y) can be any kind of int.
+Calls XSE updatemoney. (x) and (y) are any kind of int.
 
 ### warp (map bank) (map number) (warp number)
 ##### Other Names: warpto
@@ -655,6 +700,8 @@ Calls XSE setweather and then doweather. (weather type) is a string or dec/hex I
 ### wildbattle (pokemon) (level) (item)
 Calls XSE wildbattle. (pokemon) is conformed to a hex int pokemon ID (can be string representing the pokemon name, hex int, or decimal int). (level) is conformed to a hex int representing the level of the pokemon. (item) is conformed to a hex int item ID (can be string representing the item name, hex int, or decimal int).
 
+### yesnobox (x) (y)
+Calls XSE yesnobox. (x) and (y) are any kind of int.
 
 
 ## (6) List of all Special Strings
