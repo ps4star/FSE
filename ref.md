@@ -577,6 +577,9 @@ msgbox Let's go to the mall! 0x4
 ```
 (string) is a string literal (or constant), representing the text to display. (mode) is a hex integer or string (starting with "MSG_") representing the type of msgbox. Adding linebreaks in the message string is allowed, but the compiler already has a system for auto-filling these breaks. Keep in mind that an #org statement is not allowed here. See XSE msgbox documentation for more information on msgbox types. See setbreaklimit and pageonbreak in section 4 for more information on the automatic breaking system.
 
+### multichoice (x) (y) (multi ID) (can B cancel)
+Calls XSE multichoice. All arguments are either hex or decimal ints. If (can B cancel) is 0/0x0, then B can cancel the dialog, otherwise it can't.
+
 ### opendoor (x) (y)
 Calls XSE setdooropened, followed by a call to doorchange. (x) and (y) can be any kind of int.
 
