@@ -1703,12 +1703,16 @@ function getXSE(text) {
 				
 				textBreakLimit = parseInt(arg[1]);
 				
+				noliNewLineAre = true;
+				
 				break;
 			case "pageonbreak":
 				arg = derefAllFromIndex(arg, 1);
 				arg[1] = arg[1].toLowerCase();
 				
 				pageonbreak = ( arg[1] == 'true' );
+				
+				noliNewLineAre = true;
 				
 				break;
 			case "goto":
