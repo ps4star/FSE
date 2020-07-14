@@ -314,8 +314,8 @@ var constTable = {};
 
 function deref(n) {
 
-	if (Object.keys(constTable).indexOf(n) > -1) {
-		return constTable[n];
+	if (Object.keys(constTable).indexOf(n.toLowerCase()) > -1) {
+		return constTable[n.toLowerCase()];
 	}
 	return n;
 	
@@ -532,7 +532,7 @@ function doLines(n) {
 	
 	}
 	
-	if (["\n", "\l", "\p"].indexOf(res.charAt(res.length-1)) > -1 || res.charAt(res.length-1) == " ") {
+	if (["\\n", "\\l", "\\p"].indexOf(res.charAt(res.length-1)) > -1 || res.charAt(res.length-1) == " ") {
 		res = res.substring(0, res.length-2);
 	}
 	
@@ -1783,9 +1783,23 @@ function getXSE(text) {
 				body += "\nend";
 				endsNeeded--;
 				break;
+			case "multichoice":
+			
+				arg = derefAllFromIndex(arg, 1);
+			
+				arg[1] = conformHex(arg[1]);
+				arg[2] = conformHex(arg[2]);
+				arg[3] = conformHex(arg[3]);
+				arg[4] = conformHex(arg[4]);
+				
+				body += "multichoice "+arg[1]+" "+arg[2]+" "+arg[3]+" "+arg[4];
+			
+				break;
 			case "const":
 			case "define":
 			case "sconst":
+			
+				arg[1] = arg[1].toLowerCase();
 				if (arg[2] == "=") {
 					arg.splice(2, 1);
 				}
