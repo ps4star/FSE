@@ -34,3 +34,5 @@ link: https://ps4star.github.io/FSE/
 ### New in 1.1
 - Small bugfixes
 - multichoice now recognized (takes 4 arguments: x, y, multichoice ID, can B cancel? (0x0=yes))
+
+Tutorial: https://www.youtube.com/watch?v=fI1cGKpfEDw&feature=youtu.be
