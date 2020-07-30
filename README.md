@@ -31,13 +31,15 @@ link: https://ps4star.github.io/FSE/
 4. Whatever directory "nw.exe" is in, copy it and all other files in the directory into the same directory as FSE's "index.html", "package.json", "scripts.js", etc.
 5. Once nw.exe and all other nw files are in the same directory as FSE, double click nw.exe and it should launch the program.
 
-### New in 1.1
-- Small bugfixes
-- multichoice now recognized (takes 4 arguments: x, y, multichoice ID, can B cancel? (0x0=yes))
+# Update Log
 
 ### New in 1.2
 - Major msgbox bug fix
 - /* and \*/ can now be used for multi-line comments instead of &comstart and &comend
 - showsprite and hidesprite can now take 0 arguments. If 0 arguments are provided, the argument will be assumed to be 0x800F.
+
+### New in 1.1
+- Small bugfixes
+- multichoice now recognized (takes 4 arguments: x, y, multichoice ID, can B cancel? (0x0=yes))
 
 Tutorial: https://www.youtube.com/watch?v=fI1cGKpfEDw&feature=youtu.be
