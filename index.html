@@ -488,47 +488,55 @@ function doLines(n) {
 	
 	for (let iter = 0; iter < chars.length; iter++) {
 	
-		if (chars[iter] == " ") {
-			lastSpace = iter+breaks;
-		}
+		if (!([`\n`, `\l`, `\p`].indexOf(chars[iter]) > -1)) {
 	
-		if (charID >= textBreakLimit && (!hasBroken && chars[iter] == " ")) {
-			res = res.substring(0, lastSpace) + "\\n" + res.substring(lastSpace, res.length);
-			hasBroken = true;
-			charID = -1;
-			doNotAddChar = true;
-			breaks++;
-		} else if (charID >= textBreakLimit && chars[iter] == " ") {
-			if (pageonbreak) {
-				if (breaks % 2 != 0) {
-					res = res.substring(0, lastSpace) + "\\p" + res.substring(lastSpace, res.length)
-				} else {
-					res = res.substring(0, lastSpace) + "\\n" + res.substring(lastSpace, res.length)
-				}
-			} else {
-				res = res.substring(0, lastSpace) + "\\l" + res.substring(lastSpace, res.length)
+			if (chars[iter] == " ") {
+				lastSpace = iter+breaks;
 			}
-			charID = -1;
-			doNotAddChar = true;
-			breaks++;
-		}
 		
-		if (!doNotAddChar) {
-		
-			res += chars[iter];
-			
-			if (["\\n", "\\l", "\\p"].indexOf(chars[iter]) > -1) {
+			if (charID >= textBreakLimit && (!hasBroken && chars[iter] == " ")) {
+				res = res.substring(0, lastSpace) + "\\n" + res.substring(lastSpace, res.length);
+				hasBroken = true;
 				charID = -1;
+				doNotAddChar = true;
+				breaks++;
+			} else if (charID >= textBreakLimit && chars[iter] == " ") {
+				if (pageonbreak) {
+					if (breaks % 2 != 0) {
+						res = res.substring(0, lastSpace) + "\\p" + res.substring(lastSpace, res.length)
+					} else {
+						res = res.substring(0, lastSpace) + "\\n" + res.substring(lastSpace, res.length)
+					}
+				} else {
+					res = res.substring(0, lastSpace) + "\\l" + res.substring(lastSpace, res.length)
+				}
+				charID = -1;
+				doNotAddChar = true;
 				breaks++;
 			}
 			
+			
+			if (!doNotAddChar) {
+			
+				res += chars[iter];
+				
+			} else {
+			
+				doNotAddChar = false;
+			
+			}
+		
+			charID++;
+			
 		} else {
-		
-			doNotAddChar = false;
-		
+			lastSpace = 0;
+			hasBroken = false;
+			breaks++;
+			res += chars[iter];
+			charID = 0;
+			
+			console.log("yes");
 		}
-	
-		charID++;
 	
 	}
 	
@@ -858,8 +866,10 @@ function getXSE(text) {
 
         switch(arg[0].toLowerCase()) {
 			case "&comstart":
+			case "/*":
 				oldFuncValue = isFuncDef;
 				isFuncDef = "com";
+				noliNewLineAre = true;
 				break;
 			case "$table":
 			case "$tabstart":
@@ -1396,6 +1406,8 @@ function getXSE(text) {
 			case "movereverse":
 			case "mover":
 			case "movenowaitreverse":
+			case "movernowait":
+			case "movenowaitr":
             case "applymovement":
             case "move":
 			case "applymovementnowait":
@@ -1942,16 +1954,44 @@ function getXSE(text) {
 				break;
 			case "hidesprite":
 			
-				arg = derefAllFromIndex(arg, 1);
+				if (arg.length > 1) {
+			
+					arg = derefAllFromIndex(arg, 1);
+					
+					body += "hidesprite "+conformHex(arg[1]);
+					
+				} else if (arg.length == 1) {
 				
-				body += "hidesprite "+conformHex(arg[1]);
+					body += "hidesprite 0x800F";
+					
+				} else {
+				
+					success = false;
+					alert("hidesprite can take 0 (0x800F) or 1 (specified value) arguments. Argument number is not either one of these values.");
+					return;
+					
+				}
 			
 				break;
 			case "showsprite":
 			
-				arg = derefAllFromIndex(arg, 1);
+				if (arg.length > 1) {
+			
+					arg = derefAllFromIndex(arg, 1);
+					
+					body += "showsprite "+conformHex(arg[1]);
+					
+				} else if (arg.length == 1) {
 				
-				body += "showsprite "+conformHex(arg[1]);
+					body += "showsprite 0x800F";
+					
+				} else {
+				
+					success = false;
+					alert("showsprite can take 0 (0x800F) or 1 (specified value) arguments. Argument number is not either one of these values.");
+					return;
+					
+				}
 			
 				break;
 			case "setweather":
@@ -2136,7 +2176,7 @@ function getXSE(text) {
 			}
 			
 		} else if (isFuncDef == "com") {
-			if (arg[0].toLowerCase() == "&comend"){
+			if (arg[0].toLowerCase() == "&comend" || arg[0].toLowerCase() == "*/"){
 				isFuncDef = oldFuncValue;
 			}
 			noliNewLineAre = true;
