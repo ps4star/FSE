@@ -13,7 +13,6 @@ TABLE OF CONTENTS:
 <br>2a. fcall
 <br>2b. External Functions
 <br>2c. Internal Functions
-<br>2d. Special Function Arguments
 3. Loops and Expansion Statements
 4. FSE Commands
 5. List of XSE Commands
@@ -559,7 +558,7 @@ Calls XSE hidemoney. (x) and (y) are any kind of int.
 Calls XSE hidepokepic.
 
 ### hidesprite (sprite ID)
-Calls XSE hidesprite. (sprite ID) can be any kind of int.
+Calls XSE hidesprite. (sprite ID) can be any kind of int. As of v1.2, (sprite ID) is now an optional argument. If it is omitted, 0x800F (in-game variable which stores the people no. of last person interacted with) is used.
 
 ### lf
 ###### Other Names: lockface, lockfaceplayer
@@ -664,7 +663,7 @@ Calls XSE showmoney. (x) and (y) can both be any kind of int.
 Calls XSE showpokepic. (pokemon) can be any kind of int or a string representing a pokemon name, and (x) and (y) can be any kind of int.
 
 ### showsprite (sprite ID)
-Calls XSE showsprite. (sprite ID) can be any kind of int.
+Calls XSE showsprite. (sprite ID) can be any kind of int. As of v1.2, (sprite ID) is now an optional argument. If it is omitted, 0x800F (in-game variable which stores the people no. of last person interacted with) is used.
 
 ### special (special ID)
 Calls XSE special. (special ID) can be any kind of int.
