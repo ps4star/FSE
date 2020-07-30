@@ -466,7 +466,27 @@ function resetAll() {
 	FSEeditor.clearSelection();
 }
 
+function catseq(alist, index, index2) {
 
+	return alist[index]+alist[index2];
+	
+}
+
+function findUpperMod2(n) {
+	if (n % 2 == 0) {
+		return n;
+	} else {
+		return n+1;
+	}
+}
+
+function findUpperMod2i(n) {
+	if (n % 2 != 0) {
+		return n;
+	} else {
+		return n+1;
+	}
+}
 
 function doLines(n) {
 
@@ -488,60 +508,66 @@ function doLines(n) {
 	
 	for (let iter = 0; iter < chars.length; iter++) {
 	
-		if (!([`\n`, `\l`, `\p`].indexOf(chars[iter]) > -1)) {
-	
-			if (chars[iter] == " ") {
-				lastSpace = iter+breaks;
-			}
+		if (chars[iter] == " ") {
+			lastSpace = iter+breaks;
+		}
 		
-			if (charID >= textBreakLimit && (!hasBroken && chars[iter] == " ")) {
-				res = res.substring(0, lastSpace) + "\\n" + res.substring(lastSpace, res.length);
-				hasBroken = true;
-				charID = -1;
-				doNotAddChar = true;
-				breaks++;
-			} else if (charID >= textBreakLimit && chars[iter] == " ") {
-				if (pageonbreak) {
-					if (breaks % 2 != 0) {
-						res = res.substring(0, lastSpace) + "\\p" + res.substring(lastSpace, res.length)
-					} else {
-						res = res.substring(0, lastSpace) + "\\n" + res.substring(lastSpace, res.length)
-					}
-				} else {
-					res = res.substring(0, lastSpace) + "\\l" + res.substring(lastSpace, res.length)
-				}
-				charID = -1;
-				doNotAddChar = true;
-				breaks++;
-			}
+		let specialCharCheck = catseq(chars, iter, iter+1);
+		
+		if (specialCharCheck == String.raw`\n` || specialCharCheck == String.raw`\p` || specialCharCheck == String.raw`\l`) {
 			
+			charID = -1;
 			
-			if (!doNotAddChar) {
-			
-				res += chars[iter];
+			if (specialCharCheck == String.raw`\p` && pageonbreak) {
 				
-			} else {
+				breaks = findUpperMod2(breaks);
+				
+			} else if (specialCharCheck == String.raw`\n` && pageonbreak) {
 			
-				doNotAddChar = false;
-			
+				breaks = findUpperMod2i(breaks);
+				
 			}
-		
-			charID++;
 			
-		} else {
-			lastSpace = 0;
-			hasBroken = false;
-			breaks++;
-			res += chars[iter];
-			charID = 0;
+			hasBroken = true;
 			
-			console.log("yes");
 		}
 	
-	}
+		if (charID >= textBreakLimit && (!hasBroken && chars[iter] == " ")) {
+			res = res.substring(0, lastSpace) + "\\n" + res.substring(lastSpace, res.length);
+			hasBroken = true;
+			charID = -1;
+			doNotAddChar = true;
+			breaks++;
+		} else if (charID >= textBreakLimit && chars[iter] == " ") {
+			if (pageonbreak) {
+				if (breaks % 2 != 0) {
+					res = res.substring(0, lastSpace) + "\\p" + res.substring(lastSpace, res.length)
+				} else {
+					res = res.substring(0, lastSpace) + "\\n" + res.substring(lastSpace, res.length)
+				}
+			} else {
+				res = res.substring(0, lastSpace) + "\\l" + res.substring(lastSpace, res.length)
+			}
+			charID = -1;
+			doNotAddChar = true;
+			breaks++;
+		}
+		
+		console.log(chars[iter]);
+		
+		if (!doNotAddChar) {
+		
+			res += chars[iter];
+			
+		} else {
+		
+			doNotAddChar = false;
+		
+		}
 	
-	if (["\\n", "\\l", "\\p"].indexOf(res.charAt(res.length-1)) > -1 || res.charAt(res.length-1) == " ") {
-		res = res.substring(0, res.length-2);
+		charID++;
+			
+	
 	}
 	
 	return res;
@@ -2016,15 +2042,6 @@ function getXSE(text) {
 					alert("msgbox requires 2 arguments, "+(globalLine+1)+" provided.");
 				}
 				arg = derefAllFromIndex(arg, 1);
-				
-				for (let g = 1; g < arg.length-1; g++) {
-					if (arg[g].indexOf(String.raw`\n`) > -1 && arg[g].indexOf(String.raw`\\n`) == -1) {
-						success = false;
-						alert("Use \\\\n not \\n. Exception on line.");
-						return;
-					}
-					arg[g] = arg[g].replace("\\\\n", "\\n");
-				}
 				
 				if (!(isHex(arg[arg.length-1]))) {
 					if (arg[arg.length-1].substring(0, 4) != "MSG_") {
