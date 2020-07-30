@@ -35,4 +35,9 @@ link: https://ps4star.github.io/FSE/
 - Small bugfixes
 - multichoice now recognized (takes 4 arguments: x, y, multichoice ID, can B cancel? (0x0=yes))
 
+### New in 1.2
+- Major msgbox bug fix
+- /* and \*/ can now be used for multi-line comments instead of &comstart and &comend
+- showsprite and hidesprite can now take 0 arguments. If 0 arguments are provided, the argument will be assumed to be 0x800F.
+
 Tutorial: https://www.youtube.com/watch?v=fI1cGKpfEDw&feature=youtu.be
