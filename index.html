@@ -952,6 +952,26 @@ function getXSE(text) {
 				body += "compare "+arg[1]+" "+arg[2];
 			
 				break;
+			case "stopif":
+				
+				arg = derefAllFromIndex(arg, 1);
+				
+				if (arg.length != 2) {
+					success = false;
+					alert("stopif takes 1 argument. Different num. of args specified.");
+					return;
+				}
+				
+				body += "checkflag "+arg[1];
+				body += "\nif 0x1 goto @endScript\n";
+				
+				if (footer.indexOf("@endScript") == -1) {
+				
+					footer += footer.addOrg("end", "@endScript");
+					
+				}
+			
+				break;
 			case "if":
 			
 				console.log(arg);
@@ -1385,6 +1405,8 @@ function getXSE(text) {
 				noliNewLineAre = true;
 				
 				break;
+			case "maptile":
+			case "map":
 			case "setmaptile":
 			
 				arg = derefAllFromIndex(arg, 1);
@@ -1976,6 +1998,30 @@ function getXSE(text) {
 				arg = derefAllFromIndex(arg, 1);
 				
 				body += "special2 "+conformHex(arg[1])+" "+conformHex(arg[2]);
+			
+				break;
+			case "fhidesprite":
+			case "hideset":
+			
+				if (arg.length == 3) {
+			
+					arg = derefAllFromIndex(arg, 1);
+					
+					body += "hidesprite "+conformHex(arg[1])+"\n";
+					body += "setflag "+conformHex(arg[2]);
+					
+				} else if (arg.length == 2) {
+				
+					body += "hidesprite 0x800F\n";
+					body += "setflag "+conformHex(arg[1]);
+					
+				} else {
+				
+					success = false;
+					alert("hidesprite can take 0 (0x800F) or 1 (specified value) arguments. Argument number is not either one of these values.");
+					return;
+					
+				}
 			
 				break;
 			case "hidesprite":
