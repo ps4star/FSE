@@ -1,4 +1,4 @@
-# Welcome to FSE (FastScriptEditor) 1.2
+# Welcome to FSE (FastScriptEditor) 1.3
 
 This tool is designed to speed up the scripting process in ROM hack development by translating proprietary FSE code (documentation found in "ref.md") into standard XSE code.
 There are several benefits to scripting this way rather than with XSE directly, with the main ones being that you're only going to be writing about 1/2 the amount of code to achieve the same outcome you would in XSE, as well as the fact that FSE comes pre-loaded with plenty of data tables (simply put in the common string name, like "potion", or "pokeball", and the hex value will be generated), and allows one to define and call custom functions.
@@ -32,6 +32,10 @@ link: https://ps4star.github.io/FSE/
 5. Once nw.exe and all other nw files are in the same directory as FSE, double click nw.exe and it should launch the program.
 
 # Update Log
+
+### New in 1.3
+- New com: stopif (flag). Immediately ends script if (flag) is set.
+- New com: setgame ("frlg" or "rse"). Sets internal game variable. Has same effect as selecting a game from the drop-down menu. This mostly just affects movement.
 
 ### New in 1.2
 - Major msgbox bug fix
