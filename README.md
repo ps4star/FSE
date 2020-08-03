@@ -36,6 +36,7 @@ link: https://ps4star.github.io/FSE/
 ### New in 1.3
 - New com: stopif (flag). Immediately ends script if (flag) is set.
 - New com: setgame ("frlg" or "rse"). Sets internal game variable. Has same effect as selecting a game from the drop-down menu. This mostly just affects movement.
+- Starting offset now saves in between sessions.
 
 ### New in 1.2
 - Major msgbox bug fix
