@@ -952,6 +952,30 @@ function getXSE(text) {
 				body += "compare "+arg[1]+" "+arg[2];
 			
 				break;
+			case "updatemap":
+			
+				body += "special 0x8E";
+			
+				break;
+			case "setgame":
+			
+				noliNewLineAre = true;
+			
+				let finalRes = arg[1].toLowerCase();
+				
+				if (finalRes == "rse" || finalRes == "frlg") {
+			
+					whichGame = finalRes;
+					
+				} else {
+				
+					success = false;
+					alert("'rse' and 'frlg' are only valid setgame args.");
+					return;
+				
+				}
+			
+				break;
 			case "stopif":
 				
 				arg = derefAllFromIndex(arg, 1);
